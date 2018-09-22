@@ -1,0 +1,32 @@
+o  Windows API Index (Windows)‎
+
+o  Menus and Other Resources (Windows)‎
+-> BITMAPs, ICONs
+-> Version Information
+-> Resource Compiler
+
+o  DefaultIcon (COM)‎
+
+o  Error Handling in COM (COM)‎
+
+o  Registering Shell Extension Handlers (Windows)‎
+
+o  Using Window Procedures
+
+o  High DPI Desktop Application Development on Windows
+
+o  Everyone quotes command line arguments the wrong way
+
+-> https://blogs.msdn.microsoft.com/twistylittlepassagesallalike/2011/04/23/everyone-quotes-command-line-arguments-the-wrong-way/
+
+o  EFNet #Winprog
+
+-> http://winprog.org/
+
+o  Reliable Software - Windows API Tutorial
+
+-> http://www.relisoft.com/win32/index.htm
+
+o  FunctionX - Win32 Programming
+
+-> http://www.functionx.com/win32/index.htm
