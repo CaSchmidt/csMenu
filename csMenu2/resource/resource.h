@@ -1,6 +1,6 @@
-#ifndef __RESOURCE_H__
-#define __RESOURCE_H__
+#ifndef RESOURCE_H
+#define RESOURCE_H
 
 #define IDI_csMenu  100
 
-#endif // __RESOURCE_H__
+#endif // RESOURCE_H
