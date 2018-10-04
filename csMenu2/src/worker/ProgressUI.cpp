@@ -65,32 +65,14 @@ std::unique_ptr<ProgressUI> ProgressUI::create(IJobQueue *jobs,
 
   // (2) Register window class ///////////////////////////////////////////////
 
-  const wchar_t *wndClassName = L"ProgressUI Class";
-
-  WNDCLASSEXW wcex;
-  wcex.cbSize        = sizeof(WNDCLASSEXW);
-  wcex.style         = 0;
-  wcex.lpfnWndProc   = ProgressUI::WindowProc;
-  wcex.cbClsExtra    = 0;
-  wcex.cbWndExtra    = sizeof(LONG_PTR);
-  wcex.hInstance     = hInstance;
-  wcex.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
-  wcex.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-  wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-  wcex.lpszMenuName  = nullptr;
-  wcex.lpszClassName = wndClassName;
-  wcex.hIconSm       = LoadIcon(nullptr, IDI_APPLICATION);
-
-  if( RegisterClassExW(&wcex) == 0 ) {
-    MessageBoxW(nullptr, L"RegisterClassExW()", L"Error",
-                MB_ICONERROR | MB_OK);
+  if( !registerWindowClass(hInstance) ) {
     result.reset(nullptr);
     return result;
   }
 
   // (3) Create main window //////////////////////////////////////////////////
 
-  result->_mainWnd = CreateWindowExW(0, wndClassName, L"Progress", WS_BORDER,
+  result->_mainWnd = CreateWindowExW(0, windowClassName(), L"Progress", WS_BORDER,
                                      CW_USEDEFAULT, CW_USEDEFAULT,
                                      width, height + GetSystemMetrics(SM_CYSIZE),
                                      nullptr, nullptr, hInstance, nullptr);
@@ -138,6 +120,40 @@ std::unique_ptr<ProgressUI> ProgressUI::create(IJobQueue *jobs,
   PostMessageW(result->_progWnd, PBM_SETSTEP, (WPARAM)1, 0);
 
   return result;
+}
+
+bool ProgressUI::registerWindowClass(HINSTANCE hInstance)
+{
+  WNDCLASSEXW wcex;
+  if( GetClassInfoExW(hInstance, windowClassName(), &wcex) != FALSE ) {
+    return true; // Window class is already registered!
+  }
+
+  wcex.cbSize        = sizeof(WNDCLASSEXW);
+  wcex.style         = 0;
+  wcex.lpfnWndProc   = ProgressUI::WindowProc;
+  wcex.cbClsExtra    = 0;
+  wcex.cbWndExtra    = sizeof(LONG_PTR);
+  wcex.hInstance     = hInstance;
+  wcex.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
+  wcex.hCursor       = LoadCursor(nullptr, IDC_ARROW);
+  wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+  wcex.lpszMenuName  = nullptr;
+  wcex.lpszClassName = windowClassName();
+  wcex.hIconSm       = LoadIcon(nullptr, IDI_APPLICATION);
+
+  if( RegisterClassExW(&wcex) == 0 ) {
+    MessageBoxW(nullptr, L"RegisterClassExW()", L"Error",
+                MB_ICONERROR | MB_OK);
+    return false;
+  }
+
+  return true;
+}
+
+const wchar_t *ProgressUI::windowClassName()
+{
+  return L"ProgressUI";
 }
 
 ////// private ///////////////////////////////////////////////////////////////

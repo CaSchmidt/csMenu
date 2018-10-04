@@ -210,3 +210,11 @@ HBITMAP createBitmapFromIcon(const HICON icon, const int width, const int height
 
   return bitmap;
 }
+
+void unregisterClass(HINSTANCE hInstance, const wchar_t *windowClassName)
+{
+  WNDCLASSEXW wcex;
+  if( GetClassInfoExW(hInstance, windowClassName, &wcex) != FALSE ) {
+    UnregisterClassW(windowClassName, hInstance);
+  }
+}

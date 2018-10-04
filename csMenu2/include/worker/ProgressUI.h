@@ -58,6 +58,9 @@ public:
                                             HINSTANCE hInstance,
                                             const int width, const int height);
 
+  static bool registerWindowClass(HINSTANCE hInstance);
+  static const wchar_t *windowClassName();
+
 private:  
   ProgressUI() = delete;
   ProgressUI(const ProgressUI&) = delete;

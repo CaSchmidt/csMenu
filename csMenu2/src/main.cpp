@@ -36,6 +36,8 @@
 #include "csMenu.h"
 #include "csMenuFactory.h"
 #include "reg.h"
+#include "util.hpp"
+#include "worker/ProgressUI.h"
 
 HINSTANCE g_hDllInst     = nullptr;
 LONG      g_lDllRefCount = 0;
@@ -147,10 +149,14 @@ HRESULT __stdcall DllUnregisterServer(void)
 
 BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID /*lpvReserved*/)
 {
-  if( fdwReason == DLL_PROCESS_ATTACH ) {
+  if(        fdwReason == DLL_PROCESS_ATTACH ) {
     g_hDllInst     = hinstDLL;
     g_lDllRefCount = 0;
     DisableThreadLibraryCalls(hinstDLL);
+  } else if( fdwReason == DLL_PROCESS_DETACH ) {
+    unregisterClass(hinstDLL, ProgressUI::windowClassName());
+    g_hDllInst     = nullptr;
+    g_lDllRefCount = 0;
   }
   return TRUE;
 }

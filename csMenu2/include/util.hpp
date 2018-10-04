@@ -54,4 +54,6 @@ csWString resolveUNC(const csWString& filename);
 
 HBITMAP createBitmapFromIcon(const HICON icon, const int width, const int height);
 
+void unregisterClass(HINSTANCE hInstance, const wchar_t *windowClassName);
+
 #endif // UTIL_HPP
