@@ -1,5 +1,6 @@
 build-*/
 bin/
 lib/
+/csMenu2/data/Output/
 *.pro.user
 *.txt.user
