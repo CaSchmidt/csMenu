@@ -15,17 +15,27 @@ o  Using Window Procedures
 
 o  High DPI Desktop Application Development on Windows
 
+o  TN020: ID Naming and Numbering Conventions
+
+
+
 o  Everyone quotes command line arguments the wrong way
 
 -> https://blogs.msdn.microsoft.com/twistylittlepassagesallalike/2011/04/23/everyone-quotes-command-line-arguments-the-wrong-way/
+
+
 
 o  EFNet #Winprog
 
 -> http://winprog.org/
 
+
+
 o  Reliable Software - Windows API Tutorial
 
 -> http://www.relisoft.com/win32/index.htm
+
+
 
 o  FunctionX - Win32 Programming
 
