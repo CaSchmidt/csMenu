@@ -1,0 +1,16 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Classes\CLSID\{3d92630b-2959-4551-8a55-ffb508ef3791}]
+@="CS::Menu-Test"
+
+[HKEY_CURRENT_USER\Software\Classes\CLSID\{3d92630b-2959-4551-8a55-ffb508ef3791}\InprocServer32]
+@="D:\\csMenuTest.dll"
+"ThreadingModel"="Apartment"
+
+[HKEY_CURRENT_USER\Software\Classes\*\Shell\csMenuTest.Verb]
+@="CS::Menu-Test"
+"ExplorerCommandHandler"="{3d92630b-2959-4551-8a55-ffb508ef3791}"
+
+[HKEY_CURRENT_USER\Software\Classes\Directory\Shell\csMenuTest.Verb]
+@="CS::Menu-Test"
+"ExplorerCommandHandler"="{3d92630b-2959-4551-8a55-ffb508ef3791}"

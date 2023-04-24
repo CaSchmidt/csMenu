@@ -1,0 +1,36 @@
+BasedOnStyle: LLVM
+Language: Cpp
+# File
+LineEnding: LF
+UseTab: Never
+ColumnLimit: 0
+IndentWidth: 2
+ContinuationIndentWidth: 2
+# Pointer & Reference
+PointerAlignment: Right
+ReferenceAlignment: Left
+# Classes & Inheritance
+BreakInheritanceList: BeforeComma
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerIndentWidth: 2
+# Operators
+AlignOperands: AlignAfterOperator
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeTernaryOperators: true
+# Braces
+InsertBraces: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterControlStatement: Never
+  AfterFunction: true
+# Namespaces
+FixNamespaceComments: true
+NamespaceIndentation: All
+ShortNamespaceLines: 0
+# Spaces
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: false
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyBlock: true
+SpacesInConditionalStatement: true
