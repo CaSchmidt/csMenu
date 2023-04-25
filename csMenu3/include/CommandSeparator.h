@@ -31,32 +31,13 @@
 
 #pragma once
 
-#include <string>
+#include "CommandBase.h"
 
-////// Types /////////////////////////////////////////////////////////////////
+class CommandSeparator : public CommandBase {
+public:
+  CommandSeparator() noexcept;
+  ~CommandSeparator() noexcept;
 
-using CommandId = unsigned int;
-
-enum class Command : CommandId {
-  None = 0,
-  Root,
-  List,
-  ListPath,
-  ListPathTabular,
-  CheckBatchProcessing,
-  CheckParallelExecution,
-  CheckResolveUncPaths,
-  CheckUnixPathSeparators,
-  Num_Commands
+  IFACEMETHODIMP_(HRESULT) GetFlags(EXPCMDFLAGS *pFlags);
+  IFACEMETHODIMP_(HRESULT) GetTitle(IShellItemArray *psiItemArray, LPWSTR *ppszName);
 };
-
-////// Operators /////////////////////////////////////////////////////////////
-
-inline bool operator==(const CommandId id, const Command cmd)
-{
-  return id == static_cast<CommandId>(cmd);
-}
-
-////// Implementation ////////////////////////////////////////////////////////
-
-std::wstring titleFromId(const CommandId id);

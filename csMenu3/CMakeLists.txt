@@ -13,6 +13,7 @@ list(APPEND csMenu3_HEADERS
   include/CommandEnum.h
   include/CommandInvoke.h
   include/Commands.h
+  include/CommandSeparator.h
   include/guid.h
 )
 
@@ -21,6 +22,7 @@ list(APPEND csMenu3_SOURCES
   src/CommandEnum.cpp
   src/CommandInvoke.cpp
   src/Commands.cpp
+  src/CommandSeparator.cpp
   src/guid.cpp
   src/main.cpp
 )

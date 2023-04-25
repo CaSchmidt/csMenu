@@ -29,34 +29,28 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#pragma once
+#include "CommandSeparator.h"
 
-#include <string>
+////// public ////////////////////////////////////////////////////////////////
 
-////// Types /////////////////////////////////////////////////////////////////
-
-using CommandId = unsigned int;
-
-enum class Command : CommandId {
-  None = 0,
-  Root,
-  List,
-  ListPath,
-  ListPathTabular,
-  CheckBatchProcessing,
-  CheckParallelExecution,
-  CheckResolveUncPaths,
-  CheckUnixPathSeparators,
-  Num_Commands
-};
-
-////// Operators /////////////////////////////////////////////////////////////
-
-inline bool operator==(const CommandId id, const Command cmd)
+CommandSeparator::CommandSeparator() noexcept
+  : CommandBase{Command::None}
 {
-  return id == static_cast<CommandId>(cmd);
 }
 
-////// Implementation ////////////////////////////////////////////////////////
+CommandSeparator::~CommandSeparator() noexcept
+{
+}
 
-std::wstring titleFromId(const CommandId id);
+IFACEMETHODIMP_(HRESULT) CommandSeparator::GetFlags(EXPCMDFLAGS *pFlags)
+{
+  *pFlags = ECF_ISSEPARATOR;
+  return S_OK;
+}
+
+IFACEMETHODIMP_(HRESULT) CommandSeparator::GetTitle(IShellItemArray *psiItemArray, LPWSTR *ppszName)
+{
+  UNREFERENCED_PARAMETER(psiItemArray);
+  UNREFERENCED_PARAMETER(ppszName);
+  return E_NOTIMPL;
+}

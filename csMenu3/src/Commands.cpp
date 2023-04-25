@@ -45,6 +45,14 @@ std::wstring titleFromId(const CommandId id)
     return std::wstring{L"List (path)"};
   } else if( id == Command::ListPathTabular ) {
     return std::wstring{L"List (path, tabular)"};
+  } else if( id == Command::CheckBatchProcessing ) {
+    return std::wstring{L"Batch processing"};
+  } else if( id == Command::CheckParallelExecution ) {
+    return std::wstring{L"Parallel execution"};
+  } else if( id == Command::CheckResolveUncPaths ) {
+    return std::wstring{L"Resolve UNC paths"};
+  } else if( id == Command::CheckUnixPathSeparators ) {
+    return std::wstring{L"UN*X path separators"};
   }
 
   return std::wstring{};

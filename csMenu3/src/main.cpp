@@ -35,6 +35,7 @@
 
 #include "CommandEnum.h"
 #include "CommandInvoke.h"
+#include "CommandSeparator.h"
 
 ////// Global ////////////////////////////////////////////////////////////////
 
@@ -51,6 +52,13 @@ void buildMenu(CommandEnum *menu)
   menu->append(winrt::make<CommandInvoke>(Command::List));
   menu->append(winrt::make<CommandInvoke>(Command::ListPath));
   menu->append(winrt::make<CommandInvoke>(Command::ListPathTabular));
+
+  menu->append(winrt::make<CommandSeparator>());
+
+  menu->append(winrt::make<CommandInvoke>(Command::CheckBatchProcessing));
+  menu->append(winrt::make<CommandInvoke>(Command::CheckParallelExecution));
+  menu->append(winrt::make<CommandInvoke>(Command::CheckResolveUncPaths));
+  menu->append(winrt::make<CommandInvoke>(Command::CheckUnixPathSeparators));
 }
 
 ////// Class Factory /////////////////////////////////////////////////////////
