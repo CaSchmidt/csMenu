@@ -11,6 +11,7 @@ list(APPEND csMenu3_EXTRAS
 list(APPEND csMenu3_HEADERS
   include/CommandBase.h
   include/CommandEnum.h
+  include/CommandFlag.h
   include/CommandInvoke.h
   include/Commands.h
   include/CommandSeparator.h
@@ -20,6 +21,7 @@ list(APPEND csMenu3_HEADERS
 list(APPEND csMenu3_SOURCES
   src/CommandBase.cpp
   src/CommandEnum.cpp
+  src/CommandFlag.cpp
   src/CommandInvoke.cpp
   src/Commands.cpp
   src/CommandSeparator.cpp

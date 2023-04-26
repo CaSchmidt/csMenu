@@ -34,6 +34,7 @@
 #include <winrt/windows.foundation.h>
 
 #include "CommandEnum.h"
+#include "CommandFlag.h"
 #include "CommandInvoke.h"
 #include "CommandSeparator.h"
 
@@ -55,10 +56,10 @@ void buildMenu(CommandEnum *menu)
 
   menu->append(winrt::make<CommandSeparator>());
 
-  menu->append(winrt::make<CommandInvoke>(Command::CheckBatchProcessing));
-  menu->append(winrt::make<CommandInvoke>(Command::CheckParallelExecution));
-  menu->append(winrt::make<CommandInvoke>(Command::CheckResolveUncPaths));
-  menu->append(winrt::make<CommandInvoke>(Command::CheckUnixPathSeparators));
+  menu->append(winrt::make<CommandFlag>(false, Command::CheckBatchProcessing));
+  menu->append(winrt::make<CommandFlag>(true, Command::CheckParallelExecution));
+  menu->append(winrt::make<CommandFlag>(false, Command::CheckResolveUncPaths));
+  menu->append(winrt::make<CommandFlag>(true, Command::CheckUnixPathSeparators));
 }
 
 ////// Class Factory /////////////////////////////////////////////////////////
