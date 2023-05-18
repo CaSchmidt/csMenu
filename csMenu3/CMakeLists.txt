@@ -16,6 +16,8 @@ list(APPEND csMenu3_HEADERS
   include/Commands.h
   include/CommandSeparator.h
   include/guid.h
+  include/Win32/Compat.h
+  include/Win32/Registry.h
 )
 
 list(APPEND csMenu3_SOURCES
@@ -27,6 +29,8 @@ list(APPEND csMenu3_SOURCES
   src/CommandSeparator.cpp
   src/guid.cpp
   src/main.cpp
+  src/Win32/Compat.cpp
+  src/Win32/Registry.cpp
 )
 
 ### Target ###################################################################
