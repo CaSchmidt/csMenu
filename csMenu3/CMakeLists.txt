@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 project(csMenu3)
 
+### CMake ####################################################################
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+include(FormatOutputName)
+
 ### Dependencies #############################################################
 
 add_subdirectory(${csMenu-dev_SOURCE_DIR}/3rdparty/csUtil/csUtil
@@ -42,6 +48,8 @@ list(APPEND csMenu3_SOURCES
 ### Target ###################################################################
 
 add_library(csMenu3 SHARED)
+
+format_output_name(csMenu3 "csMenu")
 
 set_target_properties(csMenu3 PROPERTIES
   CXX_STANDARD 20
