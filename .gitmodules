@@ -1,0 +1,3 @@
+[submodule "3rdparty/csUtil"]
+	path = 3rdparty/csUtil
+	url = https://github.com/CaSchmidt/csUtil.git
