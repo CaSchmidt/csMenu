@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 project(csMenu3)
 
+### Dependencies #############################################################
+
+add_subdirectory(${csMenu-dev_SOURCE_DIR}/3rdparty/csUtil/csUtil
+  ${CMAKE_CURRENT_BINARY_DIR}/3rdparty/csUtil
+)
+
 ### Project ##################################################################
 
 list(APPEND csMenu3_EXTRAS
@@ -47,7 +53,7 @@ target_include_directories(csMenu3
 )
 
 target_link_libraries(csMenu3
-  PRIVATE shlwapi.lib
+  PRIVATE csUtil shlwapi.lib
 )
 
 target_sources(csMenu3
