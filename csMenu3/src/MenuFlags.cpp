@@ -29,41 +29,25 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include "CommandFlag.h"
+#include "MenuFlags.h"
 
-#include "Invoke.h"
+#include "Win32/Registry.h"
 
-////// public ////////////////////////////////////////////////////////////////
+////// Macros ////////////////////////////////////////////////////////////////
 
-CommandFlag::CommandFlag(const bool on, const Command cmd, const std::wstring& icon) noexcept
-  : CommandBase{cmd, icon}
-  , _on{on}
+#define FLAGS_KEY L"Software\\csLabs\\csMenu"
+#define FLAGS_NAME L"Flags"
+
+////// Public ////////////////////////////////////////////////////////////////
+
+MenuFlags readFlags()
 {
+  const DWORD_t value = reg::readCurrentUserDWord(FLAGS_KEY, FLAGS_NAME);
+  return MenuFlags{value};
 }
 
-CommandFlag::~CommandFlag() noexcept
+void writeFlags(const MenuFlags flags)
 {
-}
-
-IFACEMETHODIMP_(HRESULT) CommandFlag::GetState(IShellItemArray *psiItemArray, BOOL fOkToBeSlow, EXPCMDSTATE *pCmdState)
-{
-  UNREFERENCED_PARAMETER(psiItemArray);
-  UNREFERENCED_PARAMETER(fOkToBeSlow);
-
-  *pCmdState = ECS_CHECKBOX;
-  if( _on ) {
-    *pCmdState |= ECS_CHECKED;
-  }
-
-  return S_OK;
-}
-
-IFACEMETHODIMP_(HRESULT) CommandFlag::Invoke(IShellItemArray *psiItemArray, IBindCtx *pbc)
-{
-  UNREFERENCED_PARAMETER(psiItemArray);
-  UNREFERENCED_PARAMETER(pbc);
-
-  invokeCommandId(_id);
-
-  return S_OK;
+  const DWORD_t value{flags};
+  reg::writeCurrentUserDWord(FLAGS_KEY, FLAGS_NAME, value);
 }

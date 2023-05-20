@@ -29,41 +29,24 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include "CommandFlag.h"
+#pragma once
 
-#include "Invoke.h"
+#include <cs/Core/Flags.h>
 
-////// public ////////////////////////////////////////////////////////////////
+#include "Win32/Compat.h"
 
-CommandFlag::CommandFlag(const bool on, const Command cmd, const std::wstring& icon) noexcept
-  : CommandBase{cmd, icon}
-  , _on{on}
-{
-}
+enum class MenuFlag : DWORD_t {
+  None = 0,
+  BatchProcessing = 1,
+  ParallelExecution = 2,
+  ResolveUncPaths = 4,
+  UnixPathSeparators = 8
+};
 
-CommandFlag::~CommandFlag() noexcept
-{
-}
+CS_ENABLE_FLAGS(MenuFlag);
 
-IFACEMETHODIMP_(HRESULT) CommandFlag::GetState(IShellItemArray *psiItemArray, BOOL fOkToBeSlow, EXPCMDSTATE *pCmdState)
-{
-  UNREFERENCED_PARAMETER(psiItemArray);
-  UNREFERENCED_PARAMETER(fOkToBeSlow);
+using MenuFlags = cs::Flags<MenuFlag>;
 
-  *pCmdState = ECS_CHECKBOX;
-  if( _on ) {
-    *pCmdState |= ECS_CHECKED;
-  }
+MenuFlags readFlags();
 
-  return S_OK;
-}
-
-IFACEMETHODIMP_(HRESULT) CommandFlag::Invoke(IShellItemArray *psiItemArray, IBindCtx *pbc)
-{
-  UNREFERENCED_PARAMETER(psiItemArray);
-  UNREFERENCED_PARAMETER(pbc);
-
-  invokeCommandId(_id);
-
-  return S_OK;
-}
+void writeFlags(const MenuFlags flags);

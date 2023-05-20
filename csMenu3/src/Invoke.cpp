@@ -29,41 +29,44 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include "CommandFlag.h"
-
 #include "Invoke.h"
 
-////// public ////////////////////////////////////////////////////////////////
+#include "MenuFlags.h"
 
-CommandFlag::CommandFlag(const bool on, const Command cmd, const std::wstring& icon) noexcept
-  : CommandBase{cmd, icon}
-  , _on{on}
-{
-}
+////// Private ///////////////////////////////////////////////////////////////
 
-CommandFlag::~CommandFlag() noexcept
-{
-}
+namespace impl_invoke {
 
-IFACEMETHODIMP_(HRESULT) CommandFlag::GetState(IShellItemArray *psiItemArray, BOOL fOkToBeSlow, EXPCMDSTATE *pCmdState)
-{
-  UNREFERENCED_PARAMETER(psiItemArray);
-  UNREFERENCED_PARAMETER(fOkToBeSlow);
+  void invokeFlags(const CommandId id)
+  {
+    MenuFlags flags = readFlags();
 
-  *pCmdState = ECS_CHECKBOX;
-  if( _on ) {
-    *pCmdState |= ECS_CHECKED;
+    if( id == Command::CheckBatchProcessing ) {
+      flags.toggle(MenuFlag::BatchProcessing);
+    } else if( id == Command::CheckParallelExecution ) {
+      flags.toggle(MenuFlag::ParallelExecution);
+    } else if( id == Command::CheckResolveUncPaths ) {
+      flags.toggle(MenuFlag::ResolveUncPaths);
+    } else if( id == Command::CheckUnixPathSeparators ) {
+      flags.toggle(MenuFlag::UnixPathSeparators);
+    }
+
+    writeFlags(flags);
   }
 
-  return S_OK;
-}
+} // namespace impl_invoke
 
-IFACEMETHODIMP_(HRESULT) CommandFlag::Invoke(IShellItemArray *psiItemArray, IBindCtx *pbc)
+////// Public ////////////////////////////////////////////////////////////////
+
+void invokeCommandId(const CommandId id)
 {
-  UNREFERENCED_PARAMETER(psiItemArray);
-  UNREFERENCED_PARAMETER(pbc);
-
-  invokeCommandId(_id);
-
-  return S_OK;
+  if( id == Command::CheckBatchProcessing ) {
+    impl_invoke::invokeFlags(id);
+  } else if( id == Command::CheckParallelExecution ) {
+    impl_invoke::invokeFlags(id);
+  } else if( id == Command::CheckResolveUncPaths ) {
+    impl_invoke::invokeFlags(id);
+  } else if( id == Command::CheckUnixPathSeparators ) {
+    impl_invoke::invokeFlags(id);
+  }
 }

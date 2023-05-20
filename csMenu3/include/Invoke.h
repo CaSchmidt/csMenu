@@ -29,41 +29,8 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include "CommandFlag.h"
+#pragma once
 
-#include "Invoke.h"
+#include "Commands.h"
 
-////// public ////////////////////////////////////////////////////////////////
-
-CommandFlag::CommandFlag(const bool on, const Command cmd, const std::wstring& icon) noexcept
-  : CommandBase{cmd, icon}
-  , _on{on}
-{
-}
-
-CommandFlag::~CommandFlag() noexcept
-{
-}
-
-IFACEMETHODIMP_(HRESULT) CommandFlag::GetState(IShellItemArray *psiItemArray, BOOL fOkToBeSlow, EXPCMDSTATE *pCmdState)
-{
-  UNREFERENCED_PARAMETER(psiItemArray);
-  UNREFERENCED_PARAMETER(fOkToBeSlow);
-
-  *pCmdState = ECS_CHECKBOX;
-  if( _on ) {
-    *pCmdState |= ECS_CHECKED;
-  }
-
-  return S_OK;
-}
-
-IFACEMETHODIMP_(HRESULT) CommandFlag::Invoke(IShellItemArray *psiItemArray, IBindCtx *pbc)
-{
-  UNREFERENCED_PARAMETER(psiItemArray);
-  UNREFERENCED_PARAMETER(pbc);
-
-  invokeCommandId(_id);
-
-  return S_OK;
-}
+void invokeCommandId(const CommandId id);

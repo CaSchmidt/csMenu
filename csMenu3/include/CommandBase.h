@@ -63,8 +63,10 @@ public:
   IFACEMETHODIMP_(HRESULT) Reset();
   IFACEMETHODIMP_(HRESULT) Skip(ULONG celt);
 
+protected:
+  CommandId _id;
+
 private:
   std::wstring _icon;
-  CommandId _id;
   std::wstring _title;
 };

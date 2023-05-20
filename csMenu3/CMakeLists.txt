@@ -28,6 +28,8 @@ list(APPEND csMenu3_HEADERS
   include/Commands.h
   include/CommandSeparator.h
   include/guid.h
+  include/Invoke.h
+  include/MenuFlags.h
   include/Win32/Compat.h
   include/Win32/Registry.h
 )
@@ -40,7 +42,9 @@ list(APPEND csMenu3_SOURCES
   src/Commands.cpp
   src/CommandSeparator.cpp
   src/guid.cpp
+  src/Invoke.cpp
   src/main.cpp
+  src/MenuFlags.cpp
   src/Win32/Compat.cpp
   src/Win32/Registry.cpp
 )
@@ -49,7 +53,7 @@ list(APPEND csMenu3_SOURCES
 
 add_library(csMenu3 SHARED)
 
-format_output_name(csMenu3 "csMenu")
+format_output_name(csMenu3 "csMenu3")
 
 set_target_properties(csMenu3 PROPERTIES
   CXX_STANDARD 20
@@ -61,7 +65,8 @@ target_include_directories(csMenu3
 )
 
 target_link_libraries(csMenu3
-  PRIVATE csUtil shlwapi.lib
+  PRIVATE csUtil
+  PRIVATE shlwapi.lib
 )
 
 target_sources(csMenu3
