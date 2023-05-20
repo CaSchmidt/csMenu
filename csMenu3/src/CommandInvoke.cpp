@@ -31,6 +31,53 @@
 
 #include "CommandInvoke.h"
 
+#include "Invoke.h"
+
+////// Private ///////////////////////////////////////////////////////////////
+
+namespace impl_cmdinvoke {
+
+  FileList makeFileList(IShellItemArray *items)
+  {
+    if( items == nullptr ) {
+      return FileList{};
+    }
+
+    DWORD count = 0;
+    if( FAILED(items->GetCount(&count)) ) {
+      return FileList{};
+    }
+
+    FileList list;
+
+    wchar_t *displayName = nullptr;
+    try {
+      wchar_t *displayName = nullptr;
+      for( DWORD i = 0; i < count; i++ ) {
+        winrt::com_ptr<IShellItem> item;
+        if( FAILED(items->GetItemAt(i, item.put())) ) {
+          continue;
+        }
+
+        displayName = nullptr;
+        if( FAILED(item->GetDisplayName(SIGDN_FILESYSPATH, &displayName)) ) {
+          continue;
+        }
+
+        list.push_back(std::wstring{displayName});
+        ::CoTaskMemFree(displayName);
+        displayName = nullptr;
+      }
+    } catch( ... ) {
+      ::CoTaskMemFree(displayName);
+      return FileList{};
+    }
+
+    return list;
+  }
+
+} // namespace impl_cmdinvoke
+
 ////// public ////////////////////////////////////////////////////////////////
 
 CommandInvoke::CommandInvoke(const Command cmd, const std::wstring& icon) noexcept
@@ -46,9 +93,9 @@ IFACEMETHODIMP_(HRESULT) CommandInvoke::Invoke(IShellItemArray *psiItemArray, IB
 {
   UNREFERENCED_PARAMETER(pbc);
 
-  // TODO 1: Create List of Files...
+  const FileList files = impl_cmdinvoke::makeFileList(psiItemArray);
 
-  // TODO 2: Execute Command...
+  invokeCommandId(_id, files);
 
   return S_OK;
 }

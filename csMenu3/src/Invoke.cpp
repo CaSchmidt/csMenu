@@ -58,7 +58,7 @@ namespace impl_invoke {
 
 ////// Public ////////////////////////////////////////////////////////////////
 
-void invokeCommandId(const CommandId id)
+void invokeCommandId(const CommandId id, const FileList& files)
 {
   if( id == Command::CheckBatchProcessing ) {
     impl_invoke::invokeFlags(id);

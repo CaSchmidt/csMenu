@@ -31,6 +31,11 @@
 
 #pragma once
 
+#include <list>
+#include <string>
+
 #include "Commands.h"
 
-void invokeCommandId(const CommandId id);
+using FileList = std::list<std::wstring>;
+
+void invokeCommandId(const CommandId id, const FileList& files = FileList{});
