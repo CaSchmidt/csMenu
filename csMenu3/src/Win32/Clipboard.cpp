@@ -32,7 +32,7 @@
 #define NOMINMAX
 #include <Windows.h>
 
-#include <cs/Text/StringRange.h>
+#include <cs/Core/Range.h>
 
 #include "Win32/Clipboard.h"
 
@@ -52,8 +52,10 @@ bool clearClipboard()
 
 bool setClipboardText(const wchar_t *text)
 {
-  const std::size_t length = cs::length(text);
-  if( length < 1 ) {
+  constexpr std::size_t ONE = 1;
+
+  const std::size_t length = cs::strlen(text);
+  if( length < ONE ) {
     return false;
   }
 
@@ -65,7 +67,7 @@ bool setClipboardText(const wchar_t *text)
     return false;
   }
 
-  HGLOBAL globalMem = GlobalAlloc(GMEM_MOVEABLE, (length + 1) * sizeof(wchar_t));
+  HGLOBAL globalMem = GlobalAlloc(GMEM_MOVEABLE, (length + ONE) * sizeof(wchar_t));
   if( globalMem == nullptr ) {
     CloseClipboard();
     return false;
