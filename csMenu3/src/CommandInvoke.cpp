@@ -52,7 +52,6 @@ namespace impl_cmdinvoke {
 
     wchar_t *displayName = nullptr;
     try {
-      wchar_t *displayName = nullptr;
       for( DWORD i = 0; i < count; i++ ) {
         winrt::com_ptr<IShellItem> item;
         if( FAILED(items->GetItemAt(i, item.put())) ) {
@@ -70,6 +69,7 @@ namespace impl_cmdinvoke {
       }
     } catch( ... ) {
       ::CoTaskMemFree(displayName);
+      displayName = nullptr;
       return FileList{};
     }
 

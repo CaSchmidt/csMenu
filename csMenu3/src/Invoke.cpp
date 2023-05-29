@@ -29,13 +29,54 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#include <filesystem>
+
+#include <cs/Text/StringAlgorithm.h>
+
 #include "Invoke.h"
 
 #include "MenuFlags.h"
+#include "Win32/Clipboard.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 
 namespace impl_invoke {
+
+  constexpr wchar_t SEP_NATIVE = L'\\';
+  constexpr wchar_t SEP_UNIX = L'/';
+
+  inline bool is_directory(const std::wstring& filename)
+  {
+    std::error_code ec;
+    return std::filesystem::is_directory(filename, ec);
+  }
+
+  void appendFilename(std::wstring *text, const std::wstring& filename, const CommandId id)
+  {
+    constexpr std::size_t NPOS = std::wstring::npos;
+    constexpr std::size_t ONE = 1;
+
+    const std::size_t pos = filename.rfind(SEP_NATIVE);
+    if( pos != NPOS ) {
+      if( id == Command::List ) {
+        text->append(filename.data() + pos + ONE);
+      } else if( id == Command::ListPathTabular ) {
+        text->append(filename.data(), pos + ONE);
+        text->append(ONE, L'\t');
+        text->append(filename.data() + pos + ONE);
+      } else { // Command::ListPath  AKA  "as-is"
+        text->append(filename);
+      }
+    } else {
+      text->append(filename);
+    }
+
+    if( is_directory(filename) ) {
+      text->append(ONE, SEP_NATIVE);
+    }
+
+    text->append(L"\r\n");
+  }
 
   void invokeFlags(const CommandId id)
   {
@@ -54,13 +95,39 @@ namespace impl_invoke {
     writeFlags(flags);
   }
 
+  void invokeList(const CommandId id, const FileList& files)
+  {
+    if( files.empty() ) {
+      return;
+    }
+
+    const MenuFlags flags = readFlags();
+
+    std::wstring text;
+    try {
+      for( const std::wstring& filename : files ) {
+        appendFilename(&text, filename, id);
+      }
+    } catch( ... ) {
+      return;
+    }
+
+    if( flags.testAny(MenuFlag::UnixPathSeparators) ) {
+      cs::replaceAll(text.data(), text.size(), SEP_NATIVE, SEP_UNIX);
+    }
+
+    setClipboardText(text.data());
+  }
+
 } // namespace impl_invoke
 
 ////// Public ////////////////////////////////////////////////////////////////
 
 void invokeCommandId(const CommandId id, const FileList& files)
 {
-  if( id == Command::CheckBatchProcessing ) {
+  if( id == Command::List || id == Command::ListPath || id == Command::ListPathTabular ) {
+    impl_invoke::invokeList(id, files);
+  } else if( id == Command::CheckBatchProcessing ) {
     impl_invoke::invokeFlags(id);
   } else if( id == Command::CheckParallelExecution ) {
     impl_invoke::invokeFlags(id);
