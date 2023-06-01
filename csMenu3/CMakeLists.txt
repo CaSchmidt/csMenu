@@ -76,3 +76,7 @@ target_sources(csMenu3
   PRIVATE ${csMenu3_HEADERS}
   PRIVATE ${csMenu3_SOURCES}
 )
+
+### Tests ####################################################################
+
+add_subdirectory(tests)
