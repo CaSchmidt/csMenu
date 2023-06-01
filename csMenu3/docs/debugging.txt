@@ -1,0 +1,3 @@
+https://learn.microsoft.com/en-us/windows/win32/debug/configuring-automatic-debugging
+
+https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/enabling-postmortem-debugging
