@@ -4,12 +4,34 @@
 #include <cs/Text/PrintFormat.h>
 #include <cs/Text/PrintUtil.h>
 
+#define NOMINMAX
+#include <winrt/windows.foundation.h>
+
 #include <ShObjIdl.h>
 #include <objbase.h>
 
-void printTitle(IExplorerCommand *cmd)
+using CoUnknown = winrt::com_ptr<IUnknown>;
+using CoExplorerCommand = winrt::com_ptr<IExplorerCommand>;
+using CoEnumExplorerCommand = winrt::com_ptr<IEnumExplorerCommand>;
+
+void printCount(const CoUnknown& unk, const char *text = nullptr)
 {
-  if( cmd == nullptr ) {
+  if( text != nullptr ) {
+    cs::print("%: ", text);
+  }
+
+  if( !unk ) {
+    cs::println("%", std::numeric_limits<ULONG>::max());
+    return;
+  }
+
+  unk->AddRef();
+  cs::println("%+1", unk->Release() - ULONG{1});
+}
+
+void printTitle(const CoExplorerCommand& cmd)
+{
+  if( !cmd ) {
     return;
   }
 
@@ -23,24 +45,25 @@ void printTitle(IExplorerCommand *cmd)
   CoTaskMemFree(title);
 }
 
-void printSubCommands(IExplorerCommand *root)
+void printSubCommands(const CoExplorerCommand& root)
 {
-  if( root == nullptr ) {
+  if( !root ) {
     return;
   }
 
-  IEnumExplorerCommand *ienumexpcmd = nullptr;
-  if( FAILED(root->EnumSubCommands(&ienumexpcmd)) ) {
+  CoEnumExplorerCommand enumexpcmd;
+  if( FAILED(root->EnumSubCommands(enumexpcmd.put())) ) {
     return;
   }
 
-  IExplorerCommand *iexpcmd = nullptr;
-  while( ienumexpcmd->Next(1, &iexpcmd, nullptr) == S_OK ) {
-    printTitle(iexpcmd);
-    cs::println("> Release(IExplorerCommand): %", iexpcmd->Release());
+  CoExplorerCommand expcmd;
+  while( enumexpcmd->Next(1, expcmd.put(), nullptr) == S_OK ) {
+    printTitle(expcmd);
+    printCount(expcmd, "> IExplorerCommand");
+    expcmd.attach(nullptr);
   }
 
-  cs::println("Release(IEnumExplorerCommand): %", ienumexpcmd->Release());
+  printCount(enumexpcmd, "IEnumExplorerCommand");
 }
 
 int main(int argc, char **argv)
@@ -59,17 +82,17 @@ int main(int argc, char **argv)
   }
 
   for( int i = 0; i < NUM_CREATE; i++ ) {
-    IExplorerCommand *iexpcmd = nullptr;
+    CoExplorerCommand expcmd;
     const HRESULT hr = CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER,
-                                        IID_IExplorerCommand, reinterpret_cast<void **>(&iexpcmd));
+                                        IID_IExplorerCommand, expcmd.put_void());
     if( FAILED(hr) ) {
       cs::println(&std::cerr, "%: CoCreateInstance(): 0x%", i, cs::hexf(hr));
       continue;
     }
 
     cs::println("*** %: CoCreateInstance(IExplorerCommand): 0x%", i, cs::hexf(hr));
-    printSubCommands(iexpcmd);
-    cs::println("Release(IExplorerCommand): %", iexpcmd->Release());
+    printSubCommands(expcmd);
+    printCount(expcmd, "IExplorerCommand");
 
     cs::println("");
   }
