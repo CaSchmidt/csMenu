@@ -19,6 +19,7 @@
 
 using CoEnumExplorerCommand = winrt::com_ptr<IEnumExplorerCommand>;
 using CoExplorerCommand = winrt::com_ptr<IExplorerCommand>;
+using CoShellItem = winrt::com_ptr<IShellItem>;
 using CoShellItemArray = winrt::com_ptr<IShellItemArray>;
 using CoUnknown = winrt::com_ptr<IUnknown>;
 
@@ -104,9 +105,36 @@ HRESULT listFiles(const wchar_t *root, IShellItemArray **ppsia)
   return hr;
 }
 
+void printShellItems(const CoShellItemArray& sia)
+{
+  if( !sia ) {
+    return;
+  }
+
+  DWORD count{0};
+  if( FAILED(sia->GetCount(&count)) ) {
+    return;
+  }
+
+  for( DWORD i = 0; i < count; i++ ) {
+    CoShellItem item;
+    if( FAILED(sia->GetItemAt(i, item.put())) ) {
+      continue;
+    }
+
+    wchar_t *name = nullptr;
+    if( FAILED(item->GetDisplayName(SIGDN_FILESYSPATH, &name)) ) {
+      continue;
+    }
+
+    cs::println(&std::wcout, L"%", name);
+    CoTaskMemFree(name);
+  } // For Each ShellItem
+}
+
 ////// IExplorerCommand //////////////////////////////////////////////////////
 
-void invokeCommand(const CoExplorerCommand& cmd, const wchar_t *path)
+void invokeCommand(const CoExplorerCommand& cmd, const wchar_t *path, const bool is_print_sia = false)
 {
   if( !cmd || path == nullptr ) {
     return;
@@ -118,6 +146,9 @@ void invokeCommand(const CoExplorerCommand& cmd, const wchar_t *path)
     return;
   }
 
+  if( is_print_sia ) {
+    printShellItems(sia);
+  }
   printCount(sia, "> IShellItemArray");
 
   const HRESULT hr = cmd->Invoke(sia.get(), nullptr);
