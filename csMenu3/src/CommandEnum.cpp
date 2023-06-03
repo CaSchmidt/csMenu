@@ -67,7 +67,6 @@ IFACEMETHODIMP_(HRESULT) CommandEnum::EnumSubCommands(IEnumExplorerCommand **ppE
   }
 
   _curCmd = _cmds.cbegin();
-  AddRef();
   return QueryInterface(IID_PPV_ARGS(ppEnum));
 }
 
