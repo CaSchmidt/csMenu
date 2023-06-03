@@ -22,6 +22,23 @@ using CoExplorerCommand = winrt::com_ptr<IExplorerCommand>;
 using CoShellItemArray = winrt::com_ptr<IShellItemArray>;
 using CoUnknown = winrt::com_ptr<IUnknown>;
 
+////// IUnknown //////////////////////////////////////////////////////////////
+
+void printCount(const CoUnknown& unk, const char *text = nullptr)
+{
+  if( text != nullptr ) {
+    cs::print("%: ", text);
+  }
+
+  if( !unk ) {
+    cs::println("%", std::numeric_limits<ULONG>::max());
+    return;
+  }
+
+  unk->AddRef();
+  cs::println("%+1", unk->Release() - ULONG{1});
+}
+
 ////// File System ///////////////////////////////////////////////////////////
 
 template <typename T>
@@ -89,19 +106,24 @@ HRESULT listFiles(const wchar_t *root, IShellItemArray **ppsia)
 
 ////// IExplorerCommand //////////////////////////////////////////////////////
 
-void printCount(const CoUnknown& unk, const char *text = nullptr)
+void invokeCommand(const CoExplorerCommand& cmd, const wchar_t *path)
 {
-  if( text != nullptr ) {
-    cs::print("%: ", text);
-  }
-
-  if( !unk ) {
-    cs::println("%", std::numeric_limits<ULONG>::max());
+  if( !cmd || path == nullptr ) {
     return;
   }
 
-  unk->AddRef();
-  cs::println("%+1", unk->Release() - ULONG{1});
+  CoShellItemArray sia;
+  if( const HRESULT hr = listFiles(path, sia.put()); FAILED(hr) ) {
+    cs::println(&std::cerr, "listFiles(): %", cs::hexf(hr));
+    return;
+  }
+
+  printCount(sia, "> IShellItemArray");
+
+  const HRESULT hr = cmd->Invoke(sia.get(), nullptr);
+  if( FAILED(hr) ) {
+    cs::println(&std::cerr, "Invoke(): %", cs::hexf(hr));
+  }
 }
 
 void printTitle(const CoExplorerCommand& cmd)
@@ -131,9 +153,16 @@ void printSubCommands(const CoExplorerCommand& root)
     return;
   }
 
+  int cntCmd{0};
   CoExplorerCommand expcmd;
   while( enumexpcmd->Next(1, expcmd.put(), nullptr) == S_OK ) {
     printTitle(expcmd);
+
+    if( cntCmd == 1 ) {
+      invokeCommand(expcmd, L"D:\\");
+    }
+    cntCmd++;
+
     printCount(expcmd, "> IExplorerCommand");
     expcmd.attach(nullptr);
   }
@@ -149,12 +178,12 @@ int main(int argc, char **argv)
 
   CLSID clsid;
   if( FAILED(CLSIDFromString(L"{3d92630b-2959-4551-8a55-ffb508ef3791}", &clsid)) ) {
-    fprintf(stderr, "ERROR: CLSIDFromString()!\n");
+    cs::println(&std::cerr, "ERROR: CLSIDFromString()!");
     return EXIT_FAILURE;
   }
 
   if( FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) ) {
-    fprintf(stderr, "ERROR: CoInitialize()!\n");
+    cs::println(&std::cerr, "ERROR: CoInitialize()!");
     return EXIT_FAILURE;
   }
 
