@@ -1,6 +1,10 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <filesystem>
+#include <iterator>
+#include <vector>
+
 #include <cs/Text/PrintFormat.h>
 #include <cs/Text/PrintUtil.h>
 
@@ -8,11 +12,82 @@
 #include <winrt/windows.foundation.h>
 
 #include <ShObjIdl.h>
+#include <ShlObj.h>
 #include <objbase.h>
 
-using CoUnknown = winrt::com_ptr<IUnknown>;
-using CoExplorerCommand = winrt::com_ptr<IExplorerCommand>;
+////// Types /////////////////////////////////////////////////////////////////
+
 using CoEnumExplorerCommand = winrt::com_ptr<IEnumExplorerCommand>;
+using CoExplorerCommand = winrt::com_ptr<IExplorerCommand>;
+using CoShellItemArray = winrt::com_ptr<IShellItemArray>;
+using CoUnknown = winrt::com_ptr<IUnknown>;
+
+////// File System ///////////////////////////////////////////////////////////
+
+template <typename T>
+  requires cs::IsCharacter<T>
+inline std::filesystem::directory_iterator makeDirIter(const T *root)
+{
+  namespace fs = std::filesystem;
+  std::error_code ec;
+  return root != nullptr
+         ? fs::directory_iterator{root,
+                                  fs::directory_options::skip_permission_denied, ec}
+         : fs::directory_iterator{};
+}
+
+/*
+ * NOTE: "How do I create an IShellItemArray from a bunch of file paths?", Raymond Chen:
+ * https://devblogs.microsoft.com/oldnewthing/20140314-00/?p=1503
+ */
+
+HRESULT listFiles(const wchar_t *root, IShellItemArray **ppsia)
+{
+  namespace fs = std::filesystem;
+
+  // (0) Sanity Check ////////////////////////////////////////////////////////
+
+  if( root == nullptr || ppsia == nullptr ) {
+    return E_POINTER;
+  }
+
+  *ppsia = nullptr;
+
+  // (1) Create ID List //////////////////////////////////////////////////////
+
+  std::vector<LPCITEMIDLIST> idList;
+  try {
+    for( const fs::directory_entry& entry : makeDirIter(root) ) {
+      LPITEMIDLIST pItem = nullptr;
+
+      const HRESULT hr = SHParseDisplayName(entry.path().wstring().data(), nullptr,
+                                            &pItem, 0, nullptr);
+      if( FAILED(hr) ) {
+        return hr;
+      }
+
+      if( pItem != nullptr ) {
+        idList.push_back(pItem);
+      }
+    } // For Each Directory Entry
+  } catch( ... ) {
+    return E_FAIL;
+  }
+
+  // (2) Create ShellItemArray ///////////////////////////////////////////////
+
+  const HRESULT hr = SHCreateShellItemArrayFromIDLists(idList.size(), idList.data(), ppsia);
+
+  // (3) Free Resources //////////////////////////////////////////////////////
+
+  for( LPCITEMIDLIST pItem : idList ) {
+    CoTaskMemFree(const_cast<LPITEMIDLIST>(pItem));
+  }
+
+  return hr;
+}
+
+////// IExplorerCommand //////////////////////////////////////////////////////
 
 void printCount(const CoUnknown& unk, const char *text = nullptr)
 {
@@ -66,6 +141,8 @@ void printSubCommands(const CoExplorerCommand& root)
   printCount(enumexpcmd, "IEnumExplorerCommand");
 }
 
+////// Main //////////////////////////////////////////////////////////////////
+
 int main(int argc, char **argv)
 {
   constexpr int NUM_CREATE = 2;
@@ -95,7 +172,7 @@ int main(int argc, char **argv)
     printCount(expcmd, "IExplorerCommand");
 
     cs::println("");
-  }
+  } // For Each CoCreateInstance
 
   CoUninitialize();
 
