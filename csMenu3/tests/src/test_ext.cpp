@@ -142,7 +142,7 @@ void invokeCommand(const CoExplorerCommand& cmd, const wchar_t *path, const bool
 
   CoShellItemArray sia;
   if( const HRESULT hr = listFiles(path, sia.put()); FAILED(hr) ) {
-    cs::println(&std::cerr, "listFiles(): %", cs::hexf(hr));
+    cs::println(&std::cerr, "listFiles(): 0x%", cs::hexf(hr));
     return;
   }
 
@@ -153,7 +153,7 @@ void invokeCommand(const CoExplorerCommand& cmd, const wchar_t *path, const bool
 
   const HRESULT hr = cmd->Invoke(sia.get(), nullptr);
   if( FAILED(hr) ) {
-    cs::println(&std::cerr, "Invoke(): %", cs::hexf(hr));
+    cs::println(&std::cerr, "Invoke(): 0x%", cs::hexf(hr));
   }
 }
 
@@ -196,6 +196,8 @@ void printSubCommands(const CoExplorerCommand& root)
 
     printCount(expcmd, "> IExplorerCommand");
     expcmd.attach(nullptr);
+
+    cs::println("");
   }
 
   printCount(enumexpcmd, "IEnumExplorerCommand");
