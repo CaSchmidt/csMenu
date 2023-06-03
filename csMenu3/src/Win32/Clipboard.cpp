@@ -74,11 +74,15 @@ bool setClipboardText(const wchar_t *text)
   }
 
   wchar_t *globalText = reinterpret_cast<wchar_t *>(GlobalLock(globalMem));
-  CopyMemory(globalText, text, length * sizeof(std::size_t));
+  CopyMemory(globalText, text, length * sizeof(wchar_t));
   globalText[length] = L'\0';
   GlobalUnlock(globalMem);
 
   const bool ok = SetClipboardData(CF_UNICODETEXT, globalMem) != nullptr;
+  if( !ok ) {
+    GlobalFree(globalMem);
+  }
+
   CloseClipboard();
 
   return ok;
