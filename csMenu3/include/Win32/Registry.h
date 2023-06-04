@@ -31,6 +31,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "Win32/Compat.h"
 
 namespace reg {

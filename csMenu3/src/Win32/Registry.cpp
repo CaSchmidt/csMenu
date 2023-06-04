@@ -29,7 +29,14 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#ifndef NOMINMAX
+# define NOMINMAX
+#endif
 #include <Windows.h>
+
+#include <cs/Core/Buffer.h>
+#include <cs/Core/Container.h>
+#include <cs/Core/Range.h>
 
 #include "Win32/Registry.h"
 
@@ -39,6 +46,8 @@ namespace reg {
 
     constexpr bool IS_READ = false;
     constexpr bool IS_WRITE = true;
+
+    // Access ////////////////////////////////////////////////////////////////
 
     HKEY createKey(const HKEY rootKey, const wchar_t *subKey, const bool is_write)
     {
@@ -56,6 +65,8 @@ namespace reg {
              ? key
              : nullptr;
     }
+
+    // Read //////////////////////////////////////////////////////////////////
 
     DWORD readDWord(const HKEY rootKey, const wchar_t *subKey, const wchar_t *name,
                     const DWORD defValue, bool *ok)
@@ -86,7 +97,57 @@ namespace reg {
       return value;
     }
 
-    bool writeDWord(const HKEY rootKey, const wchar_t *subKey, const wchar_t *name, const DWORD value)
+    std::wstring readString(const HKEY rootKey, const wchar_t *subKey, const wchar_t *name,
+                            const std::wstring defValue, bool *ok)
+    {
+      if( ok != nullptr ) {
+        *ok = false;
+      }
+
+      const HKEY key = createKey(rootKey, subKey, IS_READ);
+      if( key == nullptr ) {
+        return defValue;
+      }
+
+      DWORD size{0};
+      if( RegGetValueW(key, nullptr, name, RRF_RT_REG_SZ, nullptr, nullptr, &size)
+          != ERROR_SUCCESS ) {
+        RegCloseKey(key);
+        return defValue;
+      }
+
+      cs::Buffer buf;
+      if( !cs::resize(&buf, size) ) {
+        RegCloseKey(key);
+        return defValue;
+      }
+
+      if( RegGetValueW(key, nullptr, name, RRF_RT_REG_SZ, nullptr, buf.data(), &size)
+          != ERROR_SUCCESS ) {
+        RegCloseKey(key);
+        return defValue;
+      }
+
+      RegCloseKey(key);
+
+      std::wstring value;
+      try {
+        value.assign(reinterpret_cast<const wchar_t *>(buf.data()));
+      } catch( ... ) {
+        return defValue;
+      }
+
+      if( ok != nullptr ) {
+        *ok = true;
+      }
+
+      return value;
+    }
+
+    // Write /////////////////////////////////////////////////////////////////
+
+    bool writeDWord(const HKEY rootKey, const wchar_t *subKey, const wchar_t *name,
+                    const DWORD value)
     {
       const HKEY key = createKey(rootKey, subKey, IS_WRITE);
       if( key == nullptr ) {
@@ -95,6 +156,33 @@ namespace reg {
 
       if( RegSetValueExW(key, name, 0, REG_DWORD,
                          reinterpret_cast<const BYTE *>(&value), sizeof(value))
+          != ERROR_SUCCESS ) {
+        RegCloseKey(key);
+        return false;
+      }
+
+      RegCloseKey(key);
+
+      return true;
+    }
+
+    bool writeString(const HKEY rootKey, const wchar_t *subKey, const wchar_t *name,
+                     const wchar_t *value)
+    {
+      constexpr std::size_t ONE = 1;
+
+      const std::size_t length = cs::strlen(value);
+      if( length < ONE ) {
+        return false;
+      }
+
+      const HKEY key = createKey(rootKey, subKey, IS_WRITE);
+      if( key == nullptr ) {
+        return false;
+      }
+
+      if( RegSetValueExW(key, name, 0, REG_SZ,
+                         reinterpret_cast<const BYTE *>(value), (length + ONE) * sizeof(wchar_t))
           != ERROR_SUCCESS ) {
         RegCloseKey(key);
         return false;
