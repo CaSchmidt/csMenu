@@ -30,6 +30,7 @@
 *****************************************************************************/
 
 #define NOMINMAX
+#include <olectl.h>
 #include <Windows.h>
 
 #include <winrt/windows.foundation.h>
@@ -38,7 +39,11 @@
 #include "CommandFlag.h"
 #include "CommandInvoke.h"
 #include "CommandSeparator.h"
+#include "guid.h"
 #include "MenuFlags.h"
+#include "Win32/GUID.h"
+#include "Win32/Module.h"
+#include "Win32/Registry.h"
 
 ////// Global ////////////////////////////////////////////////////////////////
 
@@ -160,8 +165,52 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
   return TRUE;
 }
 
+#define KEY_CLSID L"Software\\Classes\\CLSID\\"
+#define RELKEY_INPROCSERVER32 L"\\InprocServer32"
+
+#define KEY_FILEVERB L"Software\\Classes\\*\\Shell\\csMenuVerb"
+#define KEY_DIRECTORYVERB L"Software\\Classes\\Directory\\Shell\\csMenuVerb"
+
+#define VALUE_CSMENU L"CS::Menu3"
+
 HRESULT WINAPI DllRegisterServer()
 {
+  const std::wstring guid = GUIDasString(&g_guid);
+  const std::wstring filename = getModuleFileName(g_hInstance);
+  if( filename.empty() ) {
+    return SELFREG_E_CLASS;
+  }
+
+  std::wstring key{KEY_CLSID};
+  key += guid;
+  if( !reg::writeLocalMachineString(key.data(), nullptr, VALUE_CSMENU) ) {
+    return SELFREG_E_CLASS;
+  }
+
+  key += RELKEY_INPROCSERVER32;
+  if( !reg::writeLocalMachineString(key.data(), nullptr, filename.data()) ) {
+    return SELFREG_E_CLASS;
+  }
+  if( !reg::writeLocalMachineString(key.data(), L"ThreadingModel", L"Apartment") ) {
+    return SELFREG_E_CLASS;
+  }
+
+  key = KEY_FILEVERB;
+  if( !reg::writeLocalMachineString(key.data(), nullptr, VALUE_CSMENU) ) {
+    return SELFREG_E_CLASS;
+  }
+  if( !reg::writeLocalMachineString(key.data(), L"ExplorerCommandHandler", guid.data()) ) {
+    return SELFREG_E_CLASS;
+  }
+
+  key = KEY_DIRECTORYVERB;
+  if( !reg::writeLocalMachineString(key.data(), nullptr, VALUE_CSMENU) ) {
+    return SELFREG_E_CLASS;
+  }
+  if( !reg::writeLocalMachineString(key.data(), L"ExplorerCommandHandler", guid.data()) ) {
+    return SELFREG_E_CLASS;
+  }
+
   return S_OK;
 }
 
