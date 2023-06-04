@@ -47,11 +47,12 @@ namespace reg {
                             : KEY_READ;
 
       HKEY key = nullptr;
-      const HRESULT hr = HRESULT_FROM_WIN32(RegCreateKeyExW(rootKey, subKey,
-                                                            0, nullptr, REG_OPTION_NON_VOLATILE,
-                                                            rights, nullptr, &key, nullptr));
+      const bool ok = RegCreateKeyExW(rootKey, subKey,
+                                      0, nullptr, REG_OPTION_NON_VOLATILE,
+                                      rights, nullptr, &key, nullptr)
+                   == ERROR_SUCCESS;
 
-      return SUCCEEDED(hr)
+      return ok
              ? key
              : nullptr;
     }
@@ -70,12 +71,11 @@ namespace reg {
 
       DWORD value = 0;
       DWORD size = sizeof(value);
-      const HRESULT hr = HRESULT_FROM_WIN32(RegGetValueW(key, nullptr, name,
-                                                         RRF_RT_DWORD, nullptr,
-                                                         &value, &size));
+      const bool ok = RegGetValueW(key, nullptr, name, RRF_RT_DWORD, nullptr, &value, &size)
+                   == ERROR_SUCCESS;
       RegCloseKey(key);
 
-      if( FAILED(hr) ) {
+      if( !ok ) {
         return defValue;
       }
 
@@ -93,12 +93,12 @@ namespace reg {
         return false;
       }
 
-      const HRESULT hr = HRESULT_FROM_WIN32(RegSetValueExW(key, name, 0, REG_DWORD,
-                                                           reinterpret_cast<const BYTE *>(&value),
-                                                           sizeof(value)));
+      const bool ok = RegSetValueExW(key, name, 0, REG_DWORD,
+                                     reinterpret_cast<const BYTE *>(&value), sizeof(value))
+                   == ERROR_SUCCESS;
       RegCloseKey(key);
 
-      if( FAILED(hr) ) {
+      if( !ok ) {
         return false;
       }
 
