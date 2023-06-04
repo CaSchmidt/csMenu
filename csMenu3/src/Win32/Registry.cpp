@@ -30,7 +30,7 @@
 *****************************************************************************/
 
 #ifndef NOMINMAX
-# define NOMINMAX
+#define NOMINMAX
 #endif
 #include <Windows.h>
 
@@ -195,16 +195,46 @@ namespace reg {
 
   } // namespace impl_reg
 
+  ////// Public //////////////////////////////////////////////////////////////
+
+  // HKEY_CURRENT_USER ///////////////////////////////////////////////////////
+
+  DWORD_t readCurrentUserDWord(const wchar_t *key, const wchar_t *name,
+                               const DWORD_t defValue, bool *ok)
+  {
+    return impl_reg::readDWord(HKEY_CURRENT_USER, key, name, defValue, ok);
+  }
+
+  std::wstring readCurrentUserString(const wchar_t *key, const wchar_t *name,
+                                     const std::wstring& defValue, bool *ok)
+  {
+    return impl_reg::readString(HKEY_CURRENT_USER, key, name, defValue, ok);
+  }
+
+  bool writeCurrentUserDWord(const wchar_t *key, const wchar_t *name,
+                             const DWORD_t value)
+  {
+    return impl_reg::writeDWord(HKEY_CURRENT_USER, key, name, value);
+  }
+
+  bool writeCurrentUserString(const wchar_t *key, const wchar_t *name,
+                              const wchar_t *value)
+  {
+    return impl_reg::writeString(HKEY_CURRENT_USER, key, name, value);
+  }
+
+  // HKEY_LOCAL_MACHINE //////////////////////////////////////////////////////
+
   DWORD_t readLocalMachineDWord(const wchar_t *key, const wchar_t *name,
                                 const DWORD_t defValue, bool *ok)
   {
     return impl_reg::readDWord(HKEY_LOCAL_MACHINE, key, name, defValue, ok);
   }
 
-  DWORD_t readCurrentUserDWord(const wchar_t *key, const wchar_t *name,
-                               const DWORD_t defValue, bool *ok)
+  std::wstring readLocalMachineString(const wchar_t *key, const wchar_t *name,
+                                      const std::wstring& defValue, bool *ok)
   {
-    return impl_reg::readDWord(HKEY_CURRENT_USER, key, name, defValue, ok);
+    return impl_reg::readString(HKEY_LOCAL_MACHINE, key, name, defValue, ok);
   }
 
   bool writeLocalMachineDWord(const wchar_t *key, const wchar_t *name,
@@ -213,10 +243,10 @@ namespace reg {
     return impl_reg::writeDWord(HKEY_LOCAL_MACHINE, key, name, value);
   }
 
-  bool writeCurrentUserDWord(const wchar_t *key, const wchar_t *name,
-                             const DWORD_t value)
+  bool writeLocalMachineString(const wchar_t *key, const wchar_t *name,
+                               const wchar_t *value)
   {
-    return impl_reg::writeDWord(HKEY_CURRENT_USER, key, name, value);
+    return impl_reg::writeString(HKEY_LOCAL_MACHINE, key, name, value);
   }
 
 } // namespace reg

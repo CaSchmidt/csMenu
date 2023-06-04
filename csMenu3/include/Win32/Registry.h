@@ -37,16 +37,32 @@
 
 namespace reg {
 
-  DWORD_t readLocalMachineDWord(const wchar_t *key, const wchar_t *name,
-                                const DWORD_t defValue = 0, bool *ok = nullptr);
+  // HKEY_CURRENT_USER ///////////////////////////////////////////////////////
 
   DWORD_t readCurrentUserDWord(const wchar_t *key, const wchar_t *name,
                                const DWORD_t defValue = 0, bool *ok = nullptr);
 
-  bool writeLocalMachineDWord(const wchar_t *key, const wchar_t *name,
-                              const DWORD_t value);
+  std::wstring readCurrentUserString(const wchar_t *key, const wchar_t *name,
+                                     const std::wstring& defValue = std::wstring{}, bool *ok = nullptr);
 
   bool writeCurrentUserDWord(const wchar_t *key, const wchar_t *name,
                              const DWORD_t value);
+
+  bool writeCurrentUserString(const wchar_t *key, const wchar_t *name,
+                              const wchar_t *value);
+
+  // HKEY_LOCAL_MACHINE //////////////////////////////////////////////////////
+
+  DWORD_t readLocalMachineDWord(const wchar_t *key, const wchar_t *name,
+                                const DWORD_t defValue = 0, bool *ok = nullptr);
+
+  std::wstring readLocalMachineString(const wchar_t *key, const wchar_t *name,
+                                      const std::wstring& defValue = std::wstring{}, bool *ok = nullptr);
+
+  bool writeLocalMachineDWord(const wchar_t *key, const wchar_t *name,
+                              const DWORD_t value);
+
+  bool writeLocalMachineString(const wchar_t *key, const wchar_t *name,
+                               const wchar_t *value);
 
 } // namespace reg
