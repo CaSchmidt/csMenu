@@ -71,13 +71,13 @@ namespace reg {
 
       DWORD value = 0;
       DWORD size = sizeof(value);
-      const bool ok = RegGetValueW(key, nullptr, name, RRF_RT_DWORD, nullptr, &value, &size)
-                   == ERROR_SUCCESS;
-      RegCloseKey(key);
-
-      if( !ok ) {
+      if( RegGetValueW(key, nullptr, name, RRF_RT_DWORD, nullptr, &value, &size)
+          != ERROR_SUCCESS ) {
+        RegCloseKey(key);
         return defValue;
       }
+
+      RegCloseKey(key);
 
       if( ok != nullptr ) {
         *ok = true;
@@ -93,14 +93,14 @@ namespace reg {
         return false;
       }
 
-      const bool ok = RegSetValueExW(key, name, 0, REG_DWORD,
-                                     reinterpret_cast<const BYTE *>(&value), sizeof(value))
-                   == ERROR_SUCCESS;
-      RegCloseKey(key);
-
-      if( !ok ) {
+      if( RegSetValueExW(key, name, 0, REG_DWORD,
+                         reinterpret_cast<const BYTE *>(&value), sizeof(value))
+          != ERROR_SUCCESS ) {
+        RegCloseKey(key);
         return false;
       }
+
+      RegCloseKey(key);
 
       return true;
     }
