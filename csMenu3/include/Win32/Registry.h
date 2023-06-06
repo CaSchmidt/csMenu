@@ -39,6 +39,8 @@ namespace reg {
 
   // HKEY_CURRENT_USER ///////////////////////////////////////////////////////
 
+  bool deleteCurrentUserTree(const wchar_t *key);
+
   DWORD_t readCurrentUserDWord(const wchar_t *key, const wchar_t *name,
                                const DWORD_t defValue = 0, bool *ok = nullptr);
 
@@ -52,6 +54,8 @@ namespace reg {
                               const wchar_t *value);
 
   // HKEY_LOCAL_MACHINE //////////////////////////////////////////////////////
+
+  bool deleteLocalMachineTree(const wchar_t *key);
 
   DWORD_t readLocalMachineDWord(const wchar_t *key, const wchar_t *name,
                                 const DWORD_t defValue = 0, bool *ok = nullptr);

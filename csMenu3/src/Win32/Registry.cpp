@@ -64,6 +64,13 @@ namespace reg {
              : nullptr;
     }
 
+    // Deletion //////////////////////////////////////////////////////////////
+
+    bool deleteTree(const HKEY rootKey, const wchar_t *subKey)
+    {
+      return RegDeleteTreeW(rootKey, subKey) == ERROR_SUCCESS;
+    }
+
     // Read //////////////////////////////////////////////////////////////////
 
     DWORD readDWord(const HKEY rootKey, const wchar_t *subKey, const wchar_t *name,
@@ -197,6 +204,11 @@ namespace reg {
 
   // HKEY_CURRENT_USER ///////////////////////////////////////////////////////
 
+  bool deleteCurrentUserTree(const wchar_t *key)
+  {
+    return impl_reg::deleteTree(HKEY_CURRENT_USER, key);
+  }
+
   DWORD_t readCurrentUserDWord(const wchar_t *key, const wchar_t *name,
                                const DWORD_t defValue, bool *ok)
   {
@@ -222,6 +234,11 @@ namespace reg {
   }
 
   // HKEY_LOCAL_MACHINE //////////////////////////////////////////////////////
+
+  bool deleteLocalMachineTree(const wchar_t *key)
+  {
+    return impl_reg::deleteTree(HKEY_LOCAL_MACHINE, key);
+  }
 
   DWORD_t readLocalMachineDWord(const wchar_t *key, const wchar_t *name,
                                 const DWORD_t defValue, bool *ok)
