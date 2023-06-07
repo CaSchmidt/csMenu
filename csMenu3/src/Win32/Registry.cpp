@@ -80,20 +80,12 @@ namespace reg {
         *ok = false;
       }
 
-      const HKEY key = createKey(rootKey, subKey, IS_READ);
-      if( key == nullptr ) {
-        return defValue;
-      }
-
       DWORD value = 0;
       DWORD size = sizeof(value);
-      if( RegGetValueW(key, nullptr, name, RRF_RT_DWORD, nullptr, &value, &size)
+      if( RegGetValueW(rootKey, subKey, name, RRF_RT_DWORD, nullptr, &value, &size)
           != ERROR_SUCCESS ) {
-        RegCloseKey(key);
         return defValue;
       }
-
-      RegCloseKey(key);
 
       if( ok != nullptr ) {
         *ok = true;
@@ -109,31 +101,21 @@ namespace reg {
         *ok = false;
       }
 
-      const HKEY key = createKey(rootKey, subKey, IS_READ);
-      if( key == nullptr ) {
-        return defValue;
-      }
-
       DWORD size{0};
-      if( RegGetValueW(key, nullptr, name, RRF_RT_REG_SZ, nullptr, nullptr, &size)
+      if( RegGetValueW(rootKey, subKey, name, RRF_RT_REG_SZ, nullptr, nullptr, &size)
           != ERROR_SUCCESS ) {
-        RegCloseKey(key);
         return defValue;
       }
 
       cs::Buffer buf;
       if( !cs::resize(&buf, size) ) {
-        RegCloseKey(key);
         return defValue;
       }
 
-      if( RegGetValueW(key, nullptr, name, RRF_RT_REG_SZ, nullptr, buf.data(), &size)
+      if( RegGetValueW(rootKey, subKey, name, RRF_RT_REG_SZ, nullptr, buf.data(), &size)
           != ERROR_SUCCESS ) {
-        RegCloseKey(key);
         return defValue;
       }
-
-      RegCloseKey(key);
 
       std::wstring value;
       try {
