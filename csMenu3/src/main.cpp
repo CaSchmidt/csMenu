@@ -175,9 +175,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 
 HRESULT WINAPI DllRegisterServer()
 {
-  const std::wstring guid = GUIDasString(&g_guid);
   const std::wstring filename = getModuleFileName(g_hInstance);
-  if( filename.empty() ) {
+  const std::wstring guid = GUIDasString(&g_guid);
+  if( filename.empty() || guid.empty() ) {
     return SELFREG_E_CLASS;
   }
 
@@ -216,5 +216,26 @@ HRESULT WINAPI DllRegisterServer()
 
 HRESULT WINAPI DllUnregisterServer()
 {
+  std::wstring guid = GUIDasString(&g_guid);
+  if( guid.empty() ) {
+    return SELFREG_E_CLASS;
+  }
+
+  std::wstring key{KEY_CLSID};
+  key += guid;
+  if( !reg::deleteLocalMachineTree(key.data()) ) {
+    return SELFREG_E_CLASS;
+  }
+
+  key = KEY_FILEVERB;
+  if( !reg::deleteLocalMachineTree(key.data()) ) {
+    return SELFREG_E_CLASS;
+  }
+
+  key = KEY_DIRECTORYVERB;
+  if( !reg::deleteLocalMachineTree(key.data()) ) {
+    return SELFREG_E_CLASS;
+  }
+
   return S_OK;
 }
