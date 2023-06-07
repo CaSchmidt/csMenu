@@ -44,6 +44,7 @@
 #include "Win32/GUID.h"
 #include "Win32/Module.h"
 #include "Win32/Registry.h"
+#include "Win32/Shell.h"
 
 ////// Global ////////////////////////////////////////////////////////////////
 
@@ -211,6 +212,8 @@ HRESULT WINAPI DllRegisterServer()
     return SELFREG_E_CLASS;
   }
 
+  shell::notifyAssocChanged();
+
   return S_OK;
 }
 
@@ -236,6 +239,8 @@ HRESULT WINAPI DllUnregisterServer()
   if( !reg::deleteLocalMachineTree(key.data()) ) {
     return SELFREG_E_CLASS;
   }
+
+  shell::notifyAssocChanged();
 
   return S_OK;
 }
