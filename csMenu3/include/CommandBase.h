@@ -31,6 +31,7 @@
 
 #pragma once
 
+#define NOMINMAX
 #include <ShObjIdl.h>
 #include <Windows.h>
 
