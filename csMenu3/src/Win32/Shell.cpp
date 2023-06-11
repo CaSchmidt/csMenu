@@ -29,11 +29,37 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#include <cstring>
+
 #include <ShlObj.h>
+#include <Windows.h>
 
 #include "Win32/Shell.h"
 
 namespace shell {
+
+  void execute(const wchar_t *executable, const wchar_t *arguments, const wchar_t *directory)
+  {
+    SHELLEXECUTEINFOW sei;
+    std::memset(&sei, 0, sizeof(sei));
+
+    sei.cbSize = sizeof(sei);
+    sei.fMask = SEE_MASK_NOASYNC | SEE_MASK_NOCLOSEPROCESS;
+    sei.lpVerb = L"open";
+    sei.lpFile = executable;
+    sei.lpParameters = arguments;
+    sei.lpDirectory = directory;
+    sei.nShow = SW_SHOWNORMAL;
+
+    if( ShellExecuteExW(&sei) != TRUE ) {
+      return;
+    }
+
+    if( sei.hProcess != nullptr ) {
+      WaitForSingleObject(sei.hProcess, INFINITE);
+      CloseHandle(sei.hProcess);
+    }
+  }
 
   void notifyAssocChanged()
   {

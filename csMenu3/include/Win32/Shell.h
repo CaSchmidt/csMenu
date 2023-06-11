@@ -33,6 +33,10 @@
 
 namespace shell {
 
+  void execute(const wchar_t *executable,
+               const wchar_t *arguments,
+               const wchar_t *directory = nullptr);
+
   void notifyAssocChanged();
 
 } // namespace shell
