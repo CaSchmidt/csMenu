@@ -31,7 +31,7 @@
 
 #include <filesystem>
 
-#include <cs/Text/StringAlgorithm.h>
+#include <cs/Text/StringUtil.h>
 
 #include "Invoke.h"
 
@@ -42,14 +42,10 @@
 
 namespace impl_invoke {
 
+  namespace fs = std::filesystem;
+
   constexpr wchar_t SEP_NATIVE = L'\\';
   constexpr wchar_t SEP_UNIX = L'/';
-
-  inline bool is_directory(const std::wstring& filename)
-  {
-    std::error_code ec;
-    return std::filesystem::is_directory(filename, ec);
-  }
 
   void appendFilename(std::wstring *text, const std::wstring& filename, const CommandId id)
   {
@@ -71,7 +67,7 @@ namespace impl_invoke {
       text->append(filename);
     }
 
-    if( is_directory(filename) ) {
+    if( cs::isDirectory(filename) ) {
       text->append(ONE, SEP_NATIVE);
     }
 
@@ -95,7 +91,7 @@ namespace impl_invoke {
     writeFlags(flags);
   }
 
-  void invokeList(const CommandId id, const FileList& files)
+  void invokeList(const CommandId id, const cs::PathList& files)
   {
     if( files.empty() ) {
       return;
@@ -105,15 +101,15 @@ namespace impl_invoke {
 
     std::wstring text;
     try {
-      for( const std::wstring& filename : files ) {
-        appendFilename(&text, filename, id);
+      for( const fs::path& file : files ) {
+        appendFilename(&text, file.wstring(), id);
       }
     } catch( ... ) {
       return;
     }
 
     if( flags.testAny(MenuFlag::UnixPathSeparators) ) {
-      cs::replaceAll(text.data(), text.size(), SEP_NATIVE, SEP_UNIX);
+      cs::replaceAll(&text, SEP_NATIVE, SEP_UNIX);
     }
 
     setClipboardText(text.data());
@@ -123,7 +119,7 @@ namespace impl_invoke {
 
 ////// Public ////////////////////////////////////////////////////////////////
 
-void invokeCommandId(const CommandId id, const FileList& files)
+void invokeCommandId(const CommandId id, const cs::PathList& files)
 {
   if( id == Command::List || id == Command::ListPath || id == Command::ListPathTabular ) {
     impl_invoke::invokeList(id, files);

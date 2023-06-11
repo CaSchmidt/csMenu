@@ -31,11 +31,8 @@
 
 #pragma once
 
-#include <list>
-#include <string>
+#include <cs/System/FileSystem.h>
 
 #include "Commands.h"
 
-using FileList = std::list<std::wstring>;
-
-void invokeCommandId(const CommandId id, const FileList& files = FileList{});
+void invokeCommandId(const CommandId id, const cs::PathList& files = cs::PathList{});

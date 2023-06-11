@@ -37,18 +37,18 @@
 
 namespace impl_cmdinvoke {
 
-  FileList makeFileList(IShellItemArray *items)
+  cs::PathList makeFileList(IShellItemArray *items)
   {
     if( items == nullptr ) {
-      return FileList{};
+      return cs::PathList{};
     }
 
     DWORD count = 0;
     if( FAILED(items->GetCount(&count)) ) {
-      return FileList{};
+      return cs::PathList{};
     }
 
-    FileList list;
+    cs::PathList list;
 
     wchar_t *displayName = nullptr;
     try {
@@ -63,14 +63,16 @@ namespace impl_cmdinvoke {
           continue;
         }
 
-        list.push_back(std::wstring{displayName});
+        list.push_back(displayName);
         ::CoTaskMemFree(displayName);
         displayName = nullptr;
-      }
+      } // For Each Item
+
+      list.sort();
     } catch( ... ) {
       ::CoTaskMemFree(displayName);
       displayName = nullptr;
-      return FileList{};
+      return cs::PathList{};
     }
 
     return list;
@@ -93,7 +95,7 @@ IFACEMETHODIMP_(HRESULT) CommandInvoke::Invoke(IShellItemArray *psiItemArray, IB
 {
   UNREFERENCED_PARAMETER(pbc);
 
-  const FileList files = impl_cmdinvoke::makeFileList(psiItemArray);
+  const cs::PathList files = impl_cmdinvoke::makeFileList(psiItemArray);
 
   invokeCommandId(_id, files);
 
