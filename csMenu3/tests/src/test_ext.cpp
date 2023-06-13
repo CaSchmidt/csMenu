@@ -207,7 +207,7 @@ void printSubCommands(const CoExplorerCommand& root)
 
 int main(int argc, char **argv)
 {
-  constexpr int NUM_CREATE = 2;
+  constexpr int NUM_CREATE = 1;
 
   CLSID clsid;
   if( FAILED(CLSIDFromString(L"{3d92630b-2959-4551-8a55-ffb508ef3791}", &clsid)) ) {
