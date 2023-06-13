@@ -37,6 +37,7 @@
 
 #include "MenuFlags.h"
 #include "Win32/Clipboard.h"
+#include "Win32/Network.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 
@@ -51,6 +52,10 @@ namespace impl_invoke {
   {
     constexpr std::size_t NPOS = std::wstring::npos;
     constexpr std::size_t ONE = 1;
+
+    if( text == nullptr || filename.empty() ) {
+      return;
+    }
 
     const std::size_t pos = filename.rfind(SEP_NATIVE);
     if( pos != NPOS ) {
@@ -98,11 +103,17 @@ namespace impl_invoke {
     }
 
     const MenuFlags flags = readFlags();
+    const bool is_unc = flags.testAny(MenuFlag::ResolveUncPaths) && id != Command::List;
 
     std::wstring text;
     try {
       for( const fs::path& file : files ) {
-        appendFilename(&text, file.wstring(), id);
+        std::wstring uncName;
+        if( is_unc && !(uncName = resolveUniversalName(file.wstring().data())).empty() ) {
+          appendFilename(&text, uncName, id);
+        } else {
+          appendFilename(&text, file.wstring(), id);
+        }
       }
     } catch( ... ) {
       return;
