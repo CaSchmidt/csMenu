@@ -82,7 +82,7 @@ struct ClassFactory
     }
 
     try {
-      auto root = winrt::make<CommandEnum>(Command::Root);
+      auto root = winrt::make<CommandEnum>(Command::RootMenu);
       buildMenu(dynamic_cast<CommandEnum *>(root.get()));
 
       return root->QueryInterface(riid, ppvObject);
