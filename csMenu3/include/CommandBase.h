@@ -43,7 +43,7 @@ class CommandBase
   : public winrt::implements<CommandBase,
                              IExplorerCommand, IEnumExplorerCommand> {
 public:
-  CommandBase(const Command cmd, const std::wstring& icon = std::wstring{}) noexcept;
+  CommandBase(const Command cmd, const std::wstring& title = std::wstring{}) noexcept;
   ~CommandBase() noexcept;
 
   // IExplorerCommand

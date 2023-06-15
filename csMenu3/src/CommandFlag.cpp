@@ -35,8 +35,8 @@
 
 ////// public ////////////////////////////////////////////////////////////////
 
-CommandFlag::CommandFlag(const bool on, const Command cmd, const std::wstring& icon) noexcept
-  : CommandBase{cmd, icon}
+CommandFlag::CommandFlag(const bool on, const Command cmd) noexcept
+  : CommandBase{cmd}
   , _on{on}
 {
 }

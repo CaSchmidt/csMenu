@@ -39,7 +39,7 @@
 
 class CommandFlag : public CommandBase {
 public:
-  CommandFlag(const bool on, const Command cmd, const std::wstring& icon = std::wstring{}) noexcept;
+  CommandFlag(const bool on, const Command cmd) noexcept;
   ~CommandFlag() noexcept;
 
   IFACEMETHODIMP_(HRESULT) GetState(IShellItemArray *psiItemArray, BOOL fOkToBeSlow, EXPCMDSTATE *pCmdState);

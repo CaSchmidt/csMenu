@@ -35,7 +35,7 @@
 
 class CommandInvoke : public CommandBase {
 public:
-  CommandInvoke(const Command cmd, const std::wstring& icon = std::wstring{}) noexcept;
+  CommandInvoke(const Command cmd, const std::wstring& title = std::wstring{}) noexcept;
   ~CommandInvoke() noexcept;
 
   IFACEMETHODIMP_(HRESULT) Invoke(IShellItemArray *psiItemArray, IBindCtx *pbc);

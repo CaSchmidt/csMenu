@@ -82,8 +82,8 @@ namespace impl_cmdinvoke {
 
 ////// public ////////////////////////////////////////////////////////////////
 
-CommandInvoke::CommandInvoke(const Command cmd, const std::wstring& icon) noexcept
-  : CommandBase{cmd, icon}
+CommandInvoke::CommandInvoke(const Command cmd, const std::wstring& title) noexcept
+  : CommandBase{cmd, title}
 {
 }
 

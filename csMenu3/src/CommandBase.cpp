@@ -35,11 +35,15 @@
 
 ////// public ////////////////////////////////////////////////////////////////
 
-CommandBase::CommandBase(const Command cmd, const std::wstring& icon) noexcept
+CommandBase::CommandBase(const Command cmd, const std::wstring& title) noexcept
   : _id{static_cast<CommandId>(cmd)}
-  , _icon{icon}
+  , _icon{}
 {
-  _title = titleFromId(_id);
+  if( title.empty() ) {
+    _title = titleFromId(_id);
+  } else {
+    _title = title;
+  }
 }
 
 CommandBase::~CommandBase() noexcept
