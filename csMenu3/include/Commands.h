@@ -43,6 +43,7 @@ enum class Command : CommandId {
   List,
   ListPath,
   ListPathTabular,
+  SettingsMenu,
   CheckBatchProcessing,
   CheckParallelExecution,
   CheckResolveUncPaths,

@@ -81,6 +81,19 @@ void buildRunMenu(CommandEnum *menu)
   }
 }
 
+void buildSettingsMenu(CommandEnum *menu)
+{
+  if( menu == nullptr ) {
+    return;
+  }
+
+  const MenuFlags flags = readFlags();
+  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::BatchProcessing), Command::CheckBatchProcessing));
+  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::ParallelExecution), Command::CheckParallelExecution));
+  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::ResolveUncPaths), Command::CheckResolveUncPaths));
+  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::UnixPathSeparators), Command::CheckUnixPathSeparators));
+}
+
 void buildRootMenu(CommandEnum *menu)
 {
   if( menu == nullptr ) {
@@ -91,13 +104,15 @@ void buildRootMenu(CommandEnum *menu)
   menu->append(winrt::make<CommandInvoke>(Command::ListPath));
   menu->append(winrt::make<CommandInvoke>(Command::ListPathTabular));
 
+  // Settings ////////////////////////////////////////////////////////////////
+
   menu->append(winrt::make<CommandSeparator>());
 
-  const MenuFlags flags = readFlags();
-  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::BatchProcessing), Command::CheckBatchProcessing));
-  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::ParallelExecution), Command::CheckParallelExecution));
-  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::ResolveUncPaths), Command::CheckResolveUncPaths));
-  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::UnixPathSeparators), Command::CheckUnixPathSeparators));
+  auto settings = winrt::make<CommandEnum>(Command::SettingsMenu);
+  menu->append(settings);
+  buildSettingsMenu(dynamic_cast<CommandEnum *>(settings.get()));
+
+  // Scripts /////////////////////////////////////////////////////////////////
 
   menu->append(winrt::make<CommandSeparator>());
 
