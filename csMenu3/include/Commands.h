@@ -47,6 +47,7 @@ enum class Command : CommandId {
   CheckParallelExecution,
   CheckResolveUncPaths,
   CheckUnixPathSeparators,
+  RunMenu,
   Num_Commands
 };
 

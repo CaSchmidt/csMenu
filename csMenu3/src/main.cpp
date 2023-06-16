@@ -35,6 +35,8 @@
 
 #include <winrt/windows.foundation.h>
 
+#include <cs/System/FileSystem.h>
+
 #include "CommandEnum.h"
 #include "CommandFlag.h"
 #include "CommandInvoke.h"
@@ -50,9 +52,36 @@
 
 HINSTANCE g_hInstance = nullptr;
 
-////// Private ///////////////////////////////////////////////////////////////
+////// Context Menu //////////////////////////////////////////////////////////
 
-void buildMenu(CommandEnum *menu)
+#define KEY_SCRIPTS L"Software\\csLabs\\csMenu"
+
+#define VALUE_SCRIPTS L"Scripts"
+
+void buildRunMenu(CommandEnum *menu)
+{
+  if( menu == nullptr ) {
+    return;
+  }
+
+  const std::wstring scriptsPath = reg::readCurrentUserString(KEY_SCRIPTS, VALUE_SCRIPTS);
+  if( scriptsPath.empty() ) {
+    return;
+  }
+
+  const cs::PathListFlags flags = cs::PathListFlag::File | cs::PathListFlag::SelectFilename;
+  const cs::PathList scripts = cs::list(scriptsPath, flags);
+  if( scripts.empty() ) {
+    return;
+  }
+
+  CommandId id{static_cast<CommandId>(Command::RunMenu)};
+  for( const std::filesystem::path& script : scripts ) {
+    menu->append(winrt::make<CommandInvoke>(static_cast<Command>(++id), script.wstring()));
+  }
+}
+
+void buildRootMenu(CommandEnum *menu)
 {
   if( menu == nullptr ) {
     return;
@@ -69,6 +98,12 @@ void buildMenu(CommandEnum *menu)
   menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::ParallelExecution), Command::CheckParallelExecution));
   menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::ResolveUncPaths), Command::CheckResolveUncPaths));
   menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::UnixPathSeparators), Command::CheckUnixPathSeparators));
+
+  menu->append(winrt::make<CommandSeparator>());
+
+  auto run = winrt::make<CommandEnum>(Command::RunMenu);
+  menu->append(run);
+  buildRunMenu(dynamic_cast<CommandEnum *>(run.get()));
 }
 
 ////// Class Factory /////////////////////////////////////////////////////////
@@ -83,7 +118,7 @@ struct ClassFactory
 
     try {
       auto root = winrt::make<CommandEnum>(Command::RootMenu);
-      buildMenu(dynamic_cast<CommandEnum *>(root.get()));
+      buildRootMenu(dynamic_cast<CommandEnum *>(root.get()));
 
       return root->QueryInterface(riid, ppvObject);
     } catch( ... ) {
