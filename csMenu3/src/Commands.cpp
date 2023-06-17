@@ -55,8 +55,8 @@ std::wstring titleFromId(const CommandId id)
     return std::wstring{L"Resolve UNC paths"};
   } else if( id == Command::CheckUnixPathSeparators ) {
     return std::wstring{L"UN*X path separators"};
-  } else if( id == Command::RunMenu ) {
-    return std::wstring{L"Run"};
+  } else if( id == Command::ScriptsMenu ) {
+    return std::wstring{L"Scripts"};
   }
 
   return std::wstring{};

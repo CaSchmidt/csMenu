@@ -58,9 +58,12 @@ HINSTANCE g_hInstance = nullptr;
 
 #define VALUE_SCRIPTS L"Scripts"
 
-void buildRunMenu(CommandEnum *menu)
+void buildScriptsMenu(CommandEnum *rootMenu)
 {
-  if( menu == nullptr ) {
+  constexpr std::size_t MAX_ScriptMenus = 8;
+  constexpr std::size_t MAX_ScriptsPerMenu = 8;
+
+  if( rootMenu == nullptr ) {
     return;
   }
 
@@ -75,9 +78,37 @@ void buildRunMenu(CommandEnum *menu)
     return;
   }
 
-  CommandId id{static_cast<CommandId>(Command::RunMenu)};
-  for( const std::filesystem::path& script : scripts ) {
-    menu->append(winrt::make<CommandInvoke>(static_cast<Command>(++id), script.wstring()));
+  rootMenu->append(winrt::make<CommandSeparator>());
+
+  if( scripts.size() <= MAX_ScriptsPerMenu ) {
+    CommandId id = static_cast<CommandId>(Command::ScriptsMenu);
+    auto menu = winrt::make<CommandEnum>(static_cast<Command>(id));
+    rootMenu->append(menu);
+
+    CommandEnum *cmdEnum = dynamic_cast<CommandEnum *>(menu.get());
+    for( const std::filesystem::path& script : scripts ) {
+      cmdEnum->append(winrt::make<CommandInvoke>(static_cast<Command>(++id), script.wstring()));
+    }
+
+  } else {
+    CommandId id = static_cast<CommandId>(Command::ScriptsMenu);
+    cs::ConstPathListIter iter = scripts.begin();
+    std::wstring title{L"Scripts #0"};
+
+    for( std::size_t i = 0; i < MAX_ScriptMenus && iter != scripts.end(); i++ ) {
+      title.back() += wchar_t{1};
+      auto menu = winrt::make<CommandEnum>(static_cast<Command>(id), title);
+      rootMenu->append(menu);
+
+      CommandEnum *cmdEnum = dynamic_cast<CommandEnum *>(menu.get());
+      for( std::size_t j = 0; j < MAX_ScriptsPerMenu && iter != scripts.end(); j++ ) {
+        cmdEnum->append(winrt::make<CommandInvoke>(static_cast<Command>(++id), iter->wstring()));
+
+        ++iter;
+      } // For Each Script
+
+      id++;
+    } // For Each Menu
   }
 }
 
@@ -114,11 +145,7 @@ void buildRootMenu(CommandEnum *menu)
 
   // Scripts /////////////////////////////////////////////////////////////////
 
-  menu->append(winrt::make<CommandSeparator>());
-
-  auto run = winrt::make<CommandEnum>(Command::RunMenu);
-  menu->append(run);
-  buildRunMenu(dynamic_cast<CommandEnum *>(run.get()));
+  buildScriptsMenu(menu);
 }
 
 ////// Class Factory /////////////////////////////////////////////////////////
