@@ -42,7 +42,7 @@ using EnumListIter = EnumList::const_iterator;
 
 class CommandEnum : public CommandBase {
 public:
-  CommandEnum(const Command cmd) noexcept;
+  CommandEnum(const Command cmd, const std::wstring& title = std::wstring{}) noexcept;
   ~CommandEnum() noexcept;
 
   void append(winrt::com_ptr<IExplorerCommand> ptr);

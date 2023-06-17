@@ -35,8 +35,8 @@
 
 ////// public ////////////////////////////////////////////////////////////////
 
-CommandEnum::CommandEnum(const Command cmd) noexcept
-  : CommandBase{cmd}
+CommandEnum::CommandEnum(const Command cmd, const std::wstring& title) noexcept
+  : CommandBase{cmd, title}
 {
 }
 
