@@ -35,6 +35,10 @@
 
 std::wstring GUIDasString(const void *ptr)
 {
+  if( ptr == nullptr ) {
+    return std::wstring{};
+  }
+
   const GUID *guid = reinterpret_cast<const GUID *>(ptr);
 
   wchar_t *data = nullptr;
