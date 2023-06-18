@@ -27,7 +27,7 @@ list(APPEND csMenu3_HEADERS
   include/CommandInvoke.h
   include/Commands.h
   include/CommandSeparator.h
-  include/guid.h
+  include/GUIDs.h
   include/Invoke.h
   include/MenuFlags.h
   include/Win32/Clipboard.h
@@ -46,7 +46,7 @@ list(APPEND csMenu3_SOURCES
   src/CommandInvoke.cpp
   src/Commands.cpp
   src/CommandSeparator.cpp
-  src/guid.cpp
+  src/GUIDs.cpp
   src/Invoke.cpp
   src/main.cpp
   src/MenuFlags.cpp

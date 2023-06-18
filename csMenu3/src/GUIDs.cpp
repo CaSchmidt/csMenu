@@ -29,7 +29,7 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include "guid.h"
+#include "GUIDs.h"
 
 GUID g_guid = {/* 3d92630b-2959-4551-8a55-ffb508ef3791 */
                0x3d92630b,

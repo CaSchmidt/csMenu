@@ -41,7 +41,7 @@
 #include "CommandFlag.h"
 #include "CommandInvoke.h"
 #include "CommandSeparator.h"
-#include "guid.h"
+#include "GUIDs.h"
 #include "MenuFlags.h"
 #include "Win32/GUID.h"
 #include "Win32/Module.h"
