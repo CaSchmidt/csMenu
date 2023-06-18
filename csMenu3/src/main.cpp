@@ -152,7 +152,7 @@ void buildRootMenu(CommandEnum *menu)
 
 struct ClassFactory
   : public winrt::implements<ClassFactory, IClassFactory> {
-  IFACEMETHODIMP_(HRESULT) CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject)
+  IFACEMETHODIMP CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject)
   {
     if( pUnkOuter != nullptr ) {
       return CLASS_E_NOAGGREGATION;
@@ -170,7 +170,7 @@ struct ClassFactory
     return E_NOINTERFACE;
   }
 
-  IFACEMETHODIMP_(HRESULT) LockServer(BOOL fLock)
+  IFACEMETHODIMP LockServer(BOOL fLock)
   {
     if( fLock ) {
       ++winrt::get_module_lock();
