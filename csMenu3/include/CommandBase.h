@@ -66,8 +66,8 @@ public:
 
 protected:
   CommandId _id;
+  std::wstring _title;
 
 private:
   std::wstring _icon;
-  std::wstring _title;
 };
