@@ -97,7 +97,7 @@ IFACEMETHODIMP_(HRESULT) CommandInvoke::Invoke(IShellItemArray *psiItemArray, IB
 
   const cs::PathList files = impl_cmdinvoke::makeFileList(psiItemArray);
 
-  invokeCommandId(_id, files);
+  invokeCommandId(_id, _title, files);
 
   return S_OK;
 }

@@ -59,6 +59,11 @@ inline bool operator==(const CommandId id, const Command cmd)
   return id == static_cast<CommandId>(cmd);
 }
 
+inline bool operator>(const CommandId id, const Command cmd)
+{
+  return id > static_cast<CommandId>(cmd);
+}
+
 ////// Implementation ////////////////////////////////////////////////////////
 
 std::wstring titleFromId(const CommandId id);

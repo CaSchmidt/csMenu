@@ -31,6 +31,7 @@
 
 #include <filesystem>
 
+#include <cs/System/FileSystem.h>
 #include <cs/Text/StringUtil.h>
 
 #include "Invoke.h"
@@ -38,6 +39,7 @@
 #include "MenuFlags.h"
 #include "Win32/Clipboard.h"
 #include "Win32/Network.h"
+#include "Win32/Registry.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 
@@ -126,11 +128,21 @@ namespace impl_invoke {
     setClipboardText(text.data());
   }
 
+  void invokeScript(const std::wstring& scriptFileName, const cs::PathList& files)
+  {
+    std::filesystem::path script = reg::readCurrentUserString(L"Software\\csLabs\\csMenu", L"Scripts");
+    script /= scriptFileName;
+
+    if( !cs::isFile(script) ) {
+      return;
+    }
+  }
+
 } // namespace impl_invoke
 
 ////// Public ////////////////////////////////////////////////////////////////
 
-void invokeCommandId(const CommandId id, const cs::PathList& files)
+void invokeCommandId(const CommandId id, const std::wstring& script, const cs::PathList& files)
 {
   if( id == Command::List || id == Command::ListPath || id == Command::ListPathTabular ) {
     impl_invoke::invokeList(id, files);
@@ -142,5 +154,7 @@ void invokeCommandId(const CommandId id, const cs::PathList& files)
     impl_invoke::invokeFlags(id);
   } else if( id == Command::CheckUnixPathSeparators ) {
     impl_invoke::invokeFlags(id);
+  } else if( id > Command::ScriptsMenu ) {
+    impl_invoke::invokeScript(script, files);
   }
 }
