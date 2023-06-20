@@ -30,6 +30,7 @@
 *****************************************************************************/
 
 #include <filesystem>
+#include <thread>
 
 #include <cs/System/FileSystem.h>
 #include <cs/Text/StringUtil.h>
@@ -39,7 +40,7 @@
 #include "MenuFlags.h"
 #include "Win32/Clipboard.h"
 #include "Win32/Network.h"
-#include "Win32/Registry.h"
+#include "Worker.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 
@@ -128,14 +129,14 @@ namespace impl_invoke {
     setClipboardText(text.data());
   }
 
-  void invokeScript(const std::wstring& scriptFileName, const cs::PathList& files)
+  void invokeScript(const std::wstring& script, const cs::PathList& files)
   {
-    std::filesystem::path script = reg::readCurrentUserString(L"Software\\csLabs\\csMenu", L"Scripts");
-    script /= scriptFileName;
-
-    if( !cs::isFile(script) ) {
+    WorkContext ctx;
+    if( !ctx.setScript(script) || !ctx.setFiles(files) ) {
       return;
     }
+
+    std::thread{batch_work, std::move(ctx)}.detach();
   }
 
 } // namespace impl_invoke
