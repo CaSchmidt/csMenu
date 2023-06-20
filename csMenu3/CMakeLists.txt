@@ -32,6 +32,7 @@ list(APPEND csMenu3_HEADERS
   include/Invoke.h
   include/MenuFlags.h
   include/Register.h
+  include/WorkContext.h
   include/Win32/Clipboard.h
   include/Win32/Compat.h
   include/Win32/GUID.h
@@ -55,6 +56,7 @@ list(APPEND csMenu3_SOURCES
   src/main.cpp
   src/MenuFlags.cpp
   src/Register.cpp
+  src/WorkContext.cpp
   src/Win32/Clipboard.cpp
   src/Win32/Compat.cpp
   src/Win32/GUID.cpp
