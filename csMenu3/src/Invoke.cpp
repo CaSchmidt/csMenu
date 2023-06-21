@@ -131,12 +131,25 @@ namespace impl_invoke {
 
   void invokeScript(const std::wstring& script, const cs::PathList& files)
   {
+    constexpr std::size_t ONE = 1;
+
     WorkContext ctx;
     if( !ctx.setScript(script) || !ctx.setFiles(files) ) {
       return;
     }
 
-    std::thread{batch_work, std::move(ctx)}.detach();
+    const MenuFlags flags = readFlags();
+    const bool is_batch = flags.testAny(MenuFlag::BatchProcessing);
+    const bool is_parallel = ctx.numThreads > ONE && flags.testAny(MenuFlag::ParallelExecution);
+
+    if( is_batch ) {
+      std::thread{batch_work, std::move(ctx)}.detach();
+    } else {
+      if( is_parallel ) {
+      } else {
+        std::thread{sequential_work, std::move(ctx)}.detach();
+      }
+    }
   }
 
 } // namespace impl_invoke

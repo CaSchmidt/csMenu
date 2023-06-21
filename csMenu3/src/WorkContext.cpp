@@ -31,11 +31,15 @@
 
 #include "WorkContext.h"
 
+#include "Settings.h"
 #include "Win32/Registry.h"
 
 ////// public ////////////////////////////////////////////////////////////////
 
-WorkContext::WorkContext() noexcept = default;
+WorkContext::WorkContext() noexcept
+{
+  numThreads = reg::readCurrentUserDWord(KEY_CSMENU, NAME_PARALLEL_COUNT);
+}
 
 bool WorkContext::isEmpty() const
 {
@@ -44,7 +48,7 @@ bool WorkContext::isEmpty() const
 
 bool WorkContext::setScript(const std::wstring& filename)
 {
-  script = reg::readCurrentUserString(L"Software\\csLabs\\csMenu", L"Scripts");
+  script = reg::readCurrentUserString(KEY_CSMENU, NAME_SCRIPTS);
   script /= filename;
 
   return cs::isFile(script);

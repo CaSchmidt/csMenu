@@ -34,3 +34,5 @@
 #include "WorkContext.h"
 
 void batch_work(WorkContext ctx);
+
+void sequential_work(WorkContext ctx);

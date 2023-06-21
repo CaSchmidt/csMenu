@@ -38,7 +38,16 @@
 
 void batch_work(WorkContext ctx)
 {
-  const std::wstring exec = ctx.script.wstring();
+  const std::wstring exec = ctx.script;
   const std::wstring args = joinFileNames(ctx.files);
   shell::execute(exec.data(), args.data());
+}
+
+void sequential_work(WorkContext ctx)
+{
+  const std::wstring exec = ctx.script;
+  for( const std::filesystem::path& path : ctx.files ) {
+    const std::wstring arg = quotedFileName(path);
+    shell::execute(exec.data(), arg.data());
+  }
 }

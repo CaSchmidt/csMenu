@@ -42,5 +42,6 @@ struct WorkContext {
   bool setFiles(const cs::PathList& input);
 
   cs::PathList files{};
+  std::size_t numThreads{0};
   std::filesystem::path script{};
 };
