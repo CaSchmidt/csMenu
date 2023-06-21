@@ -32,6 +32,7 @@ list(APPEND csMenu3_HEADERS
   include/Invoke.h
   include/MenuFlags.h
   include/Register.h
+  include/Settings.h
   include/WorkContext.h
   include/Worker.h
   include/Win32/Clipboard.h

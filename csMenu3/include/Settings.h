@@ -29,21 +29,10 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include "MenuFlags.h"
+#pragma once
 
-#include "Settings.h"
-#include "Win32/Registry.h"
+#define KEY_CSMENU L"Software\\csLabs\\csMenu"
 
-////// Public ////////////////////////////////////////////////////////////////
-
-MenuFlags readFlags()
-{
-  const DWORD_t value = reg::readCurrentUserDWord(KEY_CSMENU, NAME_FLAGS);
-  return MenuFlags{value};
-}
-
-void writeFlags(const MenuFlags flags)
-{
-  const DWORD_t value{flags};
-  reg::writeCurrentUserDWord(KEY_CSMENU, NAME_FLAGS, value);
-}
+#define NAME_FLAGS L"Flags"
+#define NAME_PARALLEL_COUNT L"ParallelCount"
+#define NAME_SCRIPTS L"Scripts"

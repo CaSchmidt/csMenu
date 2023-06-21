@@ -44,6 +44,7 @@
 #include "GUIDs.h"
 #include "MenuFlags.h"
 #include "Register.h"
+#include "Settings.h"
 #include "Win32/Registry.h"
 
 ////// Global ////////////////////////////////////////////////////////////////
@@ -51,10 +52,6 @@
 HINSTANCE g_hInstance = nullptr;
 
 ////// Context Menu //////////////////////////////////////////////////////////
-
-#define KEY_SCRIPTS L"Software\\csLabs\\csMenu"
-
-#define VALUE_SCRIPTS L"Scripts"
 
 void buildScriptsMenu(CommandEnum *rootMenu)
 {
@@ -65,7 +62,7 @@ void buildScriptsMenu(CommandEnum *rootMenu)
     return;
   }
 
-  const std::wstring scriptsPath = reg::readCurrentUserString(KEY_SCRIPTS, VALUE_SCRIPTS);
+  const std::wstring scriptsPath = reg::readCurrentUserString(KEY_CSMENU, NAME_SCRIPTS);
   if( scriptsPath.empty() ) {
     return;
   }
