@@ -33,7 +33,7 @@
 
 #include "Win32/Compat.h"
 
-namespace message {
+namespace messagebox {
 
   void error(const wchar_t *text, const wchar_t *title = L"Error", const HANDLE_t parent = nullptr);
 
@@ -43,4 +43,4 @@ namespace message {
 
   void warning(const wchar_t *text, const wchar_t *title = L"Warning", const HANDLE_t parent = nullptr);
 
-} // namespace message
+} // namespace messagebox

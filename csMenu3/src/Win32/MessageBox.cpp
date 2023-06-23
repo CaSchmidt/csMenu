@@ -36,7 +36,7 @@
 
 ////// Public ////////////////////////////////////////////////////////////////
 
-namespace message {
+namespace messagebox {
 
   void error(const wchar_t *text, const wchar_t *title, const HANDLE_t parent)
   {
@@ -58,4 +58,4 @@ namespace message {
     MessageBoxW(reinterpret_cast<HWND>(parent), text, title, MB_OK | MB_ICONWARNING);
   }
 
-} // namespace message
+} // namespace messagebox
