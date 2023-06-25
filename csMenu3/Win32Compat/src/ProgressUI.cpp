@@ -156,7 +156,7 @@ ProgressUIptr ProgressUI::make(const HANDLE_t hInstance, const int width, const 
   // (4) Initialize Common Controls //////////////////////////////////////////
 
   INITCOMMONCONTROLSEX iccex;
-  iccex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+  iccex.dwSize = sizeof(iccex);
   iccex.dwICC  = ICC_PROGRESS_CLASS;
   if( InitCommonControlsEx(&iccex) == FALSE ) {
     result->destroy();
@@ -199,29 +199,29 @@ bool ProgressUI::registerWindowClass(const HANDLE_t hInstance)
 
   // (1) Check for Existing Class ////////////////////////////////////////////
 
-  WNDCLASSEXW wndClass;
-  if( GetClassInfoExW(hInst, windowClassName(), &wndClass) != FALSE ) {
+  WNDCLASSEXW wcex;
+  if( GetClassInfoExW(hInst, windowClassName(), &wcex) != FALSE ) {
     return true;
   }
 
   // (2) Setup Class /////////////////////////////////////////////////////////
 
-  wndClass.cbSize        = sizeof(WNDCLASSEXW);
-  wndClass.style         = 0;
-  wndClass.lpfnWndProc   = DefWindowProc; // TODO: Custom Window Procedure...
-  wndClass.cbClsExtra    = 0;
-  wndClass.cbWndExtra    = 0; // TODO: Allocate Extra Data...
-  wndClass.hInstance     = hInst;
-  wndClass.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
-  wndClass.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-  wndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-  wndClass.lpszMenuName  = nullptr;
-  wndClass.lpszClassName = windowClassName();
-  wndClass.hIconSm       = LoadIcon(nullptr, IDI_APPLICATION);
+  wcex.cbSize        = sizeof(wcex);
+  wcex.style         = 0;
+  wcex.lpfnWndProc   = DefWindowProc; // TODO: Custom Window Procedure...
+  wcex.cbClsExtra    = 0;
+  wcex.cbWndExtra    = 0; // TODO: Allocate Extra Data...
+  wcex.hInstance     = hInst;
+  wcex.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
+  wcex.hCursor       = LoadCursor(nullptr, IDC_ARROW);
+  wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+  wcex.lpszMenuName  = nullptr;
+  wcex.lpszClassName = windowClassName();
+  wcex.hIconSm       = LoadIcon(nullptr, IDI_APPLICATION);
 
   // (3) Register Class //////////////////////////////////////////////////////
 
-  if( RegisterClassExW(&wndClass) == 0 ) {
+  if( RegisterClassExW(&wcex) == 0 ) {
     impl_prog::errorMessage(L"RegisterClassExW()");
     return false;
   }
