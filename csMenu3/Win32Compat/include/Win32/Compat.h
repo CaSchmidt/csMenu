@@ -38,11 +38,3 @@ using DWORD_t = uint32_t;
 using HANDLE_t = void *;
 
 using UINT_t = unsigned int;
-
-#if defined(_WIN64)
-using WPARAM_t = uint64_t;
-using LPARAM_t = int64_t;
-#else
-using WPARAM_t = unsigned int;
-using LPARAM_t = int32_t;
-#endif

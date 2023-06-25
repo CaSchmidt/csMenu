@@ -36,7 +36,7 @@
 
 namespace message {
 
-  WPARAM_t loop(const LoopFunction& func)
+  int loop(const LoopFunction& func)
   {
     MSG msg;
 
@@ -55,12 +55,6 @@ namespace message {
     } // For Each Message
 
     return msg.wParam; // WM_QUIT
-  }
-
-  bool post(const HANDLE_t hWnd, const UINT_t msg,
-            const WPARAM_t wParam, const LPARAM_t lParam)
-  {
-    return PostMessageW(reinterpret_cast<HWND>(hWnd), msg, wParam, lParam) != 0;
   }
 
   void postQuit(const int exit_code)

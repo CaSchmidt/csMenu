@@ -37,9 +37,6 @@
 
 using LoopFunction = std::function<void(UINT_t)>;
 
-WPARAM_t loop(const LoopFunction& func = nullptr);
-
-bool post(const HANDLE_t hWnd, const UINT_t msg,
-          const WPARAM_t wParam, const LPARAM_t lParam);
+int loop(const LoopFunction& func = nullptr);
 
 void postQuit(const int exit_code);

@@ -52,19 +52,3 @@ static_assert( std::is_pointer_v<HANDLE_t> && std::is_pointer_v<HANDLE> );
 static_assert( sizeof(UINT_t) == sizeof(UINT) );
 
 static_assert( std::is_unsigned_v<UINT_t> && std::is_unsigned_v<UINT> );
-
-////// WPARAM ////////////////////////////////////////////////////////////////
-
-static_assert( sizeof(WPARAM_t) == sizeof(WPARAM) );
-
-static_assert( std::is_unsigned_v<WPARAM_t> && std::is_unsigned_v<WPARAM> );
-
-static_assert( !std::is_pointer_v<WPARAM_t> && !std::is_pointer_v<WPARAM> );
-
-////// LPARAM ////////////////////////////////////////////////////////////////
-
-static_assert( sizeof(LPARAM_t) == sizeof(LPARAM) );
-
-static_assert( std::is_signed_v<LPARAM_t> && std::is_signed_v<LPARAM> );
-
-static_assert( !std::is_pointer_v<LPARAM_t> && !std::is_pointer_v<LPARAM> );
