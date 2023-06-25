@@ -29,10 +29,10 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#include <cwchar>
+
 #define NOMINMAX
 #include <Windows.h>
-
-#include <cs/Core/Range.h>
 
 #include "Win32/Clipboard.h"
 
@@ -54,7 +54,9 @@ bool setClipboardText(const wchar_t *text)
 {
   constexpr std::size_t ONE = 1;
 
-  const std::size_t length = cs::strlen(text);
+  const std::size_t length = text != nullptr
+                             ? std::wcslen(text)
+                             : 0;
   if( length < ONE ) {
     return false;
   }
