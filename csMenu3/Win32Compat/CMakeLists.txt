@@ -12,6 +12,7 @@ list(APPEND Win32Compat_HEADERS
   include/Win32/Registry.h
   include/Win32/Shell.h
   include/Win32/String.h
+  include/Win32/Window.h
 )
 
 list(APPEND Win32Compat_SOURCES
@@ -26,6 +27,7 @@ list(APPEND Win32Compat_SOURCES
   src/Registry.cpp
   src/Shell.cpp
   src/String.cpp
+  src/Window.cpp
 )
 
 ### Target ###################################################################
