@@ -32,29 +32,60 @@
 #define NOMINMAX
 #include <Windows.h>
 
-#include <cs/Core/Range.h>
+#include "Win32/Clipboard.h"
 
-#include "Win32/Module.h"
+#include "Win32/String.h"
 
-std::wstring getModuleFileName(const HANDLE_t hModule)
+////// Public ////////////////////////////////////////////////////////////////
+
+bool clearClipboard()
 {
-  constexpr std::size_t MAX_LENGTH = MAX_PATH;
+  if( OpenClipboard(nullptr) == FALSE ) {
+    return false;
+  }
+
+  const bool ok = EmptyClipboard() != FALSE;
+  CloseClipboard();
+
+  return ok;
+}
+
+bool setClipboardText(const wchar_t *text)
+{
   constexpr std::size_t ONE = 1;
 
-  wchar_t data[MAX_LENGTH];
-  GetModuleFileNameW(reinterpret_cast<HMODULE>(hModule), data, MAX_LENGTH);
-
-  const std::size_t length = cs::strlen(data, MAX_LENGTH);
+  const std::size_t length = text != nullptr
+                             ? StringLength(text)
+                             : 0;
   if( length < ONE ) {
-    return std::wstring{};
+    return false;
   }
 
-  std::wstring result;
-  try {
-    result.assign(data, length);
-  } catch( ... ) {
-    result.clear();
+  if( !clearClipboard() ) {
+    return false;
   }
 
-  return result;
+  if( OpenClipboard(nullptr) == FALSE ) {
+    return false;
+  }
+
+  HGLOBAL globalMem = GlobalAlloc(GMEM_MOVEABLE, (length + ONE) * sizeof(wchar_t));
+  if( globalMem == nullptr ) {
+    CloseClipboard();
+    return false;
+  }
+
+  wchar_t *globalText = reinterpret_cast<wchar_t *>(GlobalLock(globalMem));
+  CopyMemory(globalText, text, length * sizeof(wchar_t));
+  globalText[length] = L'\0';
+  GlobalUnlock(globalMem);
+
+  const bool ok = SetClipboardData(CF_UNICODETEXT, globalMem) != nullptr;
+  if( !ok ) {
+    GlobalFree(globalMem);
+  }
+
+  CloseClipboard();
+
+  return ok;
 }

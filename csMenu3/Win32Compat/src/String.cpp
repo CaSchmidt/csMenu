@@ -29,63 +29,23 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include <cwchar>
+#include <strsafe.h>
 
-#define NOMINMAX
-#include <Windows.h>
+#include "Win32/String.h"
 
-#include "Win32/Clipboard.h"
-
-////// Public ////////////////////////////////////////////////////////////////
-
-bool clearClipboard()
-{
-  if( OpenClipboard(nullptr) == FALSE ) {
-    return false;
-  }
-
-  const bool ok = EmptyClipboard() != FALSE;
-  CloseClipboard();
-
-  return ok;
-}
-
-bool setClipboardText(const wchar_t *text)
+std::size_t StringLength(const wchar_t *str, const std::size_t max)
 {
   constexpr std::size_t ONE = 1;
 
-  const std::size_t length = text != nullptr
-                             ? std::wcslen(text)
-                             : 0;
-  if( length < ONE ) {
-    return false;
+  if( str == nullptr || max < ONE ) {
+    return 0;
   }
 
-  if( !clearClipboard() ) {
-    return false;
+  std::size_t length   = 0;
+  const HRESULT result = StringCchLengthW(str, max, &length);
+  if( FAILED(result) ) {
+    return 0;
   }
 
-  if( OpenClipboard(nullptr) == FALSE ) {
-    return false;
-  }
-
-  HGLOBAL globalMem = GlobalAlloc(GMEM_MOVEABLE, (length + ONE) * sizeof(wchar_t));
-  if( globalMem == nullptr ) {
-    CloseClipboard();
-    return false;
-  }
-
-  wchar_t *globalText = reinterpret_cast<wchar_t *>(GlobalLock(globalMem));
-  CopyMemory(globalText, text, length * sizeof(wchar_t));
-  globalText[length] = L'\0';
-  GlobalUnlock(globalMem);
-
-  const bool ok = SetClipboardData(CF_UNICODETEXT, globalMem) != nullptr;
-  if( !ok ) {
-    GlobalFree(globalMem);
-  }
-
-  CloseClipboard();
-
-  return ok;
+  return length;
 }

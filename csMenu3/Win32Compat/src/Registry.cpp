@@ -29,20 +29,22 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#include <vector>
+
 #define NOMINMAX
 #include <Windows.h>
 
-#include <cs/Core/Buffer.h>
-#include <cs/Core/Container.h>
-#include <cs/Core/Range.h>
-
 #include "Win32/Registry.h"
+
+#include "Win32/String.h"
 
 namespace reg {
 
   namespace impl_reg {
 
-    constexpr bool IS_READ = false;
+    using Buffer = std::vector<uint8_t>;
+
+    constexpr bool IS_READ  = false;
     constexpr bool IS_WRITE = true;
 
     // Access ////////////////////////////////////////////////////////////////
@@ -53,7 +55,7 @@ namespace reg {
                             ? KEY_WRITE
                             : KEY_READ;
 
-      HKEY key = nullptr;
+      HKEY key      = nullptr;
       const bool ok = RegCreateKeyExW(rootKey, subKey,
                                       0, nullptr, REG_OPTION_NON_VOLATILE,
                                       rights, nullptr, &key, nullptr)
@@ -81,7 +83,7 @@ namespace reg {
       }
 
       DWORD value = 0;
-      DWORD size = sizeof(value);
+      DWORD size  = sizeof(value);
       if( RegGetValueW(rootKey, subKey, name, RRF_RT_DWORD, nullptr, &value, &size)
           != ERROR_SUCCESS ) {
         return defValue;
@@ -107,19 +109,21 @@ namespace reg {
         return defValue;
       }
 
-      cs::Buffer buf;
-      if( !cs::resize(&buf, size) ) {
+      Buffer buffer;
+      try {
+        buffer.resize(size, 0);
+      } catch( ... ) {
         return defValue;
       }
 
-      if( RegGetValueW(rootKey, subKey, name, RRF_RT_REG_SZ, nullptr, buf.data(), &size)
+      if( RegGetValueW(rootKey, subKey, name, RRF_RT_REG_SZ, nullptr, buffer.data(), &size)
           != ERROR_SUCCESS ) {
         return defValue;
       }
 
       std::wstring value;
       try {
-        value.assign(reinterpret_cast<const wchar_t *>(buf.data()));
+        value.assign(reinterpret_cast<const wchar_t *>(buffer.data()));
       } catch( ... ) {
         return defValue;
       }
@@ -158,7 +162,9 @@ namespace reg {
     {
       constexpr std::size_t ONE = 1;
 
-      const std::size_t length = cs::strlen(value);
+      const std::size_t length = value != nullptr
+                                 ? StringLength(value)
+                                 : 0;
       if( length < ONE ) {
         return false;
       }

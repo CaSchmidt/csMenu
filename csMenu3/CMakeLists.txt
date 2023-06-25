@@ -14,6 +14,10 @@ add_subdirectory(${csMenu-dev_SOURCE_DIR}/3rdparty/csUtil/csUtil
   ${CMAKE_CURRENT_BINARY_DIR}/3rdparty/csUtil
 )
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Win32Compat
+  ${CMAKE_CURRENT_BINARY_DIR}/Win32Compat
+)
+
 ### Project ##################################################################
 
 list(APPEND csMenu3_EXTRAS
@@ -35,16 +39,6 @@ list(APPEND csMenu3_HEADERS
   include/Settings.h
   include/WorkContext.h
   include/Worker.h
-  include/Win32/Clipboard.h
-  include/Win32/Compat.h
-  include/Win32/GUID.h
-  include/Win32/Message.h
-  include/Win32/MessageBox.h
-  include/Win32/Module.h
-  include/Win32/Network.h
-  include/Win32/ProgressUI.h
-  include/Win32/Registry.h
-  include/Win32/Shell.h
 )
 
 list(APPEND csMenu3_SOURCES
@@ -62,16 +56,6 @@ list(APPEND csMenu3_SOURCES
   src/Register.cpp
   src/WorkContext.cpp
   src/Worker.cpp
-  src/Win32/Clipboard.cpp
-  src/Win32/Compat.cpp
-  src/Win32/GUID.cpp
-  src/Win32/Message.cpp
-  src/Win32/MessageBox.cpp
-  src/Win32/Module.cpp
-  src/Win32/Network.cpp
-  src/Win32/ProgressUI.cpp
-  src/Win32/Registry.cpp
-  src/Win32/Shell.cpp
 )
 
 ### Target ###################################################################
@@ -91,6 +75,7 @@ target_include_directories(csMenu3
 
 target_link_libraries(csMenu3
   PRIVATE csUtil
+  PRIVATE Win32Compat
   PRIVATE comctl32.lib
   PRIVATE mpr.lib
   PRIVATE shlwapi.lib
