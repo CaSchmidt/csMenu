@@ -38,9 +38,11 @@ list(APPEND csMenu3_HEADERS
   include/Win32/Clipboard.h
   include/Win32/Compat.h
   include/Win32/GUID.h
+  include/Win32/Message.h
   include/Win32/MessageBox.h
   include/Win32/Module.h
   include/Win32/Network.h
+  include/Win32/ProgressUI.h
   include/Win32/Registry.h
   include/Win32/Shell.h
 )
@@ -63,9 +65,11 @@ list(APPEND csMenu3_SOURCES
   src/Win32/Clipboard.cpp
   src/Win32/Compat.cpp
   src/Win32/GUID.cpp
+  src/Win32/Message.cpp
   src/Win32/MessageBox.cpp
   src/Win32/Module.cpp
   src/Win32/Network.cpp
+  src/Win32/ProgressUI.cpp
   src/Win32/Registry.cpp
   src/Win32/Shell.cpp
 )
@@ -87,6 +91,7 @@ target_include_directories(csMenu3
 
 target_link_libraries(csMenu3
   PRIVATE csUtil
+  PRIVATE comctl32.lib
   PRIVATE mpr.lib
   PRIVATE shlwapi.lib
 )

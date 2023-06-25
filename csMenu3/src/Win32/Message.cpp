@@ -29,20 +29,43 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#pragma once
+#define NOMINMAX
+#include <Windows.h>
 
-#include <cstdint>
+#include "Win32/Message.h"
 
-using DWORD_t = uint32_t;
+namespace message {
 
-using HANDLE_t = void *;
+  WPARAM_t loop(const LoopFunction& func)
+  {
+    MSG msg;
 
-using UINT_t = unsigned int;
+    BOOL result;
+    while( (result = GetMessageW(&msg, NULL, 0, 0)) != 0 ) {
+      if( result < 0 ) {
+        // TODO: handle error...
+      } else {
+        TranslateMessage(&msg);
+        DispatchMessageW(&msg);
 
-#if defined(_WIN64)
-using WPARAM_t = uint64_t;
-using LPARAM_t = int64_t;
-#else
-using WPARAM_t = unsigned int;
-using LPARAM_t = int32_t;
-#endif
+        if( func ) {
+          func(msg.message);
+        }
+      }
+    } // For Each Message
+
+    return msg.wParam; // WM_QUIT
+  }
+
+  bool post(const HANDLE_t hWnd, const UINT_t msg,
+            const WPARAM_t wParam, const LPARAM_t lParam)
+  {
+    return PostMessageW(reinterpret_cast<HWND>(hWnd), msg, wParam, lParam) != 0;
+  }
+
+  void postQuit(const int exit_code)
+  {
+    PostQuitMessage(exit_code);
+  }
+
+} // namespace message

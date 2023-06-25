@@ -31,18 +31,36 @@
 
 #pragma once
 
-#include <cstdint>
+#include <memory>
 
-using DWORD_t = uint32_t;
+#include "Win32/Compat.h"
 
-using HANDLE_t = void *;
+using ProgressUIptr = std::unique_ptr<class ProgressUI>;
 
-using UINT_t = unsigned int;
+class ProgressUI {
+private:
+  struct ctor_tag {
+    ctor_tag() noexcept;
+  };
 
-#if defined(_WIN64)
-using WPARAM_t = uint64_t;
-using LPARAM_t = int64_t;
-#else
-using WPARAM_t = unsigned int;
-using LPARAM_t = int32_t;
-#endif
+public:
+  ProgressUI(const ctor_tag&) noexcept;
+  ~ProgressUI() noexcept;
+
+  void close();
+  void destroy();
+  void show();
+
+  void setRange(const int lo, const int hi);
+  void step();
+
+  static ProgressUIptr make(const HANDLE_t hInstance, const int width, const int height);
+
+  static const wchar_t *windowClassName();
+
+private:
+  static bool registerWindowClass(const HANDLE_t hInstance);
+
+  HANDLE_t _hMainWnd{nullptr};
+  HANDLE_t _hProgBar{nullptr};
+};

@@ -31,18 +31,15 @@
 
 #pragma once
 
-#include <cstdint>
+#include <functional>
 
-using DWORD_t = uint32_t;
+#include "Win32/Compat.h"
 
-using HANDLE_t = void *;
+using LoopFunction = std::function<void(UINT_t)>;
 
-using UINT_t = unsigned int;
+WPARAM_t loop(const LoopFunction& func = nullptr);
 
-#if defined(_WIN64)
-using WPARAM_t = uint64_t;
-using LPARAM_t = int64_t;
-#else
-using WPARAM_t = unsigned int;
-using LPARAM_t = int32_t;
-#endif
+bool post(const HANDLE_t hWnd, const UINT_t msg,
+          const WPARAM_t wParam, const LPARAM_t lParam);
+
+void postQuit(const int exit_code);
