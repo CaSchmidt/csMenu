@@ -59,6 +59,5 @@ public:
 private:
   static bool registerWindowClass(const HANDLE_t hInstance);
 
-  HANDLE_t _hMainWnd{nullptr};
-  HANDLE_t _hProgBar{nullptr};
+  std::unique_ptr<class ProgressBarPrivate> d{};
 };

@@ -46,6 +46,26 @@ namespace impl_prog {
 
 } // namespace impl_prog
 
+////// Private ///////////////////////////////////////////////////////////////
+
+class ProgressBarPrivate {
+public:
+  ProgressBarPrivate() noexcept
+  {
+  }
+
+  ~ProgressBarPrivate() noexcept
+  {
+    if( hMainWnd != nullptr ) {
+      DestroyWindow(hMainWnd);
+    }
+    hMainWnd = hProgWnd = nullptr;
+  }
+
+  HWND hMainWnd{nullptr};
+  HWND hProgWnd{nullptr};
+};
+
 ////// private ///////////////////////////////////////////////////////////////
 
 ProgressBar::ctor_tag::ctor_tag() noexcept = default;
@@ -53,9 +73,12 @@ ProgressBar::ctor_tag::ctor_tag() noexcept = default;
 ////// public ////////////////////////////////////////////////////////////////
 
 ProgressBar::ProgressBar(const ctor_tag&) noexcept
-  : _hMainWnd{nullptr}
-  , _hProgBar{nullptr}
 {
+  try {
+    d = std::make_unique<ProgressBarPrivate>();
+  } catch( ... ) {
+    d.reset();
+  }
 }
 
 ProgressBar::~ProgressBar() noexcept
@@ -64,12 +87,7 @@ ProgressBar::~ProgressBar() noexcept
 
 void ProgressBar::show()
 {
-  if( _hMainWnd == nullptr ) {
-    return;
-  }
-  HWND hWnd = reinterpret_cast<HWND>(_hMainWnd);
-
-  ShowWindow(hWnd, SW_SHOWNORMAL);
+  ShowWindow(d->hMainWnd, SW_SHOWNORMAL);
 }
 
 void ProgressBar::setRange(const int lo, const int hi)
@@ -78,24 +96,14 @@ void ProgressBar::setRange(const int lo, const int hi)
     return;
   }
 
-  if( _hProgBar == nullptr ) {
-    return;
-  }
-  HWND hWnd = reinterpret_cast<HWND>(_hProgBar);
-
-  PostMessageW(hWnd, PBM_SETRANGE32, (WPARAM)lo, (LPARAM)hi);
-  PostMessageW(hWnd, PBM_SETPOS, (WPARAM)lo, 0);
-  PostMessageW(hWnd, PBM_SETSTEP, (WPARAM)1, 0);
+  PostMessageW(d->hProgWnd, PBM_SETRANGE32, (WPARAM)lo, (LPARAM)hi);
+  PostMessageW(d->hProgWnd, PBM_SETPOS, (WPARAM)lo, 0);
+  PostMessageW(d->hProgWnd, PBM_SETSTEP, (WPARAM)1, 0);
 }
 
 void ProgressBar::step()
 {
-  if( _hProgBar == nullptr ) {
-    return;
-  }
-  HWND hWnd = reinterpret_cast<HWND>(_hProgBar);
-
-  PostMessageW(hWnd, PBM_STEPIT, 0, 0);
+  PostMessageW(d->hProgWnd, PBM_STEPIT, 0, 0);
 }
 
 ////// public static /////////////////////////////////////////////////////////
@@ -116,6 +124,10 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t hInstance, const int width, cons
     return ProgressBarPtr{};
   }
 
+  if( !result->d ) {
+    return ProgressBarPtr{};
+  }
+
   // (2) Create Window Class /////////////////////////////////////////////////
 
   if( !registerWindowClass(hInstance) ) {
@@ -124,11 +136,11 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t hInstance, const int width, cons
 
   // (3) Create Main Window //////////////////////////////////////////////////
 
-  result->_hMainWnd = CreateWindowExW(0, windowClassName(), L"Progress", WS_BORDER,
-                                      CW_USEDEFAULT, CW_USEDEFAULT,
-                                      width, height + GetSystemMetrics(SM_CYSIZE),
-                                      nullptr, nullptr, hInst, nullptr);
-  if( result->_hMainWnd == nullptr ) {
+  result->d->hMainWnd = CreateWindowExW(0, windowClassName(), L"Progress", WS_BORDER,
+                                        CW_USEDEFAULT, CW_USEDEFAULT,
+                                        width, height + GetSystemMetrics(SM_CYSIZE),
+                                        nullptr, nullptr, hInst, nullptr);
+  if( result->d->hMainWnd == nullptr ) {
     impl_prog::errorMessage(L"CreateWindowExW(Main)");
     return ProgressBarPtr{};
   }
@@ -139,7 +151,6 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t hInstance, const int width, cons
   iccex.dwSize = sizeof(iccex);
   iccex.dwICC  = ICC_PROGRESS_CLASS;
   if( InitCommonControlsEx(&iccex) == FALSE ) {
-    result->destroy();
     impl_prog::errorMessage(L"InitCommonControlsEx()");
     return ProgressBarPtr{};
   }
@@ -147,13 +158,12 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t hInstance, const int width, cons
   // (5) Create Progress Bar /////////////////////////////////////////////////
 
   RECT rect;
-  GetClientRect(reinterpret_cast<HWND>(result->_hMainWnd), &rect);
+  GetClientRect(result->d->hMainWnd, &rect);
 
-  result->_hProgBar = CreateWindowExW(0, PROGRESS_CLASSW, nullptr, WS_CHILD | WS_VISIBLE | PBS_SMOOTH,
-                                      rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
-                                      reinterpret_cast<HWND>(result->_hMainWnd), nullptr, hInst, nullptr);
-  if( result->_hProgBar == nullptr ) {
-    result->destroy();
+  result->d->hProgWnd = CreateWindowExW(0, PROGRESS_CLASSW, nullptr, WS_CHILD | WS_VISIBLE | PBS_SMOOTH,
+                                        rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
+                                        result->d->hMainWnd, nullptr, hInst, nullptr);
+  if( result->d->hProgWnd == nullptr ) {
     impl_prog::errorMessage(L"CreateWindowExW(Prog)");
     return ProgressBarPtr{};
   }
@@ -163,7 +173,7 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t hInstance, const int width, cons
 
 const wchar_t *ProgressBar::windowClassName()
 {
-  return L"Win32::ProgressUI";
+  return L"Win32::ProgressBar";
 }
 
 ////// private static ////////////////////////////////////////////////////////
