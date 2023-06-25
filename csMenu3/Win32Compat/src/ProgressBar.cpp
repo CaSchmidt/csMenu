@@ -62,6 +62,28 @@ public:
     hMainWnd = hProgWnd = nullptr;
   }
 
+  static LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+  {
+    ProgressBarPrivate *d = reinterpret_cast<ProgressBarPrivate *>(GetWindowLongPtrW(hWnd, 0));
+
+    LRESULT result = 0;
+    switch( msg ) {
+    case WM_CLOSE:
+      DestroyWindow(d->hMainWnd);
+      break;
+
+    case WM_DESTROY:
+      d->hMainWnd = d->hProgWnd = nullptr;
+      break;
+
+    default:
+      result = DefWindowProcW(hWnd, msg, wParam, lParam);
+      break;
+    }
+
+    return result;
+  }
+
   HWND hMainWnd{nullptr};
   HWND hProgWnd{nullptr};
 };
@@ -145,6 +167,8 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t hInstance, const int width, cons
     return ProgressBarPtr{};
   }
 
+  SetWindowLongPtrW(result->d->hMainWnd, 0, reinterpret_cast<LONG_PTR>(result->d.get()));
+
   // (4) Initialize Common Controls //////////////////////////////////////////
 
   INITCOMMONCONTROLSEX iccex;
@@ -198,9 +222,9 @@ bool ProgressBar::registerWindowClass(const HANDLE_t hInstance)
 
   wcex.cbSize        = sizeof(wcex);
   wcex.style         = 0;
-  wcex.lpfnWndProc   = DefWindowProc; // TODO: Custom Window Procedure...
+  wcex.lpfnWndProc   = ProgressBarPrivate::WindowProc;
   wcex.cbClsExtra    = 0;
-  wcex.cbWndExtra    = 0; // TODO: Allocate Extra Data...
+  wcex.cbWndExtra    = sizeof(LONG_PTR);
   wcex.hInstance     = hInst;
   wcex.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
   wcex.hCursor       = LoadCursor(nullptr, IDC_ARROW);
