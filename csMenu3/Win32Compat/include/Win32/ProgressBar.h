@@ -35,17 +35,17 @@
 
 #include "Win32/Compat.h"
 
-using ProgressUIptr = std::unique_ptr<class ProgressUI>;
+using ProgressBarPtr = std::unique_ptr<class ProgressBar>;
 
-class ProgressUI {
+class ProgressBar {
 private:
   struct ctor_tag {
     ctor_tag() noexcept;
   };
 
 public:
-  ProgressUI(const ctor_tag&) noexcept;
-  ~ProgressUI() noexcept;
+  ProgressBar(const ctor_tag&) noexcept;
+  ~ProgressBar() noexcept;
 
   void close();
   void destroy();
@@ -54,7 +54,7 @@ public:
   void setRange(const int lo, const int hi);
   void step();
 
-  static ProgressUIptr make(const HANDLE_t hInstance, const int width, const int height);
+  static ProgressBarPtr make(const HANDLE_t hInstance, const int width, const int height);
 
   static const wchar_t *windowClassName();
 

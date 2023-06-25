@@ -33,7 +33,7 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 
-#include "Win32/ProgressUI.h"
+#include "Win32/ProgressBar.h"
 
 ////// Implementation ////////////////////////////////////////////////////////
 
@@ -48,21 +48,21 @@ namespace impl_prog {
 
 ////// private ///////////////////////////////////////////////////////////////
 
-ProgressUI::ctor_tag::ctor_tag() noexcept = default;
+ProgressBar::ctor_tag::ctor_tag() noexcept = default;
 
 ////// public ////////////////////////////////////////////////////////////////
 
-ProgressUI::ProgressUI(const ctor_tag&) noexcept
+ProgressBar::ProgressBar(const ctor_tag&) noexcept
   : _hMainWnd{nullptr}
   , _hProgBar{nullptr}
 {
 }
 
-ProgressUI::~ProgressUI() noexcept
+ProgressBar::~ProgressBar() noexcept
 {
 }
 
-void ProgressUI::close()
+void ProgressBar::close()
 {
   if( _hMainWnd == nullptr ) {
     return;
@@ -72,7 +72,7 @@ void ProgressUI::close()
   PostMessageW(hWnd, WM_CLOSE, 0, 0);
 }
 
-void ProgressUI::destroy()
+void ProgressBar::destroy()
 {
   if( _hMainWnd == nullptr ) {
     return;
@@ -82,7 +82,7 @@ void ProgressUI::destroy()
   DestroyWindow(hWnd);
 }
 
-void ProgressUI::show()
+void ProgressBar::show()
 {
   if( _hMainWnd == nullptr ) {
     return;
@@ -92,7 +92,7 @@ void ProgressUI::show()
   ShowWindow(hWnd, SW_SHOWNORMAL);
 }
 
-void ProgressUI::setRange(const int lo, const int hi)
+void ProgressBar::setRange(const int lo, const int hi)
 {
   if( lo < 0 || hi < 0 || hi <= lo ) {
     return;
@@ -108,7 +108,7 @@ void ProgressUI::setRange(const int lo, const int hi)
   PostMessageW(hWnd, PBM_SETSTEP, (WPARAM)1, 0);
 }
 
-void ProgressUI::step()
+void ProgressBar::step()
 {
   if( _hProgBar == nullptr ) {
     return;
@@ -120,26 +120,26 @@ void ProgressUI::step()
 
 ////// public static /////////////////////////////////////////////////////////
 
-ProgressUIptr ProgressUI::make(const HANDLE_t hInstance, const int width, const int height)
+ProgressBarPtr ProgressBar::make(const HANDLE_t hInstance, const int width, const int height)
 {
   if( hInstance == nullptr || width < 1 || height < 1 ) {
-    return ProgressUIptr{};
+    return ProgressBarPtr{};
   }
   HINSTANCE hInst = reinterpret_cast<HINSTANCE>(hInstance);
 
   // (1) Create Instance /////////////////////////////////////////////////////
 
-  ProgressUIptr result;
+  ProgressBarPtr result;
   try {
-    result = std::make_unique<ProgressUI>(ctor_tag{});
+    result = std::make_unique<ProgressBar>(ctor_tag{});
   } catch( ... ) {
-    return ProgressUIptr{};
+    return ProgressBarPtr{};
   }
 
   // (2) Create Window Class /////////////////////////////////////////////////
 
   if( !registerWindowClass(hInstance) ) {
-    return ProgressUIptr{};
+    return ProgressBarPtr{};
   }
 
   // (3) Create Main Window //////////////////////////////////////////////////
@@ -150,7 +150,7 @@ ProgressUIptr ProgressUI::make(const HANDLE_t hInstance, const int width, const 
                                       nullptr, nullptr, hInst, nullptr);
   if( result->_hMainWnd == nullptr ) {
     impl_prog::errorMessage(L"CreateWindowExW(Main)");
-    return ProgressUIptr{};
+    return ProgressBarPtr{};
   }
 
   // (4) Initialize Common Controls //////////////////////////////////////////
@@ -161,7 +161,7 @@ ProgressUIptr ProgressUI::make(const HANDLE_t hInstance, const int width, const 
   if( InitCommonControlsEx(&iccex) == FALSE ) {
     result->destroy();
     impl_prog::errorMessage(L"InitCommonControlsEx()");
-    return ProgressUIptr{};
+    return ProgressBarPtr{};
   }
 
   // (5) Create Progress Bar /////////////////////////////////////////////////
@@ -175,20 +175,20 @@ ProgressUIptr ProgressUI::make(const HANDLE_t hInstance, const int width, const 
   if( result->_hProgBar == nullptr ) {
     result->destroy();
     impl_prog::errorMessage(L"CreateWindowExW(Prog)");
-    return ProgressUIptr{};
+    return ProgressBarPtr{};
   }
 
   return result;
 }
 
-const wchar_t *ProgressUI::windowClassName()
+const wchar_t *ProgressBar::windowClassName()
 {
   return L"Win32::ProgressUI";
 }
 
 ////// private static ////////////////////////////////////////////////////////
 
-bool ProgressUI::registerWindowClass(const HANDLE_t hInstance)
+bool ProgressBar::registerWindowClass(const HANDLE_t hInstance)
 {
   // (0) Sanity Check ////////////////////////////////////////////////////////
 
