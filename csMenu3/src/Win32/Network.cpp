@@ -29,17 +29,18 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#include <vector>
+
 #define NOMINMAX
 #include <Windows.h>
 #include <winnetwk.h>
-
-#include <cs/Core/Buffer.h>
-#include <cs/Core/Container.h>
 
 #include "Win32/Network.h"
 
 std::wstring resolveUniversalName(const wchar_t *filename)
 {
+  using Buffer = std::vector<uint8_t>;
+
   UNIVERSAL_NAME_INFOW info;
   DWORD sizInfo = sizeof(info);
   if( WNetGetUniversalNameW(filename, UNIVERSAL_NAME_INFO_LEVEL,
@@ -49,8 +50,10 @@ std::wstring resolveUniversalName(const wchar_t *filename)
   }
   sizInfo += sizeof(wchar_t);
 
-  cs::Buffer buffer;
-  if( !cs::resize(&buffer, sizInfo) ) {
+  Buffer buffer;
+  try {
+    buffer.resize(sizInfo, 0);
+  } catch( ... ) {
     return std::wstring{};
   }
 
@@ -60,7 +63,7 @@ std::wstring resolveUniversalName(const wchar_t *filename)
     return std::wstring{};
   }
 
-  const UNIVERSAL_NAME_INFOW *ptrInfo = reinterpret_cast<const UNIVERSAL_NAME_INFOW*>(buffer.data());
+  const UNIVERSAL_NAME_INFOW *ptrInfo = reinterpret_cast<const UNIVERSAL_NAME_INFOW *>(buffer.data());
   const std::wstring result{ptrInfo->lpUniversalName};
 
   return result;
