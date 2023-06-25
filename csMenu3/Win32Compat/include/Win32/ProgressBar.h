@@ -47,12 +47,14 @@ public:
   ProgressBar(const ctor_tag&) noexcept;
   ~ProgressBar() noexcept;
 
-  void show();
+  void show() const;
 
   void setRange(const int lo, const int hi);
-  void step();
+  void step() const;
 
   static ProgressBarPtr make(const HANDLE_t hInstance, const int width, const int height);
+
+  static UINT_t getStepItMessage();
 
   static const wchar_t *windowClassName();
 

@@ -76,8 +76,6 @@ target_include_directories(csMenu3
 target_link_libraries(csMenu3
   PRIVATE csUtil
   PRIVATE Win32Compat
-  PRIVATE comctl32.lib
-  PRIVATE mpr.lib
   PRIVATE shlwapi.lib
 )
 

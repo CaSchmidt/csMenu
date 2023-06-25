@@ -35,8 +35,12 @@
 
 #include "Win32/Compat.h"
 
-using LoopFunction = std::function<void(UINT_t)>;
+namespace message {
 
-int loop(const LoopFunction& func = nullptr);
+  using LoopFunction = std::function<void(UINT_t)>;
 
-void postQuit(const int exit_code);
+  int loop(const LoopFunction& func = nullptr);
+
+  void postQuit(const int exit_code);
+
+} // namespace message

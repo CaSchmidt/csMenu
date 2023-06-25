@@ -107,7 +107,7 @@ ProgressBar::~ProgressBar() noexcept
 {
 }
 
-void ProgressBar::show()
+void ProgressBar::show() const
 {
   ShowWindow(d->hMainWnd, SW_SHOWNORMAL);
 }
@@ -123,7 +123,7 @@ void ProgressBar::setRange(const int lo, const int hi)
   PostMessageW(d->hProgWnd, PBM_SETSTEP, (WPARAM)1, 0);
 }
 
-void ProgressBar::step()
+void ProgressBar::step() const
 {
   PostMessageW(d->hProgWnd, PBM_STEPIT, 0, 0);
 }
@@ -193,6 +193,11 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t hInstance, const int width, cons
   }
 
   return result;
+}
+
+UINT_t ProgressBar::getStepItMessage()
+{
+  return PBM_STEPIT;
 }
 
 const wchar_t *ProgressBar::windowClassName()

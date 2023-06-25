@@ -43,12 +43,10 @@ target_include_directories(Win32Compat
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-#target_link_libraries(csMenu3
-#  PRIVATE csUtil
-#  PRIVATE comctl32.lib
-#  PRIVATE mpr.lib
-#  PRIVATE shlwapi.lib
-#)
+target_link_libraries(Win32Compat
+  PRIVATE comctl32.lib
+  PRIVATE mpr.lib
+)
 
 target_sources(Win32Compat
   PRIVATE ${Win32Compat_HEADERS}
