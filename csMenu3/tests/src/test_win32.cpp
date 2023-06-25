@@ -6,7 +6,7 @@
 #include "Win32/Message.h"
 #include "Win32/ProgressBar.h"
 
-void thread_work(const int i, ProgressBar *pb)
+void thread_work(const int i, const ProgressBar *pb)
 {
   Sleep(i * 1000);
   pb->step();
@@ -15,7 +15,7 @@ void thread_work(const int i, ProgressBar *pb)
 struct Dispatch {
   Dispatch() noexcept = delete;
 
-  Dispatch(const int numItems, ProgressBar *pb) noexcept
+  Dispatch(const int numItems, const ProgressBar *pb) noexcept
     : i{0}
     , numItems{numItems}
     , pb{pb}
@@ -38,7 +38,7 @@ struct Dispatch {
 
   int i{0};
   int numItems{0};
-  ProgressBar *pb{nullptr};
+  const ProgressBar *pb{nullptr};
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
