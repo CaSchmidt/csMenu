@@ -47,8 +47,6 @@ public:
   ProgressBar(const ctor_tag&) noexcept;
   ~ProgressBar() noexcept;
 
-  void close();
-  void destroy();
   void show();
 
   void setRange(const int lo, const int hi);

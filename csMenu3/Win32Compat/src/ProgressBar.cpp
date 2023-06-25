@@ -62,26 +62,6 @@ ProgressBar::~ProgressBar() noexcept
 {
 }
 
-void ProgressBar::close()
-{
-  if( _hMainWnd == nullptr ) {
-    return;
-  }
-  HWND hWnd = reinterpret_cast<HWND>(_hMainWnd);
-
-  PostMessageW(hWnd, WM_CLOSE, 0, 0);
-}
-
-void ProgressBar::destroy()
-{
-  if( _hMainWnd == nullptr ) {
-    return;
-  }
-  HWND hWnd = reinterpret_cast<HWND>(_hMainWnd);
-
-  DestroyWindow(hWnd);
-}
-
 void ProgressBar::show()
 {
   if( _hMainWnd == nullptr ) {
