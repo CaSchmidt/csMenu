@@ -14,6 +14,10 @@ add_subdirectory(${csMenu-dev_SOURCE_DIR}/3rdparty/csUtil/csUtil
   ${CMAKE_CURRENT_BINARY_DIR}/3rdparty/csUtil
 )
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/DebugSupport
+  ${CMAKE_CURRENT_BINARY_DIR}/DebugSupport
+)
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Win32Compat
   ${CMAKE_CURRENT_BINARY_DIR}/Win32Compat
 )
