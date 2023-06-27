@@ -41,7 +41,7 @@ namespace window {
     return IsGUIThread(TRUE) != FALSE;
   }
 
-  void unregisterWindowClass(const HANDLE_t hInstance, const wchar_t *name)
+  void unregisterClass(const HANDLE_t hInstance, const wchar_t *name)
   {
     if( hInstance == nullptr || name == nullptr ) {
       return;

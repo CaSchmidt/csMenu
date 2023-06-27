@@ -43,13 +43,13 @@ namespace shell {
     SHELLEXECUTEINFOW sei;
     std::memset(&sei, 0, sizeof(sei));
 
-    sei.cbSize = sizeof(sei);
-    sei.fMask = SEE_MASK_NOASYNC | SEE_MASK_NOCLOSEPROCESS;
-    sei.lpVerb = L"open";
-    sei.lpFile = executable;
+    sei.cbSize       = sizeof(sei);
+    sei.fMask        = SEE_MASK_NOASYNC | SEE_MASK_NOCLOSEPROCESS;
+    sei.lpVerb       = L"open";
+    sei.lpFile       = executable;
     sei.lpParameters = arguments;
-    sei.lpDirectory = directory;
-    sei.nShow = SW_SHOWNORMAL;
+    sei.lpDirectory  = directory;
+    sei.nShow        = SW_SHOWNORMAL;
 
     if( ShellExecuteExW(&sei) != TRUE ) {
       return;

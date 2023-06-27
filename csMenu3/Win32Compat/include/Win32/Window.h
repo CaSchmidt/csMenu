@@ -37,6 +37,6 @@ namespace window {
 
   bool makeGUIThread();
 
-  void unregisterWindowClass(const HANDLE_t hInstance, const wchar_t *name);
+  void unregisterClass(const HANDLE_t hInstance, const wchar_t *name);
 
 } // namespace window
