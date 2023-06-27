@@ -45,7 +45,9 @@
 #include "MenuFlags.h"
 #include "Register.h"
 #include "Settings.h"
+#include "Win32/ProgressBar.h"
 #include "Win32/Registry.h"
+#include "Win32/Window.h"
 
 ////// Global ////////////////////////////////////////////////////////////////
 
@@ -55,7 +57,7 @@ HINSTANCE g_hInstance = nullptr;
 
 void buildScriptsMenu(CommandEnum *rootMenu)
 {
-  constexpr std::size_t MAX_ScriptMenus = 8;
+  constexpr std::size_t MAX_ScriptMenus    = 8;
   constexpr std::size_t MAX_ScriptsPerMenu = 8;
 
   if( rootMenu == nullptr ) {
@@ -68,7 +70,7 @@ void buildScriptsMenu(CommandEnum *rootMenu)
   }
 
   const cs::PathListFlags flags = cs::PathListFlag::File | cs::PathListFlag::SelectFilename;
-  const cs::PathList scripts = cs::list(scriptsPath, flags);
+  const cs::PathList scripts    = cs::list(scriptsPath, flags);
   if( scripts.empty() ) {
     return;
   }
@@ -77,7 +79,7 @@ void buildScriptsMenu(CommandEnum *rootMenu)
 
   if( scripts.size() <= MAX_ScriptsPerMenu ) {
     CommandId id = static_cast<CommandId>(Command::ScriptsMenu);
-    auto menu = winrt::make<CommandEnum>(static_cast<Command>(id));
+    auto menu    = winrt::make<CommandEnum>(static_cast<Command>(id));
     rootMenu->append(menu);
 
     CommandEnum *cmdEnum = dynamic_cast<CommandEnum *>(menu.get());
@@ -86,13 +88,13 @@ void buildScriptsMenu(CommandEnum *rootMenu)
     }
 
   } else {
-    CommandId id = static_cast<CommandId>(Command::ScriptsMenu);
+    CommandId id               = static_cast<CommandId>(Command::ScriptsMenu);
     cs::ConstPathListIter iter = scripts.begin();
     std::wstring title{L"Scripts #0"};
 
     for( std::size_t i = 0; i < MAX_ScriptMenus && iter != scripts.end(); i++ ) {
       title.back() += wchar_t{1};
-      auto menu = winrt::make<CommandEnum>(static_cast<Command>(id), title);
+      auto menu     = winrt::make<CommandEnum>(static_cast<Command>(id), title);
       rootMenu->append(menu);
 
       CommandEnum *cmdEnum = dynamic_cast<CommandEnum *>(menu.get());
@@ -226,6 +228,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
     DisableThreadLibraryCalls(hinstDLL);
     break;
   case DLL_PROCESS_DETACH:
+    window::unregisterClass(hinstDLL, ProgressBar::windowClassName());
+    g_hInstance = nullptr;
     break;
   case DLL_THREAD_ATTACH:
     break;
