@@ -51,7 +51,12 @@
 
 ////// Global ////////////////////////////////////////////////////////////////
 
-HINSTANCE g_hInstance = nullptr;
+HINSTANCE g_hInstDLL = nullptr;
+
+HANDLE_t getInstDLL()
+{
+  return g_hInstDLL;
+}
 
 ////// Context Menu //////////////////////////////////////////////////////////
 
@@ -218,18 +223,18 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
   return CLASS_E_CLASSNOTAVAILABLE;
 }
 
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+BOOL WINAPI DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
   UNREFERENCED_PARAMETER(lpvReserved);
 
   switch( fdwReason ) {
   case DLL_PROCESS_ATTACH:
-    g_hInstance = hinstDLL;
-    DisableThreadLibraryCalls(hinstDLL);
+    g_hInstDLL = hInstDLL;
+    DisableThreadLibraryCalls(hInstDLL);
     break;
   case DLL_PROCESS_DETACH:
-    window::unregisterClass(hinstDLL, ProgressBar::windowClassName());
-    g_hInstance = nullptr;
+    window::unregisterClass(hInstDLL, ProgressBar::windowClassName());
+    g_hInstDLL = nullptr;
     break;
   case DLL_THREAD_ATTACH:
     break;
@@ -247,7 +252,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 
 HRESULT WINAPI DllRegisterServer()
 {
-  return registerExplorerCommand(g_guid, g_hInstance, CSMENU_VERB, CSMENU_NAME);
+  return registerExplorerCommand(g_guid, g_hInstDLL, CSMENU_VERB, CSMENU_NAME);
 }
 
 HRESULT WINAPI DllUnregisterServer()

@@ -49,12 +49,12 @@ namespace impl_invoke {
   namespace fs = std::filesystem;
 
   constexpr wchar_t SEP_NATIVE = L'\\';
-  constexpr wchar_t SEP_UNIX = L'/';
+  constexpr wchar_t SEP_UNIX   = L'/';
 
   void appendFilename(std::wstring *text, const std::wstring& filename, const CommandId id)
   {
     constexpr std::size_t NPOS = std::wstring::npos;
-    constexpr std::size_t ONE = 1;
+    constexpr std::size_t ONE  = 1;
 
     if( text == nullptr || filename.empty() ) {
       return;
@@ -106,7 +106,7 @@ namespace impl_invoke {
     }
 
     const MenuFlags flags = readFlags();
-    const bool is_unc = flags.testAny(MenuFlag::ResolveUncPaths) && id != Command::List;
+    const bool is_unc     = flags.testAny(MenuFlag::ResolveUncPaths) && id != Command::List;
 
     std::wstring text;
     try {
@@ -138,14 +138,15 @@ namespace impl_invoke {
       return;
     }
 
-    const MenuFlags flags = readFlags();
-    const bool is_batch = flags.testAny(MenuFlag::BatchProcessing);
+    const MenuFlags flags  = readFlags();
+    const bool is_batch    = flags.testAny(MenuFlag::BatchProcessing);
     const bool is_parallel = ctx.numThreads > ONE && flags.testAny(MenuFlag::ParallelExecution);
 
     if( is_batch ) {
       std::thread{batch_work, std::move(ctx)}.detach();
     } else {
       if( is_parallel ) {
+        std::thread{parallel_work, std::move(ctx)}.detach();
       } else {
         std::thread{sequential_work, std::move(ctx)}.detach();
       }

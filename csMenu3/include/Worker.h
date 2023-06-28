@@ -35,4 +35,6 @@
 
 void batch_work(WorkContext ctx);
 
+void parallel_work(WorkContext ctx);
+
 void sequential_work(WorkContext ctx);
