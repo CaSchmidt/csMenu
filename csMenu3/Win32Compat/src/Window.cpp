@@ -41,16 +41,16 @@ namespace window {
     return IsGUIThread(TRUE) != FALSE;
   }
 
-  void unregisterClass(const HANDLE_t hInstance, const wchar_t *name)
+  void unregisterClass(const HANDLE_t ptrInstance, const wchar_t *name)
   {
-    if( hInstance == nullptr || name == nullptr ) {
+    if( ptrInstance == nullptr || name == nullptr ) {
       return;
     }
-    HINSTANCE hInst = reinterpret_cast<HINSTANCE>(hInstance);
+    HINSTANCE hInstance = reinterpret_cast<HINSTANCE>(ptrInstance);
 
     WNDCLASSEXW wcex;
-    if( GetClassInfoExW(hInst, name, &wcex) != FALSE ) {
-      UnregisterClassW(name, hInst);
+    if( GetClassInfoExW(hInstance, name, &wcex) != FALSE ) {
+      UnregisterClassW(name, hInstance);
     }
   }
 

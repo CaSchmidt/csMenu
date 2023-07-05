@@ -36,13 +36,13 @@
 
 #include "Win32/String.h"
 
-std::wstring getModuleFileName(const HANDLE_t hModule)
+std::wstring getModuleFileName(const HANDLE_t ptrModule)
 {
   constexpr std::size_t MAX_LENGTH = MAX_PATH;
   constexpr std::size_t ONE        = 1;
 
   wchar_t data[MAX_LENGTH];
-  GetModuleFileNameW(reinterpret_cast<HMODULE>(hModule), data, MAX_LENGTH);
+  GetModuleFileNameW(reinterpret_cast<HMODULE>(ptrModule), data, MAX_LENGTH);
 
   const std::size_t length = StringLength(data, MAX_LENGTH);
   if( length < ONE ) {

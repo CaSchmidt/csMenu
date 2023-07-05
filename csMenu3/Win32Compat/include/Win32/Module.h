@@ -35,4 +35,4 @@
 
 #include "Win32/Compat.h"
 
-std::wstring getModuleFileName(const HANDLE_t hModule);
+std::wstring getModuleFileName(const HANDLE_t ptrModule);

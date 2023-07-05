@@ -52,14 +52,14 @@ public:
   void setRange(const int lo, const int hi);
   void step() const;
 
-  static ProgressBarPtr make(const HANDLE_t hInstance, const int width, const int height);
+  static ProgressBarPtr make(const HANDLE_t ptrInstance, const int width, const int height);
 
   static UINT_t getStepItMessage();
 
   static const wchar_t *windowClassName();
 
 private:
-  static bool registerWindowClass(const HANDLE_t hInstance);
+  static bool registerWindowClass(const HANDLE_t ptrInstance);
 
   std::unique_ptr<class ProgressBarPrivate> d{};
 };
