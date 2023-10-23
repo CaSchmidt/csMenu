@@ -74,6 +74,7 @@ public:
 
     case WM_DESTROY:
       d->hMainWnd = d->hProgWnd = nullptr;
+      PostQuitMessage(0);
       break;
 
     default:
@@ -105,6 +106,11 @@ ProgressBar::ProgressBar(const ctor_tag&) noexcept
 
 ProgressBar::~ProgressBar() noexcept
 {
+}
+
+void ProgressBar::close() const
+{
+  PostMessageW(d->hMainWnd, WM_CLOSE, 0, 0);
 }
 
 void ProgressBar::show() const
