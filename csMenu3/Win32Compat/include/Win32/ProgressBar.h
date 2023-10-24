@@ -53,6 +53,8 @@ public:
   void setRange(const int lo, const int hi);
   void step() const;
 
+  void setPostQuitOnDestroy(const bool on);
+
   static ProgressBarPtr make(const HANDLE_t ptrInstance, const int width, const int height);
 
   static UINT_t getStepItMessage();

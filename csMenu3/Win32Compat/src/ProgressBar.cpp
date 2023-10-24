@@ -74,7 +74,9 @@ public:
 
     case WM_DESTROY:
       d->hMainWnd = d->hProgWnd = nullptr;
-      PostQuitMessage(0);
+      if( d->flagPostQuitOnDestroy ) {
+        PostQuitMessage(0);
+      }
       break;
 
     default:
@@ -85,6 +87,7 @@ public:
     return result;
   }
 
+  bool flagPostQuitOnDestroy{false};
   HWND hMainWnd{nullptr};
   HWND hProgWnd{nullptr};
 };
@@ -132,6 +135,11 @@ void ProgressBar::setRange(const int lo, const int hi)
 void ProgressBar::step() const
 {
   PostMessageW(d->hProgWnd, PBM_STEPIT, 0, 0);
+}
+
+void ProgressBar::setPostQuitOnDestroy(const bool on)
+{
+  d->flagPostQuitOnDestroy = on;
 }
 
 ////// public static /////////////////////////////////////////////////////////
