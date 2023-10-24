@@ -18,10 +18,10 @@
 ////// Types /////////////////////////////////////////////////////////////////
 
 using CoEnumExplorerCommand = winrt::com_ptr<IEnumExplorerCommand>;
-using CoExplorerCommand = winrt::com_ptr<IExplorerCommand>;
-using CoShellItem = winrt::com_ptr<IShellItem>;
-using CoShellItemArray = winrt::com_ptr<IShellItemArray>;
-using CoUnknown = winrt::com_ptr<IUnknown>;
+using CoExplorerCommand     = winrt::com_ptr<IExplorerCommand>;
+using CoShellItem           = winrt::com_ptr<IShellItem>;
+using CoShellItemArray      = winrt::com_ptr<IShellItemArray>;
+using CoUnknown             = winrt::com_ptr<IUnknown>;
 
 ////// IUnknown //////////////////////////////////////////////////////////////
 
@@ -43,7 +43,7 @@ void printCount(const CoUnknown& unk, const char *text = nullptr)
 ////// File System ///////////////////////////////////////////////////////////
 
 template <typename T>
-  requires cs::IsCharacter<T>
+  requires cs::is_char_v<T>
 inline std::filesystem::directory_iterator makeDirIter(const T *root)
 {
   namespace fs = std::filesystem;
