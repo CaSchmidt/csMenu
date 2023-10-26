@@ -32,6 +32,7 @@
 #pragma once
 
 #include <memory>
+#include <utility>
 
 #include "Win32/Compat.h"
 
@@ -50,6 +51,8 @@ public:
   void close() const;
   void show() const;
 
+  int getPosition() const;
+  std::pair<int, int> getRange() const;
   void setRange(const int lo, const int hi);
   void step() const;
 

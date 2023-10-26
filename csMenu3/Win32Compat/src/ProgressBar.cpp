@@ -113,12 +113,27 @@ ProgressBar::~ProgressBar() noexcept
 
 void ProgressBar::close() const
 {
-  PostMessageW(d->hMainWnd, WM_CLOSE, 0, 0);
+  SendMessageW(d->hMainWnd, WM_CLOSE, 0, 0);
 }
 
 void ProgressBar::show() const
 {
   ShowWindow(d->hMainWnd, SW_SHOWNORMAL);
+}
+
+int ProgressBar::getPosition() const
+{
+  return SendMessageW(d->hProgWnd, PBM_GETPOS, 0, 0);
+}
+
+std::pair<int, int> ProgressBar::getRange() const
+{
+  static_assert(sizeof(PBRANGE *) == sizeof(LPARAM));
+
+  PBRANGE range;
+  SendMessageW(d->hProgWnd, PBM_GETRANGE, FALSE, reinterpret_cast<LPARAM>(&range));
+
+  return std::make_pair(range.iLow, range.iHigh);
 }
 
 void ProgressBar::setRange(const int lo, const int hi)
@@ -127,14 +142,14 @@ void ProgressBar::setRange(const int lo, const int hi)
     return;
   }
 
-  PostMessageW(d->hProgWnd, PBM_SETRANGE32, (WPARAM)lo, (LPARAM)hi);
-  PostMessageW(d->hProgWnd, PBM_SETPOS, (WPARAM)lo, 0);
-  PostMessageW(d->hProgWnd, PBM_SETSTEP, (WPARAM)1, 0);
+  SendMessageW(d->hProgWnd, PBM_SETRANGE32, (WPARAM)lo, (LPARAM)hi);
+  SendMessageW(d->hProgWnd, PBM_SETPOS, (WPARAM)lo, 0);
+  SendMessageW(d->hProgWnd, PBM_SETSTEP, (WPARAM)1, 0);
 }
 
 void ProgressBar::step() const
 {
-  PostMessageW(d->hProgWnd, PBM_STEPIT, 0, 0);
+  SendMessageW(d->hProgWnd, PBM_STEPIT, 0, 0);
 }
 
 void ProgressBar::setPostQuitOnDestroy(const bool on)
