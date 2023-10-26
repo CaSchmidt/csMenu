@@ -33,7 +33,7 @@
 #include <atomic>
 #include <thread>
 
-#include <cs/Core/Container.h>
+#include <cs/Concurrent/Map.h>
 
 #include "Worker.h"
 
@@ -52,58 +52,41 @@ extern HANDLE_t getInstDLL(); // main.cpp
 
 namespace impl_parallel {
 
-  void dispatch_thread(std::atomic_size_t& counter,
-                       const std::filesystem::path script, const std::filesystem::path filename,
-                       const ProgressBar *progress)
-  {
-    counter.fetch_add(1, std::memory_order::relaxed);
-
-    const std::wstring exec = script;
-    const std::wstring arg  = quotedFileName(filename);
-    shell::execute(exec.data(), arg.data());
-
-    counter.fetch_sub(1, std::memory_order::relaxed);
-
-    progress->step();
-  }
-
-  struct Dispatcher {
+  class Worker {
   public:
-    Dispatcher() noexcept = delete;
+    Worker() noexcept = delete;
 
-    Dispatcher(WorkContext ctx, const ProgressBar *progress) noexcept
-      : ctx{std::move(ctx)}
-      , progress{progress}
+    Worker(const std::filesystem::path& script,
+           const ProgressBar *progress = nullptr) noexcept
+      : _progress(progress)
+      , _script(script)
     {
     }
 
-    void start()
+    ~Worker()
     {
-      const std::size_t numStartJobs = std::min(ctx.files.size(), ctx.numThreads);
-      for( std::size_t i = 0; i < numStartJobs; i++ ) {
-        operator()(ProgressBar::getStepItMessage());
-      }
     }
 
-    void operator()(const UINT_t message)
+    void operator()(const std::filesystem::path& filename) const
     {
-      if( message != ProgressBar::getStepItMessage() ) {
-        return;
+      if( !_script.empty() && !filename.empty() ) {
+        const std::wstring exec = _script;
+        const std::wstring arg  = quotedFileName(filename);
+        shell::execute(exec.data(), arg.data());
       }
 
-      if( !ctx.files.empty() ) {
-        std::thread{dispatch_thread, std::ref(counter), ctx.script, cs::takeFirst(&ctx.files), progress}.detach();
+      if( _progress != nullptr ) {
+        _progress->step();
 
-      } else {
-        if( counter.load(std::memory_order::relaxed) == 0 ) {
-          message::postQuit(0);
+        if( _progress->getPosition() == _progress->getRange().second ) {
+          _progress->close();
         }
       }
     }
 
-    std::atomic_size_t counter{0};
-    WorkContext ctx{};
-    const ProgressBar *progress{nullptr};
+  private:
+    const ProgressBar *_progress{nullptr};
+    std::filesystem::path _script{};
   };
 
 } // namespace impl_parallel
@@ -115,6 +98,8 @@ void batch_work(WorkContext ctx)
   const std::wstring exec = ctx.script;
   const std::wstring args = joinFileNames(ctx.files);
   shell::execute(exec.data(), args.data());
+
+  messagebox::information(L"Done! (Batch)");
 }
 
 void parallel_work(WorkContext ctx)
@@ -130,19 +115,17 @@ void parallel_work(WorkContext ctx)
     return;
   }
 
+  progress->setPostQuitOnDestroy(true);
   progress->setRange(0, static_cast<int>(ctx.files.size()));
   progress->show();
 
-  impl_parallel::Dispatcher dispatch{std::move(ctx), progress.get()};
-  dispatch.start();
+  using Worker = impl_parallel::Worker;
+  auto f       = cs::map(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
+                         Worker(ctx.script, progress.get()));
+  message::loop();
+  f.get();
 
-  auto dispatch_wrapper = [&](const UINT_t message) -> void {
-    dispatch(message);
-  };
-
-  message::loop(dispatch_wrapper);
-
-  messagebox::information(L"Done!");
+  messagebox::information(L"Done! (Parallel)");
 }
 
 void sequential_work(WorkContext ctx)
@@ -152,4 +135,6 @@ void sequential_work(WorkContext ctx)
     const std::wstring arg = quotedFileName(path);
     shell::execute(exec.data(), arg.data());
   }
+
+  messagebox::information(L"Done! (Sequential)");
 }
