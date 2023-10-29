@@ -35,16 +35,7 @@
 
 #include "Win32/ProgressBar.h"
 
-////// Implementation ////////////////////////////////////////////////////////
-
-namespace impl_prog {
-
-  void errorMessage(const wchar_t *text)
-  {
-    MessageBoxW(nullptr, text, L"Error", MB_OK | MB_ICONERROR);
-  }
-
-} // namespace impl_prog
+#include "Win32/MessageBox.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 
@@ -121,12 +112,12 @@ void ProgressBar::show() const
   ShowWindow(d->hMainWnd, SW_SHOWNORMAL);
 }
 
-int ProgressBar::getPosition() const
+int ProgressBar::position() const
 {
   return SendMessageW(d->hProgWnd, PBM_GETPOS, 0, 0);
 }
 
-std::pair<int, int> ProgressBar::getRange() const
+std::pair<int, int> ProgressBar::range() const
 {
   static_assert(sizeof(PBRANGE *) == sizeof(LPARAM));
 
@@ -192,7 +183,7 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t ptrInstance, const int width, co
                                         width, height + GetSystemMetrics(SM_CYSIZE),
                                         nullptr, nullptr, hInstance, nullptr);
   if( result->d->hMainWnd == nullptr ) {
-    impl_prog::errorMessage(L"CreateWindowExW(Main)");
+    messagebox::error(L"CreateWindowExW(Main)");
     return ProgressBarPtr{};
   }
 
@@ -204,7 +195,7 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t ptrInstance, const int width, co
   iccex.dwSize = sizeof(iccex);
   iccex.dwICC  = ICC_PROGRESS_CLASS;
   if( InitCommonControlsEx(&iccex) == FALSE ) {
-    impl_prog::errorMessage(L"InitCommonControlsEx()");
+    messagebox::error(L"InitCommonControlsEx()");
     return ProgressBarPtr{};
   }
 
@@ -217,16 +208,11 @@ ProgressBarPtr ProgressBar::make(const HANDLE_t ptrInstance, const int width, co
                                         rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
                                         result->d->hMainWnd, nullptr, hInstance, nullptr);
   if( result->d->hProgWnd == nullptr ) {
-    impl_prog::errorMessage(L"CreateWindowExW(Prog)");
+    messagebox::error(L"CreateWindowExW(Prog)");
     return ProgressBarPtr{};
   }
 
   return result;
-}
-
-UINT_t ProgressBar::getStepItMessage()
-{
-  return PBM_STEPIT;
 }
 
 const wchar_t *ProgressBar::windowClassName()
@@ -270,7 +256,7 @@ bool ProgressBar::registerWindowClass(const HANDLE_t ptrInstance)
   // (3) Register Class //////////////////////////////////////////////////////
 
   if( RegisterClassExW(&wcex) == 0 ) {
-    impl_prog::errorMessage(L"RegisterClassExW()");
+    messagebox::error(L"RegisterClassExW()");
     return false;
   }
 

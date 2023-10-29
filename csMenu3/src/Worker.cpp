@@ -78,7 +78,7 @@ namespace impl_parallel {
       if( _progress != nullptr ) {
         _progress->step();
 
-        if( _progress->getPosition() == _progress->getRange().second ) {
+        if( _progress->position() == _progress->range().second ) {
           _progress->close();
         }
       }

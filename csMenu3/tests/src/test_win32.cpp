@@ -4,42 +4,22 @@
 #include <Windows.h>
 
 #include "Win32/Message.h"
+#include "Win32/MessageBox.h"
 #include "Win32/ProgressBar.h"
 
-void thread_work(const int i, const ProgressBar *pb)
+void thread_func(const ProgressBar *progress)
 {
-  Sleep(i * 1000);
-  pb->step();
+  int i = 0;
+
+  while( progress->position() != progress->range().second ) {
+    i++;
+
+    Sleep(i * 1000);
+    progress->step();
+  }
+
+  progress->close();
 }
-
-struct Dispatch {
-  Dispatch() noexcept = delete;
-
-  Dispatch(const int numItems, const ProgressBar *pb) noexcept
-    : i{0}
-    , numItems{numItems}
-    , pb{pb}
-  {
-  }
-
-  void operator()(const UINT_t message)
-  {
-    if( message != ProgressBar::getStepItMessage() ) {
-      return;
-    }
-
-    if( i < numItems ) {
-      i += 1;
-      std::thread{thread_work, i, pb}.detach();
-    } else {
-      message::postQuit(0);
-    }
-  }
-
-  int i{0};
-  int numItems{0};
-  const ProgressBar *pb{nullptr};
-};
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -47,13 +27,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
   constexpr int NUM_ITEMS = 4;
 
   ProgressBarPtr pb = ProgressBar::make(hInstance, 480, 48);
+  pb->setPostQuitOnDestroy(true);
   pb->setRange(MIN_ITEM, MIN_ITEM + NUM_ITEMS);
   pb->show();
 
-  Dispatch dispatch{NUM_ITEMS, pb.get()};
-  dispatch(ProgressBar::getStepItMessage());
+  std::thread t(thread_func, pb.get());
+  message::loop();
+  t.join();
 
-  message::loop(dispatch);
+  messagebox::information(L"Done!");
 
   return 0;
 }

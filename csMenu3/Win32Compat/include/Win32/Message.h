@@ -37,9 +37,10 @@
 
 namespace message {
 
-  using LoopFunction = std::function<void(UINT_t)>;
+  using FilterFunction  = std::function<bool(UINT_t)>;
+  using HandlerFunction = std::function<void(UINT_t)>;
 
-  int loop(const LoopFunction& func = nullptr);
+  int loop(const FilterFunction& filter = nullptr, const HandlerFunction& handler = nullptr);
 
   void postQuit(const int exit_code);
 

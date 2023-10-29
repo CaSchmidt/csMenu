@@ -51,16 +51,16 @@ public:
   void close() const;
   void show() const;
 
-  int getPosition() const;
-  std::pair<int, int> getRange() const;
+  int position() const;
+
+  std::pair<int, int> range() const;
   void setRange(const int lo, const int hi);
+
   void step() const;
 
   void setPostQuitOnDestroy(const bool on);
 
   static ProgressBarPtr make(const HANDLE_t ptrInstance, const int width, const int height);
-
-  static UINT_t getStepItMessage();
 
   static const wchar_t *windowClassName();
 

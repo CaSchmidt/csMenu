@@ -36,7 +36,7 @@
 
 namespace message {
 
-  int loop(const LoopFunction& func)
+  int loop(const FilterFunction& filter, const HandlerFunction& handler)
   {
     MSG msg;
 
@@ -45,11 +45,15 @@ namespace message {
       if( result < 0 ) {
         // TODO: handle error...
       } else {
+        if( filter && filter(msg.message) ) {
+          continue;
+        }
+
         TranslateMessage(&msg);
         DispatchMessageW(&msg);
 
-        if( func ) {
-          func(msg.message);
+        if( handler ) {
+          handler(msg.message);
         }
       }
     } // For Each Message
