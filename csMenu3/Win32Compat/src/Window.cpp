@@ -38,7 +38,8 @@ namespace window {
 
   bool makeGUIThread()
   {
-    return IsGUIThread(TRUE) != FALSE;
+    const BOOL result = IsGUIThread(TRUE);
+    return result != FALSE && result != ERROR_NOT_ENOUGH_MEMORY;
   }
 
   void unregisterClass(const HANDLE_t ptrInstance, const wchar_t *name)
