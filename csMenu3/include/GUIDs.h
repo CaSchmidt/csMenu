@@ -33,4 +33,4 @@
 
 #include <guiddef.h>
 
-extern GUID g_guid;
+extern GUID g_csMenu3GUID;

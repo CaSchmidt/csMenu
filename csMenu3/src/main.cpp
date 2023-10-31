@@ -247,15 +247,15 @@ BOOL WINAPI DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved)
   return TRUE;
 }
 
-#define CSMENU_NAME L"CS::Menu3"
-#define CSMENU_VERB L"csMenu3Verb"
+#define CSMENU3_NAME L"CS::Menu3"
+#define CSMENU3_VERB L"csMenu3Verb"
 
 HRESULT WINAPI DllRegisterServer()
 {
-  return registerExplorerCommand(g_guid, g_hInstDLL, CSMENU_VERB, CSMENU_NAME, true, true);
+  return registerExplorerCommand(g_csMenu3GUID, g_hInstDLL, CSMENU3_VERB, CSMENU3_NAME, true, true);
 }
 
 HRESULT WINAPI DllUnregisterServer()
 {
-  return unregisterExplorerCommand(g_guid, CSMENU_VERB);
+  return unregisterExplorerCommand(g_csMenu3GUID, CSMENU3_VERB);
 }
