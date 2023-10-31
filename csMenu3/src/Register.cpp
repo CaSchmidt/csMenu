@@ -50,14 +50,15 @@
 ////// Public ////////////////////////////////////////////////////////////////
 
 HRESULT registerExplorerCommand(const GUID& refGuid, const HMODULE module,
-                                const std::wstring& verb, const std::wstring& name)
+                                const std::wstring& verb, const std::wstring& name,
+                                const bool with_file, const bool with_directory)
 {
   if( module == nullptr || verb.empty() || name.empty() ) {
     return SELFREG_E_CLASS;
   }
 
   const std::wstring filename = getModuleFileName(module);
-  const std::wstring guid = GUIDasString(&refGuid);
+  const std::wstring guid     = GUIDasString(&refGuid);
   if( filename.empty() || guid.empty() ) {
     return SELFREG_E_CLASS;
   }
@@ -66,7 +67,7 @@ HRESULT registerExplorerCommand(const GUID& refGuid, const HMODULE module,
 
   // (1) Register Class ID (GUID) ////////////////////////////////////////////
 
-  key = BEGKEY_CLSID;
+  key  = BEGKEY_CLSID;
   key += guid;
   if( !reg::writeLocalMachineString(key.data(), nullptr, name.data()) ) {
     return SELFREG_E_CLASS;
@@ -82,24 +83,28 @@ HRESULT registerExplorerCommand(const GUID& refGuid, const HMODULE module,
 
   // (2) Register with Files /////////////////////////////////////////////////
 
-  key = BEGKEY_FILEVERB;
-  key += verb;
-  if( !reg::writeLocalMachineString(key.data(), nullptr, name.data()) ) {
-    return SELFREG_E_CLASS;
-  }
-  if( !reg::writeLocalMachineString(key.data(), L"ExplorerCommandHandler", guid.data()) ) {
-    return SELFREG_E_CLASS;
+  if( with_file ) {
+    key  = BEGKEY_FILEVERB;
+    key += verb;
+    if( !reg::writeLocalMachineString(key.data(), nullptr, name.data()) ) {
+      return SELFREG_E_CLASS;
+    }
+    if( !reg::writeLocalMachineString(key.data(), L"ExplorerCommandHandler", guid.data()) ) {
+      return SELFREG_E_CLASS;
+    }
   }
 
   // (3) Register with Directories ///////////////////////////////////////////
 
-  key = BEGKEY_DIRECTORYVERB;
-  key += verb;
-  if( !reg::writeLocalMachineString(key.data(), nullptr, name.data()) ) {
-    return SELFREG_E_CLASS;
-  }
-  if( !reg::writeLocalMachineString(key.data(), L"ExplorerCommandHandler", guid.data()) ) {
-    return SELFREG_E_CLASS;
+  if( with_directory ) {
+    key  = BEGKEY_DIRECTORYVERB;
+    key += verb;
+    if( !reg::writeLocalMachineString(key.data(), nullptr, name.data()) ) {
+      return SELFREG_E_CLASS;
+    }
+    if( !reg::writeLocalMachineString(key.data(), L"ExplorerCommandHandler", guid.data()) ) {
+      return SELFREG_E_CLASS;
+    }
   }
 
   // (4) Notify Shell of Changes /////////////////////////////////////////////
@@ -124,27 +129,21 @@ HRESULT unregisterExplorerCommand(const GUID& refGuid, const std::wstring& verb)
 
   // (1) Unregister Class ID (GUID) //////////////////////////////////////////
 
-  key = BEGKEY_CLSID;
+  key  = BEGKEY_CLSID;
   key += guid;
-  if( !reg::deleteLocalMachineTree(key.data()) ) {
-    return SELFREG_E_CLASS;
-  }
+  reg::deleteLocalMachineTree(key.data());
 
   // (2) Unregister Files ////////////////////////////////////////////////////
 
-  key = BEGKEY_FILEVERB;
+  key  = BEGKEY_FILEVERB;
   key += verb;
-  if( !reg::deleteLocalMachineTree(key.data()) ) {
-    return SELFREG_E_CLASS;
-  }
+  reg::deleteLocalMachineTree(key.data());
 
   // (3) Unregister Directories //////////////////////////////////////////////
 
-  key = BEGKEY_DIRECTORYVERB;
+  key  = BEGKEY_DIRECTORYVERB;
   key += verb;
-  if( !reg::deleteLocalMachineTree(key.data()) ) {
-    return SELFREG_E_CLASS;
-  }
+  reg::deleteLocalMachineTree(key.data());
 
   // (4) Notify Shell of Changes /////////////////////////////////////////////
 

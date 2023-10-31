@@ -252,7 +252,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved)
 
 HRESULT WINAPI DllRegisterServer()
 {
-  return registerExplorerCommand(g_guid, g_hInstDLL, CSMENU_VERB, CSMENU_NAME);
+  return registerExplorerCommand(g_guid, g_hInstDLL, CSMENU_VERB, CSMENU_NAME, true, true);
 }
 
 HRESULT WINAPI DllUnregisterServer()

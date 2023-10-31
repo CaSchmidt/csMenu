@@ -37,6 +37,7 @@
 #include <string>
 
 HRESULT registerExplorerCommand(const GUID& refGuid, const HMODULE module,
-                                const std::wstring& verb, const std::wstring& name);
+                                const std::wstring& verb, const std::wstring& name,
+                                const bool with_file, const bool with_directory);
 
 HRESULT unregisterExplorerCommand(const GUID& refGuid, const std::wstring& verb);
