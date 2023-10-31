@@ -29,24 +29,10 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#define NOMINMAX
-#include <olectl.h>
-#include <Windows.h>
-
-#include <winrt/windows.foundation.h>
-
-#include <cs/System/FileSystem.h>
-
-#include "CommandEnum.h"
-#include "CommandFlag.h"
-#include "CommandInvoke.h"
-#include "CommandSeparator.h"
 #include "GUIDs.h"
-#include "MenuFlags.h"
+#include "MenuFactory.h"
 #include "Register.h"
-#include "Settings.h"
 #include "Win32/ProgressBar.h"
-#include "Win32/Registry.h"
 #include "Win32/Window.h"
 
 ////// Global ////////////////////////////////////////////////////////////////
@@ -60,6 +46,7 @@ HANDLE_t getInstDLL()
 
 ////// Context Menu //////////////////////////////////////////////////////////
 
+#if 0
 void buildScriptsMenu(CommandEnum *rootMenu)
 {
   constexpr std::size_t MAX_ScriptMenus    = 8;
@@ -113,79 +100,7 @@ void buildScriptsMenu(CommandEnum *rootMenu)
     } // For Each Menu
   }
 }
-
-void buildSettingsMenu(CommandEnum *menu)
-{
-  if( menu == nullptr ) {
-    return;
-  }
-
-  const MenuFlags flags = readFlags();
-  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::BatchProcessing), Command::CheckBatchProcessing));
-  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::ParallelExecution), Command::CheckParallelExecution));
-  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::ResolveUncPaths), Command::CheckResolveUncPaths));
-  menu->append(winrt::make<CommandFlag>(flags.testAny(MenuFlag::UnixPathSeparators), Command::CheckUnixPathSeparators));
-}
-
-void buildRootMenu(CommandEnum *menu)
-{
-  if( menu == nullptr ) {
-    return;
-  }
-
-  menu->append(winrt::make<CommandInvoke>(Command::List));
-  menu->append(winrt::make<CommandInvoke>(Command::ListPath));
-  menu->append(winrt::make<CommandInvoke>(Command::ListPathTabular));
-
-  // Settings ////////////////////////////////////////////////////////////////
-
-  menu->append(winrt::make<CommandSeparator>());
-
-  auto settings = winrt::make<CommandEnum>(Command::SettingsMenu);
-  menu->append(settings);
-  buildSettingsMenu(dynamic_cast<CommandEnum *>(settings.get()));
-
-  // Scripts /////////////////////////////////////////////////////////////////
-
-  buildScriptsMenu(menu);
-}
-
-////// Class Factory /////////////////////////////////////////////////////////
-
-struct ClassFactory
-  : public winrt::implements<ClassFactory, IClassFactory> {
-  IFACEMETHODIMP CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject)
-  {
-    if( pUnkOuter != nullptr ) {
-      return CLASS_E_NOAGGREGATION;
-    }
-
-    try {
-      auto root = winrt::make<CommandEnum>(Command::RootMenu);
-      buildRootMenu(dynamic_cast<CommandEnum *>(root.get()));
-
-      return root->QueryInterface(riid, ppvObject);
-    } catch( ... ) {
-      return winrt::to_hresult();
-    }
-
-    return E_NOINTERFACE;
-  }
-
-  IFACEMETHODIMP LockServer(BOOL fLock)
-  {
-    if( fLock ) {
-      ++winrt::get_module_lock();
-    } else {
-      --winrt::get_module_lock();
-    }
-
-    return S_OK;
-  }
-};
-
-// cf. guid.cpp
-struct __declspec(uuid("3d92630b-2959-4551-8a55-ffb508ef3791")) ClassFactory;
+#endif
 
 ////// DLL ///////////////////////////////////////////////////////////////////
 
@@ -210,12 +125,10 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
     return E_NOINTERFACE;
   }
 
-  if( rclsid != __uuidof(ClassFactory) ) {
-    return CLASS_E_CLASSNOTAVAILABLE;
-  }
-
   try {
-    return winrt::make<ClassFactory>()->QueryInterface(riid, ppv);
+    if( rclsid == __uuidof(MenuFactory) ) {
+      return winrt::make<MenuFactory>()->QueryInterface(riid, ppv);
+    }
   } catch( ... ) {
     return winrt::to_hresult();
   }
