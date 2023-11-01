@@ -36,8 +36,8 @@
 
 #include <winrt/windows.foundation.h>
 
-struct __declspec(uuid("3d92630b-2959-4551-8a55-ffb508ef3791")) MenuFactory // cf. GUIDs.cpp
-  : public winrt::implements<MenuFactory, IClassFactory> {
+struct __declspec(uuid("3d92630b-2959-4551-8a55-ffb508ef3791")) MainMenuFactory // cf. GUIDs.cpp
+  : public winrt::implements<MainMenuFactory, IClassFactory> {
   IFACEMETHODIMP CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject);
   IFACEMETHODIMP LockServer(BOOL fLock);
 };

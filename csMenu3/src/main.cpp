@@ -126,8 +126,8 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
   }
 
   try {
-    if( rclsid == __uuidof(MenuFactory) ) {
-      return winrt::make<MenuFactory>()->QueryInterface(riid, ppv);
+    if( rclsid == __uuidof(MainMenuFactory) ) {
+      return winrt::make<MainMenuFactory>()->QueryInterface(riid, ppv);
     }
   } catch( ... ) {
     return winrt::to_hresult();

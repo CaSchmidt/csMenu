@@ -66,7 +66,7 @@ namespace impl_menu {
 
 ////// public ////////////////////////////////////////////////////////////////
 
-IFACEMETHODIMP MenuFactory::CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject)
+IFACEMETHODIMP MainMenuFactory::CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject)
 {
   if( pUnkOuter != nullptr ) {
     return CLASS_E_NOAGGREGATION;
@@ -84,7 +84,7 @@ IFACEMETHODIMP MenuFactory::CreateInstance(IUnknown *pUnkOuter, REFIID riid, voi
   return E_NOINTERFACE;
 }
 
-IFACEMETHODIMP MenuFactory::LockServer(BOOL fLock)
+IFACEMETHODIMP MainMenuFactory::LockServer(BOOL fLock)
 {
   if( fLock ) {
     ++winrt::get_module_lock();
