@@ -30,7 +30,7 @@
 *****************************************************************************/
 
 #include "GUIDs.h"
-#include "MenuFactory.h"
+#include "MainMenuFactory.h"
 #include "Register.h"
 #include "Win32/ProgressBar.h"
 #include "Win32/Window.h"
