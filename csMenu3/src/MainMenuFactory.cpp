@@ -73,10 +73,10 @@ IFACEMETHODIMP MainMenuFactory::CreateInstance(IUnknown *pUnkOuter, REFIID riid,
   }
 
   try {
-    auto root = winrt::make<CommandEnum>(Command::MainMenu);
-    impl_menu::buildContextMenu(dynamic_cast<CommandEnum *>(root.get()));
+    auto menu = winrt::make<CommandEnum>(Command::MainMenu);
+    impl_menu::buildContextMenu(dynamic_cast<CommandEnum *>(menu.get()));
 
-    return root->QueryInterface(riid, ppvObject);
+    return menu->QueryInterface(riid, ppvObject);
   } catch( ... ) {
     return winrt::to_hresult();
   }
