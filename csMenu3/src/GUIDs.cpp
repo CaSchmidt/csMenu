@@ -36,3 +36,9 @@ GUID g_csMenu3GUID = {/* 3d92630b-2959-4551-8a55-ffb508ef3791 */
                       0x2959,
                       0x4551,
                       {0x8a, 0x55, 0xff, 0xb5, 0x08, 0xef, 0x37, 0x91}};
+
+GUID g_csScripts3GUID = {/* 82f3e66e-6689-45e5-94fd-d5cbebffa415 */
+                         0x82f3e66e,
+                         0x6689,
+                         0x45e5,
+                         {0x94, 0xfd, 0xd5, 0xcb, 0xeb, 0xff, 0xa4, 0x15}};

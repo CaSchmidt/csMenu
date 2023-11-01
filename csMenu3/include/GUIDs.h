@@ -34,3 +34,5 @@
 #include <guiddef.h>
 
 extern GUID g_csMenu3GUID;
+
+extern GUID g_csScripts3GUID;

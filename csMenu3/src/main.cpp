@@ -32,6 +32,7 @@
 #include "GUIDs.h"
 #include "MainMenuFactory.h"
 #include "Register.h"
+#include "ScriptsMenuFactory.h"
 #include "Win32/ProgressBar.h"
 #include "Win32/Window.h"
 
@@ -128,6 +129,8 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
   try {
     if( rclsid == __uuidof(MainMenuFactory) ) {
       return winrt::make<MainMenuFactory>()->QueryInterface(riid, ppv);
+    } else if( rclsid == __uuidof(ScriptsMenuFactory) ) {
+      return winrt::make<ScriptsMenuFactory>()->QueryInterface(riid, ppv);
     }
   } catch( ... ) {
     return winrt::to_hresult();
@@ -163,12 +166,39 @@ BOOL WINAPI DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved)
 #define CSMENU3_NAME L"CS::Menu3"
 #define CSMENU3_VERB L"csMenu3Verb"
 
+#define CSSCRIPTS3_NAME L"CS::Scripts3"
+#define CSSCRIPTS3_VERB L"csScripts3Verb"
+
 HRESULT WINAPI DllRegisterServer()
 {
-  return registerExplorerCommand(g_csMenu3GUID, g_hInstDLL, CSMENU3_VERB, CSMENU3_NAME, true, true);
+  HRESULT result = E_FAIL;
+
+  result = registerExplorerCommand(g_csMenu3GUID, g_hInstDLL, CSMENU3_VERB, CSMENU3_NAME, true, true);
+  if( FAILED(result) ) {
+    return result;
+  }
+
+  result = registerExplorerCommand(g_csScripts3GUID, g_hInstDLL, CSSCRIPTS3_VERB, CSSCRIPTS3_NAME, true, false);
+  if( FAILED(result) ) {
+    return result;
+  }
+
+  return S_OK;
 }
 
 HRESULT WINAPI DllUnregisterServer()
 {
-  return unregisterExplorerCommand(g_csMenu3GUID, CSMENU3_VERB);
+  HRESULT result = E_FAIL;
+
+  result = unregisterExplorerCommand(g_csMenu3GUID, CSMENU3_VERB);
+  if( FAILED(result) ) {
+    return result;
+  }
+
+  result = unregisterExplorerCommand(g_csScripts3GUID, CSSCRIPTS3_VERB);
+  if( FAILED(result) ) {
+    return result;
+  }
+
+  return S_OK;
 }
