@@ -41,6 +41,7 @@ list(APPEND csMenu3_HEADERS
   include/MainMenuFactory.h
   include/MenuFlags.h
   include/Register.h
+  include/ScriptsMenuFactory.h
   include/Settings.h
   include/WorkContext.h
   include/Worker.h
@@ -60,6 +61,7 @@ list(APPEND csMenu3_SOURCES
   src/MainMenuFactory.cpp
   src/MenuFlags.cpp
   src/Register.cpp
+  src/ScriptsMenuFactory.cpp
   src/WorkContext.cpp
   src/Worker.cpp
 )
