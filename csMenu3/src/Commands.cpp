@@ -36,8 +36,8 @@
 std::wstring titleFromId(const CommandId id)
 {
   if( id == Command::None ) {
-    return std::wstring{};
-  } else if( id == Command::RootMenu ) {
+    return std::wstring();
+  } else if( id == Command::MainMenu ) {
     return std::wstring{L"CS::Menu-Test"};
   } else if( id == Command::List ) {
     return std::wstring{L"List"};
@@ -59,5 +59,5 @@ std::wstring titleFromId(const CommandId id)
     return std::wstring{L"Scripts"};
   }
 
-  return std::wstring{};
+  return std::wstring();
 }

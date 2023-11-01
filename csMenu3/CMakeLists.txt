@@ -38,7 +38,7 @@ list(APPEND csMenu3_HEADERS
   include/FileName.h
   include/GUIDs.h
   include/Invoke.h
-  include/MenuFactory.h
+  include/MainMenuFactory.h
   include/MenuFlags.h
   include/Register.h
   include/Settings.h
@@ -57,7 +57,7 @@ list(APPEND csMenu3_SOURCES
   src/GUIDs.cpp
   src/Invoke.cpp
   src/main.cpp
-  src/MenuFactory.cpp
+  src/MainMenuFactory.cpp
   src/MenuFlags.cpp
   src/Register.cpp
   src/WorkContext.cpp

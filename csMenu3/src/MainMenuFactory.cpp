@@ -29,7 +29,7 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include "MenuFactory.h"
+#include "MainMenuFactory.h"
 
 #include "CommandEnum.h"
 #include "CommandFlag.h"
@@ -73,7 +73,7 @@ IFACEMETHODIMP MenuFactory::CreateInstance(IUnknown *pUnkOuter, REFIID riid, voi
   }
 
   try {
-    auto root = winrt::make<CommandEnum>(Command::RootMenu);
+    auto root = winrt::make<CommandEnum>(Command::MainMenu);
     impl_menu::buildContextMenu(dynamic_cast<CommandEnum *>(root.get()));
 
     return root->QueryInterface(riid, ppvObject);

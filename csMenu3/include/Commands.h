@@ -39,7 +39,7 @@ using CommandId = unsigned int;
 
 enum class Command : CommandId {
   None = 0,
-  RootMenu,
+  MainMenu,
   List,
   ListPath,
   ListPathTabular,
