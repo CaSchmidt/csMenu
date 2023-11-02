@@ -55,6 +55,22 @@ std::wstring titleFromId(const CommandId id)
     return std::wstring{L"Resolve UNC paths"};
   } else if( id == Command::CheckUnixPathSeparators ) {
     return std::wstring{L"UN*X path separators"};
+  } else if( id == Command::HashMenu ) {
+    return std::wstring(L"CS::Sum");
+  } else if( id == Command::HashCrc32 ) {
+    return std::wstring(L"CRC-32");
+  } else if( id == Command::HashMd5 ) {
+    return std::wstring(L"MD5");
+  } else if( id == Command::HashSha1 ) {
+    return std::wstring(L"SHA-1");
+  } else if( id == Command::HashSha224 ) {
+    return std::wstring(L"SHA-224");
+  } else if( id == Command::HashSha256 ) {
+    return std::wstring(L"SHA-256");
+  } else if( id == Command::HashSha384 ) {
+    return std::wstring(L"SHA-384");
+  } else if( id == Command::HashSha512 ) {
+    return std::wstring(L"SHA-512");
   } else if( id == Command::ScriptsMenu ) {
     return std::wstring{L"CS::Run"};
   }

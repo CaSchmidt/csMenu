@@ -38,9 +38,9 @@
 #include "Invoke.h"
 
 #include "MenuFlags.h"
+#include "ScriptWorker.h"
 #include "Win32/Clipboard.h"
 #include "Win32/Network.h"
-#include "Worker.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 
@@ -169,6 +169,8 @@ void invokeCommandId(const CommandId id, const std::wstring& script, const cs::P
     impl_invoke::invokeFlags(id);
   } else if( id == Command::CheckUnixPathSeparators ) {
     impl_invoke::invokeFlags(id);
+  } else if( id > Command::HashMenu && id < Command::ScriptsMenu ) {
+    // TODO
   } else if( id > Command::ScriptsMenu ) {
     impl_invoke::invokeScript(script, files);
   }

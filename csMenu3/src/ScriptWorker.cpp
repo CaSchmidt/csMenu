@@ -35,7 +35,7 @@
 
 #include <cs/Concurrent/Map.h>
 
-#include "Worker.h"
+#include "ScriptWorker.h"
 
 #include "FileName.h"
 #include "Win32/Message.h"

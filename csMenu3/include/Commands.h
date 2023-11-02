@@ -48,6 +48,14 @@ enum class Command : CommandId {
   CheckParallelExecution,
   CheckResolveUncPaths,
   CheckUnixPathSeparators,
+  HashMenu,
+  HashCrc32,
+  HashMd5,
+  HashSha1,
+  HashSha224,
+  HashSha256,
+  HashSha384,
+  HashSha512,
   ScriptsMenu,
   Num_Commands
 };
@@ -57,6 +65,11 @@ enum class Command : CommandId {
 inline bool operator==(const CommandId id, const Command cmd)
 {
   return id == static_cast<CommandId>(cmd);
+}
+
+inline bool operator<(const CommandId id, const Command cmd)
+{
+  return id < static_cast<CommandId>(cmd);
 }
 
 inline bool operator>(const CommandId id, const Command cmd)
