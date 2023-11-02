@@ -30,6 +30,7 @@
 *****************************************************************************/
 
 #include "GUIDs.h"
+#include "HashMenuFactory.h"
 #include "MainMenuFactory.h"
 #include "Register.h"
 #include "ScriptMenuFactory.h"
@@ -71,6 +72,8 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
   try {
     if( rclsid == __uuidof(MainMenuFactory) ) {
       return winrt::make<MainMenuFactory>()->QueryInterface(riid, ppv);
+    } else if( rclsid == __uuidof(HashMenuFactory) ) {
+      return winrt::make<HashMenuFactory>()->QueryInterface(riid, ppv);
     } else if( rclsid == __uuidof(ScriptMenuFactory) ) {
       return winrt::make<ScriptMenuFactory>()->QueryInterface(riid, ppv);
     }
@@ -105,6 +108,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved)
   return TRUE;
 }
 
+#define CSHASH3_NAME L"CS::Hash3"
+#define CSHASH3_VERB L"csHash3Verb"
+
 #define CSMENU3_NAME L"CS::Menu3"
 #define CSMENU3_VERB L"csMenu3Verb"
 
@@ -116,6 +122,11 @@ HRESULT WINAPI DllRegisterServer()
   HRESULT result = E_FAIL;
 
   result = registerExplorerCommand(g_csMenu3GUID, g_hInstDLL, CSMENU3_VERB, CSMENU3_NAME, true, true);
+  if( FAILED(result) ) {
+    return result;
+  }
+
+  result = registerExplorerCommand(g_csHash3GUID, g_hInstDLL, CSHASH3_VERB, CSHASH3_NAME, true, false);
   if( FAILED(result) ) {
     return result;
   }
@@ -133,6 +144,11 @@ HRESULT WINAPI DllUnregisterServer()
   HRESULT result = E_FAIL;
 
   result = unregisterExplorerCommand(g_csMenu3GUID, CSMENU3_VERB);
+  if( FAILED(result) ) {
+    return result;
+  }
+
+  result = unregisterExplorerCommand(g_csHash3GUID, CSHASH3_VERB);
   if( FAILED(result) ) {
     return result;
   }
