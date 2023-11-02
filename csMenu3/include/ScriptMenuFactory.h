@@ -29,71 +29,15 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#include <cs/System/FileSystem.h>
+#pragma once
 
-#include "ScriptsMenuFactory.h"
+#define NOMINMAX
+#include <olectl.h>
 
-#include "CommandEnum.h"
-#include "CommandInvoke.h"
-#include "Settings.h"
-#include "Win32/Registry.h"
+#include <winrt/windows.foundation.h>
 
-////// Private ///////////////////////////////////////////////////////////////
-
-namespace impl_scripts {
-
-  void buildContextMenu(CommandEnum *menu)
-  {
-    if( menu == nullptr ) {
-      return;
-    }
-
-    const std::wstring scriptsPath = reg::readCurrentUserString(KEY_CSMENU, NAME_SCRIPTS);
-    if( scriptsPath.empty() ) {
-      return;
-    }
-
-    const cs::PathListFlags flags = cs::PathListFlag::File | cs::PathListFlag::SelectFilename;
-    const cs::PathList scripts    = cs::list(scriptsPath, flags);
-    if( scripts.empty() ) {
-      return;
-    }
-
-    CommandId id = static_cast<CommandId>(Command::ScriptsMenu);
-    for( const std::filesystem::path& script : scripts ) {
-      menu->append(winrt::make<CommandInvoke>(static_cast<Command>(++id), script.wstring()));
-    }
-  }
-
-} // namespace impl_scripts
-
-////// public ////////////////////////////////////////////////////////////////
-
-IFACEMETHODIMP ScriptsMenuFactory::CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject)
-{
-  if( pUnkOuter != nullptr ) {
-    return CLASS_E_NOAGGREGATION;
-  }
-
-  try {
-    auto menu = winrt::make<CommandEnum>(Command::ScriptsMenu);
-    impl_scripts::buildContextMenu(dynamic_cast<CommandEnum *>(menu.get()));
-
-    return menu->QueryInterface(riid, ppvObject);
-  } catch( ... ) {
-    return winrt::to_hresult();
-  }
-
-  return E_NOINTERFACE;
-}
-
-IFACEMETHODIMP ScriptsMenuFactory::LockServer(BOOL fLock)
-{
-  if( fLock ) {
-    ++winrt::get_module_lock();
-  } else {
-    --winrt::get_module_lock();
-  }
-
-  return S_OK;
-}
+struct __declspec(uuid("82f3e66e-6689-45e5-94fd-d5cbebffa415")) ScriptMenuFactory // cf. GUIDs.cpp
+  : public winrt::implements<ScriptMenuFactory, IClassFactory> {
+  IFACEMETHODIMP CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject);
+  IFACEMETHODIMP LockServer(BOOL fLock);
+};

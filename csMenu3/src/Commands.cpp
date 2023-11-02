@@ -71,7 +71,7 @@ std::wstring titleFromId(const CommandId id)
     return std::wstring(L"SHA-384");
   } else if( id == Command::HashSha512 ) {
     return std::wstring(L"SHA-512");
-  } else if( id == Command::ScriptsMenu ) {
+  } else if( id == Command::ScriptMenu ) {
     return std::wstring{L"CS::Run"};
   }
 

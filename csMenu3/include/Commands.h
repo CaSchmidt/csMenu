@@ -56,7 +56,7 @@ enum class Command : CommandId {
   HashSha256,
   HashSha384,
   HashSha512,
-  ScriptsMenu,
+  ScriptMenu,
   Num_Commands
 };
 

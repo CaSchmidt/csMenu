@@ -32,7 +32,7 @@
 #include "GUIDs.h"
 #include "MainMenuFactory.h"
 #include "Register.h"
-#include "ScriptsMenuFactory.h"
+#include "ScriptMenuFactory.h"
 #include "Win32/ProgressBar.h"
 #include "Win32/Window.h"
 
@@ -129,8 +129,8 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
   try {
     if( rclsid == __uuidof(MainMenuFactory) ) {
       return winrt::make<MainMenuFactory>()->QueryInterface(riid, ppv);
-    } else if( rclsid == __uuidof(ScriptsMenuFactory) ) {
-      return winrt::make<ScriptsMenuFactory>()->QueryInterface(riid, ppv);
+    } else if( rclsid == __uuidof(ScriptMenuFactory) ) {
+      return winrt::make<ScriptMenuFactory>()->QueryInterface(riid, ppv);
     }
   } catch( ... ) {
     return winrt::to_hresult();

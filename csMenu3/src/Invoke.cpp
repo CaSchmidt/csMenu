@@ -169,9 +169,9 @@ void invokeCommandId(const CommandId id, const std::wstring& script, const cs::P
     impl_invoke::invokeFlags(id);
   } else if( id == Command::CheckUnixPathSeparators ) {
     impl_invoke::invokeFlags(id);
-  } else if( id > Command::HashMenu && id < Command::ScriptsMenu ) {
+  } else if( id > Command::HashMenu && id < Command::ScriptMenu ) {
     // TODO
-  } else if( id > Command::ScriptsMenu ) {
+  } else if( id > Command::ScriptMenu ) {
     impl_invoke::invokeScript(script, files);
   }
 }
