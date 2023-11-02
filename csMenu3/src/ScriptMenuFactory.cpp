@@ -40,7 +40,7 @@
 
 ////// Private ///////////////////////////////////////////////////////////////
 
-namespace impl_scripts {
+namespace impl_script {
 
   void buildContextMenu(CommandEnum *menu)
   {
@@ -65,7 +65,7 @@ namespace impl_scripts {
     }
   }
 
-} // namespace impl_scripts
+} // namespace impl_script
 
 ////// public ////////////////////////////////////////////////////////////////
 
@@ -77,7 +77,7 @@ IFACEMETHODIMP ScriptMenuFactory::CreateInstance(IUnknown *pUnkOuter, REFIID rii
 
   try {
     auto menu = winrt::make<CommandEnum>(Command::ScriptMenu);
-    impl_scripts::buildContextMenu(dynamic_cast<CommandEnum *>(menu.get()));
+    impl_script::buildContextMenu(dynamic_cast<CommandEnum *>(menu.get()));
 
     return menu->QueryInterface(riid, ppvObject);
   } catch( ... ) {

@@ -108,8 +108,8 @@ BOOL WINAPI DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved)
 #define CSMENU3_NAME L"CS::Menu3"
 #define CSMENU3_VERB L"csMenu3Verb"
 
-#define CSSCRIPTS3_NAME L"CS::Scripts3"
-#define CSSCRIPTS3_VERB L"csScripts3Verb"
+#define CSSCRIPT3_NAME L"CS::Script3"
+#define CSSCRIPT3_VERB L"csScript3Verb"
 
 HRESULT WINAPI DllRegisterServer()
 {
@@ -120,7 +120,7 @@ HRESULT WINAPI DllRegisterServer()
     return result;
   }
 
-  result = registerExplorerCommand(g_csScripts3GUID, g_hInstDLL, CSSCRIPTS3_VERB, CSSCRIPTS3_NAME, true, false);
+  result = registerExplorerCommand(g_csScript3GUID, g_hInstDLL, CSSCRIPT3_VERB, CSSCRIPT3_NAME, true, false);
   if( FAILED(result) ) {
     return result;
   }
@@ -137,7 +137,7 @@ HRESULT WINAPI DllUnregisterServer()
     return result;
   }
 
-  result = unregisterExplorerCommand(g_csScripts3GUID, CSSCRIPTS3_VERB);
+  result = unregisterExplorerCommand(g_csScript3GUID, CSSCRIPT3_VERB);
   if( FAILED(result) ) {
     return result;
   }

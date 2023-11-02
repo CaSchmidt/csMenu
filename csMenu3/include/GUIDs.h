@@ -33,6 +33,8 @@
 
 #include <guiddef.h>
 
+extern GUID g_csHash3GUID;
+
 extern GUID g_csMenu3GUID;
 
-extern GUID g_csScripts3GUID;
+extern GUID g_csScript3GUID;
