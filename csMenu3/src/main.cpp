@@ -45,64 +45,6 @@ HANDLE_t getInstDLL()
   return g_hInstDLL;
 }
 
-////// Context Menu //////////////////////////////////////////////////////////
-
-#if 0
-void buildScriptsMenu(CommandEnum *rootMenu)
-{
-  constexpr std::size_t MAX_ScriptMenus    = 8;
-  constexpr std::size_t MAX_ScriptsPerMenu = 8;
-
-  if( rootMenu == nullptr ) {
-    return;
-  }
-
-  const std::wstring scriptsPath = reg::readCurrentUserString(KEY_CSMENU, NAME_SCRIPTS);
-  if( scriptsPath.empty() ) {
-    return;
-  }
-
-  const cs::PathListFlags flags = cs::PathListFlag::File | cs::PathListFlag::SelectFilename;
-  const cs::PathList scripts    = cs::list(scriptsPath, flags);
-  if( scripts.empty() ) {
-    return;
-  }
-
-  rootMenu->append(winrt::make<CommandSeparator>());
-
-  if( scripts.size() <= MAX_ScriptsPerMenu ) {
-    CommandId id = static_cast<CommandId>(Command::ScriptsMenu);
-    auto menu    = winrt::make<CommandEnum>(static_cast<Command>(id));
-    rootMenu->append(menu);
-
-    CommandEnum *cmdEnum = dynamic_cast<CommandEnum *>(menu.get());
-    for( const std::filesystem::path& script : scripts ) {
-      cmdEnum->append(winrt::make<CommandInvoke>(static_cast<Command>(++id), script.wstring()));
-    }
-
-  } else {
-    CommandId id               = static_cast<CommandId>(Command::ScriptsMenu);
-    cs::ConstPathListIter iter = scripts.begin();
-    std::wstring title{L"Scripts #0"};
-
-    for( std::size_t i = 0; i < MAX_ScriptMenus && iter != scripts.end(); i++ ) {
-      title.back() += wchar_t{1};
-      auto menu     = winrt::make<CommandEnum>(static_cast<Command>(id), title);
-      rootMenu->append(menu);
-
-      CommandEnum *cmdEnum = dynamic_cast<CommandEnum *>(menu.get());
-      for( std::size_t j = 0; j < MAX_ScriptsPerMenu && iter != scripts.end(); j++ ) {
-        cmdEnum->append(winrt::make<CommandInvoke>(static_cast<Command>(++id), iter->wstring()));
-
-        ++iter;
-      } // For Each Script
-
-      id++;
-    } // For Each Menu
-  }
-}
-#endif
-
 ////// DLL ///////////////////////////////////////////////////////////////////
 
 HRESULT WINAPI DllCanUnloadNow()
