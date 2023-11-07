@@ -29,6 +29,8 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#include <algorithm>
+
 #include "WorkContext.h"
 
 #include "Settings.h"
@@ -38,7 +40,7 @@
 
 WorkContext::WorkContext() noexcept
 {
-  numThreads = reg::readCurrentUserDWord(KEY_CSMENU, NAME_PARALLEL_COUNT);
+  numThreads = std::max<std::size_t>(1, reg::readCurrentUserDWord(KEY_CSMENU, NAME_PARALLEL_COUNT));
 }
 
 bool WorkContext::isEmpty() const
@@ -48,7 +50,7 @@ bool WorkContext::isEmpty() const
 
 bool WorkContext::setScript(const std::wstring& filename)
 {
-  script = reg::readCurrentUserString(KEY_CSMENU, NAME_SCRIPTS);
+  script  = reg::readCurrentUserString(KEY_CSMENU, NAME_SCRIPTS);
   script /= filename;
 
   return cs::isFile(script);

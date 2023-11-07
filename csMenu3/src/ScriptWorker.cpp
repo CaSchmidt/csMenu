@@ -54,8 +54,6 @@ namespace impl_parallel {
 
   class Worker {
   public:
-    Worker() noexcept = delete;
-
     Worker(const std::filesystem::path& script,
            const ProgressBar *progress = nullptr) noexcept
       : _progress(progress)
@@ -85,6 +83,8 @@ namespace impl_parallel {
     }
 
   private:
+    Worker() noexcept = delete;
+
     const ProgressBar *_progress{nullptr};
     std::filesystem::path _script{};
   };
