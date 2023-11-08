@@ -37,6 +37,7 @@
 
 #include "Invoke.h"
 
+#include "HashWorker.h"
 #include "MenuFlags.h"
 #include "ScriptWorker.h"
 #include "Win32/Clipboard.h"
@@ -82,6 +83,26 @@ namespace impl_invoke {
     text->append(L"\r\n");
   }
 
+  cs::Hash::Function idToHashFunction(const CommandId id)
+  {
+    if( id == Command::HashCrc32 ) {
+      return cs::Hash::CRC32;
+    } else if( id == Command::HashMd5 ) {
+      return cs::Hash::MD5;
+    } else if( id == Command::HashSha1 ) {
+      return cs::Hash::SHA1;
+    } else if( id == Command::HashSha224 ) {
+      return cs::Hash::SHA224;
+    } else if( id == Command::HashSha256 ) {
+      return cs::Hash::SHA256;
+    } else if( id == Command::HashSha384 ) {
+      return cs::Hash::SHA384;
+    } else if( id == Command::HashSha512 ) {
+      return cs::Hash::SHA512;
+    }
+    return cs::Hash::Invalid;
+  }
+
   void invokeFlags(const CommandId id)
   {
     MenuFlags flags = readFlags();
@@ -97,6 +118,22 @@ namespace impl_invoke {
     }
 
     writeFlags(flags);
+  }
+
+  void invokeHash(const CommandId id, const cs::PathList& files)
+  {
+    WorkContext ctx;
+
+    if( !ctx.setFiles(files) ) {
+      return;
+    }
+
+    const cs::Hash::Function func = idToHashFunction(id);
+    if( func == cs::Hash::Invalid ) {
+      return;
+    }
+
+    std::thread(hash_work, func, std::move(ctx)).detach();
   }
 
   void invokeList(const CommandId id, const cs::PathList& files)
@@ -170,7 +207,7 @@ void invokeCommandId(const CommandId id, const std::wstring& script, const cs::P
   } else if( id == Command::CheckUnixPathSeparators ) {
     impl_invoke::invokeFlags(id);
   } else if( id > Command::HashMenu && id < Command::ScriptMenu ) {
-    // TODO
+    impl_invoke::invokeHash(id, files);
   } else if( id > Command::ScriptMenu ) {
     impl_invoke::invokeScript(script, files);
   }
