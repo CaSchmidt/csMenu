@@ -50,6 +50,11 @@ CommandBase::~CommandBase() noexcept
 {
 }
 
+void CommandBase::setIcon(const std::wstring& icon)
+{
+  _icon = icon;
+}
+
 ////// public - IExplorerCommand /////////////////////////////////////////////
 
 IFACEMETHODIMP_(HRESULT) CommandBase::EnumSubCommands(IEnumExplorerCommand **ppEnum)

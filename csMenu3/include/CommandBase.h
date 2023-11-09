@@ -46,6 +46,8 @@ public:
   CommandBase(const Command cmd, const std::wstring& title = std::wstring{}) noexcept;
   ~CommandBase() noexcept;
 
+  void setIcon(const std::wstring& icon);
+
   // IExplorerCommand
 
   IFACEMETHODIMP_(HRESULT) EnumSubCommands(IEnumExplorerCommand **ppEnum);
