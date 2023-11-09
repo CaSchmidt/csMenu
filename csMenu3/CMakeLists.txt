@@ -26,6 +26,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Win32Compat
 
 list(APPEND csMenu3_EXTRAS
   csMenu3.def
+  resource/csMenu3.rc
 )
 
 list(APPEND csMenu3_HEADERS
@@ -83,6 +84,7 @@ set_target_properties(csMenu3 PROPERTIES
 
 target_include_directories(csMenu3
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/resource
 )
 
 target_link_libraries(csMenu3
