@@ -37,11 +37,6 @@
 #include "CommandSeparator.h"
 #include "MenuFlags.h"
 #include "resource.h"
-#include "Win32/Module.h"
-
-////// Imports ///////////////////////////////////////////////////////////////
-
-extern HANDLE_t getInstDLL(); // main.cpp
 
 ////// Private ///////////////////////////////////////////////////////////////
 
@@ -53,7 +48,7 @@ namespace impl_menu {
       return;
     }
 
-    menu->setIcon(getModuleFileName(getInstDLL()) + L',' + std::to_wstring(-IDI_csMenu));
+    menu->setIcon(-IDI_csMenu);
 
     menu->append(winrt::make<CommandInvoke>(Command::List));
     menu->append(winrt::make<CommandInvoke>(Command::ListPath));

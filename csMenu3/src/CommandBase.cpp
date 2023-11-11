@@ -33,6 +33,12 @@
 
 #include "CommandBase.h"
 
+#include "Win32/Module.h"
+
+////// Imports ///////////////////////////////////////////////////////////////
+
+extern HANDLE_t getInstDLL(); // main.cpp
+
 ////// public ////////////////////////////////////////////////////////////////
 
 CommandBase::CommandBase(const Command cmd, const std::wstring& title) noexcept
@@ -53,6 +59,11 @@ CommandBase::~CommandBase() noexcept
 void CommandBase::setIcon(const std::wstring& icon)
 {
   _icon = icon;
+}
+
+void CommandBase::setIcon(const int id)
+{
+  _icon = getModuleFileName(getInstDLL()) + L',' + std::to_wstring(id);
 }
 
 ////// public - IExplorerCommand /////////////////////////////////////////////

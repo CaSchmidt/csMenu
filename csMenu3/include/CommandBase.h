@@ -47,6 +47,7 @@ public:
   ~CommandBase() noexcept;
 
   void setIcon(const std::wstring& icon);
+  void setIcon(const int id);
 
   // IExplorerCommand
 
