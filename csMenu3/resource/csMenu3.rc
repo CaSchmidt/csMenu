@@ -3,8 +3,9 @@
 #include "resource.h"
 
 IDI_csMenu  ICON  "csMenu.ico"
+IDI_csHash  ICON  "csHash.ico"
 
-/* cf. VerRsrc.h and "VS_FIXEDFILEINFO structure (Windows)‎" */
+/* cf. VerRsrc.h and "VS_FIXEDFILEINFO structure (Windows)" */
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION     3,0,0,0

@@ -33,6 +33,7 @@
 
 #include "CommandEnum.h"
 #include "CommandInvoke.h"
+#include "resource.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 
@@ -43,6 +44,8 @@ namespace impl_hash {
     if( menu == nullptr ) {
       return;
     }
+
+    menu->setIcon(-IDI_csHash);
 
     menu->append(winrt::make<CommandInvoke>(Command::HashCrc32));
     menu->append(winrt::make<CommandInvoke>(Command::HashMd5));
