@@ -46,6 +46,8 @@
 
 ////// Imports ///////////////////////////////////////////////////////////////
 
+namespace conc = cs::concurrent;
+
 extern HANDLE_t getInstDLL(); // main.cpp
 
 ////// Parallel //////////////////////////////////////////////////////////////
@@ -120,8 +122,8 @@ void parallel_work(WorkContext ctx)
   progress->show();
 
   using Worker = impl_parallel::Worker;
-  auto f       = cs::map(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
-                         Worker(ctx.script, progress.get()));
+  auto f       = conc::asyncMap(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
+                                Worker(ctx.script, progress.get()));
   message::loop();
   f.get();
 

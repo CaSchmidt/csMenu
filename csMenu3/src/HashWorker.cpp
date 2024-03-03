@@ -45,27 +45,13 @@
 
 ////// Imports ///////////////////////////////////////////////////////////////
 
+namespace conc = cs::concurrent;
+
 extern HANDLE_t getInstDLL(); // main.cpp
 
 ////// Private ///////////////////////////////////////////////////////////////
 
 namespace impl_hash {
-
-  struct HashFold {
-    HashFold() noexcept
-    {
-    }
-
-    std::wstring operator()(std::wstring lhs, const std::wstring rhs) const
-    {
-      try {
-        lhs += rhs;
-      } catch( ... ) {
-        lhs.clear();
-      }
-      return lhs;
-    }
-  };
 
   struct HashReduce {
     HashReduce() noexcept
@@ -105,7 +91,7 @@ namespace impl_hash {
         const std::string strdigest = cs::toString(bindigest);
 
         if( cs::resize(&result, strdigest.size()) ) {
-          cs::widen(result.data(), strdigest.data(), strdigest.size());
+          cs::widen(result.data(), result.size(), strdigest.data(), strdigest.size());
         }
       }
 
@@ -158,12 +144,10 @@ void hash_work(const cs::Hash::Function func, WorkContext ctx)
   progress->setRange(0, static_cast<int>(ctx.files.size()));
   progress->show();
 
-  using Fold   = impl_hash::HashFold;
   using Reduce = impl_hash::HashReduce;
   using Worker = impl_hash::Worker;
-  auto f       = cs::mapReduce<std::wstring>(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
-                                       Worker(func, progress.get()), cs::MAP_WAIT_ms,
-                                       Reduce(), Fold());
+  auto f       = conc::asyncMapReduceUnsorted<std::wstring>(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
+                                                      Worker(func, progress.get()), Reduce());
   message::loop();
   const std::wstring result = f.get();
 
