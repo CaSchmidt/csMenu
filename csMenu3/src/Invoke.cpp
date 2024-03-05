@@ -160,7 +160,7 @@ namespace impl_invoke {
     }
 
     if( flags.testAny(MenuFlag::UnixPathSeparators) ) {
-      cs::replaceAll(&text, SEP_NATIVE, SEP_UNIX);
+      cs::replaceAll(text, SEP_NATIVE, SEP_UNIX);
     }
 
     setClipboardText(text.data());

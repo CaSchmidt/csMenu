@@ -122,7 +122,7 @@ void parallel_work(WorkContext ctx)
   progress->show();
 
   using Worker = impl_parallel::Worker;
-  auto f       = conc::asyncMap(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
+  auto f       = conc::mapAsync(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
                                 Worker(ctx.script, progress.get()));
   message::loop();
   f.get();
