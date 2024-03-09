@@ -48,7 +48,7 @@ namespace impl_menu {
       return;
     }
 
-    menu->setIcon(-IDI_csMenu);
+    menu->setIcon(-IDI_blue);
 
     menu->append(winrt::make<CommandInvoke>(Command::List));
     menu->append(winrt::make<CommandInvoke>(Command::ListPath));

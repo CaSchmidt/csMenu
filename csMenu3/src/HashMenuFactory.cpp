@@ -45,7 +45,7 @@ namespace impl_hash {
       return;
     }
 
-    menu->setIcon(-IDI_csHash);
+    menu->setIcon(-IDI_green);
 
     menu->append(winrt::make<CommandInvoke>(Command::HashCrc32));
     menu->append(winrt::make<CommandInvoke>(Command::HashMd5));

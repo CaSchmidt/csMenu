@@ -35,6 +35,7 @@
 
 #include "CommandEnum.h"
 #include "CommandInvoke.h"
+#include "resource.h"
 #include "Settings.h"
 #include "Win32/Registry.h"
 
@@ -47,6 +48,8 @@ namespace impl_script {
     if( menu == nullptr ) {
       return;
     }
+
+    menu->setIcon(-IDI_red);
 
     const std::wstring scriptsPath = reg::readCurrentUserString(KEY_CSMENU, NAME_SCRIPTS);
     if( scriptsPath.empty() ) {

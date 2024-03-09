@@ -2,8 +2,10 @@
 
 #include "resource.h"
 
-IDI_csMenu  ICON  "csMenu.ico"
-IDI_csHash  ICON  "csHash.ico"
+IDI_main   ICON  "main.ico"
+IDI_red    ICON  "red.ico"
+IDI_green  ICON  "green.ico"
+IDI_blue   ICON  "blue.ico"
 
 /* cf. VerRsrc.h and "VS_FIXEDFILEINFO structure (Windows)" */
 
@@ -28,7 +30,7 @@ BEGIN
       VALUE "FileDescription",  "CS::Menu\0"
       VALUE "FileVersion",      "3.0\0"
       VALUE "InternalName",     "csMenu\0"
-      VALUE "LegalCopyright",   "(C) 2023 by Carsten Schmidt\0"
+      VALUE "LegalCopyright",   "(C) 2024 by Carsten Schmidt\0"
       VALUE "OriginalFilename", "csMenu.DLL\0"
       VALUE "ProductName",      "CS::Menu\0"
       VALUE "ProductVersion",   "3.0\0"
