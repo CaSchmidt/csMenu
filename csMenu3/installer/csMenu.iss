@@ -1,5 +1,5 @@
 #define AppName     "CS::Menu"
-#define AppVersion  "3.0"
+#define AppVersion  "3.0.1"
 
 [Setup]
 AppName={#AppName}
