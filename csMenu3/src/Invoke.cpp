@@ -50,13 +50,14 @@ namespace impl_invoke {
 
   namespace fs = std::filesystem;
 
+  constexpr std::size_t ONE = 1;
+
   constexpr wchar_t SEP_NATIVE = L'\\';
   constexpr wchar_t SEP_UNIX   = L'/';
 
   void appendFilename(std::wstring& text, const std::wstring& filename, const CommandId id)
   {
     constexpr std::size_t NPOS = std::wstring::npos;
-    constexpr std::size_t ONE  = 1;
 
     if( filename.empty() ) {
       return;
@@ -155,6 +156,10 @@ namespace impl_invoke {
         } else {
           appendFilename(text, file.wstring(), id);
         }
+      } // For each file
+
+      if( files.size() == ONE && text.size() >= EOL.size() ) { // Remove trailing EOL
+        text.erase(text.size() - EOL.size());
       }
     } catch( ... ) {
       return;
