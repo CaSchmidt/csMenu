@@ -47,6 +47,7 @@ list(APPEND csMenu3_HEADERS
   include/ScriptMenuFactory.h
   include/ScriptWorker.h
   include/Settings.h
+  include/Util.h
   include/WorkContext.h
 )
 

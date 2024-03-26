@@ -37,6 +37,7 @@
 
 #include "HashWorker.h"
 
+#include "Util.h"
 #include "Win32/Clipboard.h"
 #include "Win32/Message.h"
 #include "Win32/MessageBox.h"
@@ -99,7 +100,7 @@ namespace impl_hash {
         try {
           result += L" *";
           result += filename.filename();
-          result += L'\n';
+          result += EOL;
         } catch( ... ) {
           result.clear();
         }

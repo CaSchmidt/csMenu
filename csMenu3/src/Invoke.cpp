@@ -40,6 +40,7 @@
 #include "HashWorker.h"
 #include "MenuFlags.h"
 #include "ScriptWorker.h"
+#include "Util.h"
 #include "Win32/Clipboard.h"
 #include "Win32/Network.h"
 
@@ -80,7 +81,7 @@ namespace impl_invoke {
       text.append(ONE, SEP_NATIVE);
     }
 
-    text.append(L"\r\n");
+    text += EOL;
   }
 
   cs::Hash::Function idToHashFunction(const CommandId id)
