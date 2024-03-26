@@ -52,35 +52,35 @@ namespace impl_invoke {
   constexpr wchar_t SEP_NATIVE = L'\\';
   constexpr wchar_t SEP_UNIX   = L'/';
 
-  void appendFilename(std::wstring *text, const std::wstring& filename, const CommandId id)
+  void appendFilename(std::wstring& text, const std::wstring& filename, const CommandId id)
   {
     constexpr std::size_t NPOS = std::wstring::npos;
     constexpr std::size_t ONE  = 1;
 
-    if( text == nullptr || filename.empty() ) {
+    if( filename.empty() ) {
       return;
     }
 
     const std::size_t pos = filename.rfind(SEP_NATIVE);
     if( pos != NPOS ) {
       if( id == Command::List ) {
-        text->append(filename.data() + pos + ONE);
+        text.append(filename.data() + pos + ONE);
       } else if( id == Command::ListPathTabular ) {
-        text->append(filename.data(), pos + ONE);
-        text->append(ONE, L'\t');
-        text->append(filename.data() + pos + ONE);
+        text.append(filename.data(), pos + ONE);
+        text.append(ONE, L'\t');
+        text.append(filename.data() + pos + ONE);
       } else { // Command::ListPath  AKA  "as-is"
-        text->append(filename);
+        text.append(filename);
       }
     } else {
-      text->append(filename);
+      text.append(filename);
     }
 
     if( cs::isDirectory(filename) ) {
-      text->append(ONE, SEP_NATIVE);
+      text.append(ONE, SEP_NATIVE);
     }
 
-    text->append(L"\r\n");
+    text.append(L"\r\n");
   }
 
   cs::Hash::Function idToHashFunction(const CommandId id)
@@ -150,9 +150,9 @@ namespace impl_invoke {
       for( const fs::path& file : files ) {
         std::wstring uncName;
         if( is_unc && !(uncName = resolveUniversalName(file.wstring().data())).empty() ) {
-          appendFilename(&text, uncName, id);
+          appendFilename(text, uncName, id);
         } else {
-          appendFilename(&text, file.wstring(), id);
+          appendFilename(text, file.wstring(), id);
         }
       }
     } catch( ... ) {
