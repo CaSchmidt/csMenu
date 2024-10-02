@@ -33,8 +33,60 @@
 
 #include <cstdint>
 
+/*
+ * References:
+ *
+ * [MS-DTYP] Windows Data Types
+ *
+ * https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types
+ */
+
+////// Implementation ////////////////////////////////////////////////////////
+
+namespace impl_compat {
+
+  template <typename Type32, typename Type64, int BITS>
+  struct select3264 {
+    // SFINAE
+  };
+
+  template <typename Type32, typename Type64>
+  struct select3264<Type32, Type64, 32> {
+    using type = Type32;
+  };
+
+  template <typename Type32, typename Type64>
+  struct select3264<Type32, Type64, 64> {
+    using type = Type64;
+  };
+
+  template <typename Type32, typename Type64>
+  using select_t = typename select3264<Type32, Type64, sizeof(void *) * 8>::type;
+
+  using int3264_t = select_t<int32_t, int64_t>;
+
+  using uint3264_t = select_t<uint32_t, uint64_t>;
+
+} // namespace impl_compat
+
+////// Windows Data Types ////////////////////////////////////////////////////
+
 using DWORD_t = uint32_t;
 
 using HANDLE_t = void *;
 
+using HINSTANCE_t = HANDLE_t;
+
+using HWND_t = HANDLE_t;
+
+using LONG_PTR_t = impl_compat::int3264_t;
+
+using LPARAM_t = LONG_PTR_t;
+
+using LRESULT_t = LONG_PTR_t;
+
 using UINT_t = unsigned int;
+
+using UINT_PTR_t = impl_compat::uint3264_t;
+
+using WPARAM_t = UINT_PTR_t;

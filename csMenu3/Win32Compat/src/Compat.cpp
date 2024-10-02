@@ -35,20 +35,69 @@
 
 #include "Win32/Compat.h"
 
+////// Helper ////////////////////////////////////////////////////////////////
+
+namespace impl_compat {
+
+  template <typename T, typename U>
+  inline constexpr bool is_both_integral_v = std::is_integral_v<T> && std::is_integral_v<U>;
+
+  template <typename T, typename U>
+  inline constexpr bool is_both_pointer_v = std::is_pointer_v<T> && std::is_pointer_v<U>;
+
+  template <typename T, typename U>
+  inline constexpr bool is_both_signed_v = is_both_integral_v<T, U> && std::is_signed_v<T> && std::is_signed_v<U>;
+
+  template <typename T, typename U>
+  inline constexpr bool is_both_unsigned_v = is_both_integral_v<T, U> && std::is_unsigned_v<T> && std::is_unsigned_v<U>;
+
+  template <typename T, typename U>
+  inline constexpr bool is_same_signedness_v = is_both_signed_v<T, U> || is_both_unsigned_v<T, U>;
+
+} // namespace impl_compat
+
+template <typename Type, typename Win32Type>
+inline constexpr bool is_compat_integral_v = sizeof(Type) == sizeof(Win32Type) && impl_compat::is_same_signedness_v<Type, Win32Type>;
+
+template <typename Type, typename Win32Type>
+inline constexpr bool is_compat_pointer_v = sizeof(Type) == sizeof(Win32Type) && impl_compat::is_both_pointer_v<Type, Win32Type>;
+
 ////// DWORD /////////////////////////////////////////////////////////////////
 
-static_assert( sizeof(DWORD_t) == sizeof(DWORD) );
-
-static_assert( std::is_unsigned_v<DWORD_t> && std::is_unsigned_v<DWORD> );
+static_assert(is_compat_integral_v<DWORD_t, DWORD>);
 
 ////// HANDLE ////////////////////////////////////////////////////////////////
 
-static_assert( sizeof(HANDLE_t) == sizeof(HANDLE) );
+static_assert(is_compat_pointer_v<HANDLE_t, HANDLE>);
 
-static_assert( std::is_pointer_v<HANDLE_t> && std::is_pointer_v<HANDLE> );
+////// HINSTANCE /////////////////////////////////////////////////////////////
+
+static_assert(is_compat_pointer_v<HINSTANCE_t, HINSTANCE>);
+
+////// HWND //////////////////////////////////////////////////////////////////
+
+static_assert(is_compat_pointer_v<HWND_t, HWND>);
+
+////// LONG_PTR //////////////////////////////////////////////////////////////
+
+static_assert(is_compat_integral_v<LONG_PTR_t, LONG_PTR>);
+
+////// LPARAM ////////////////////////////////////////////////////////////////
+
+static_assert(is_compat_integral_v<LPARAM_t, LPARAM>);
+
+////// LRESULT ///////////////////////////////////////////////////////////////
+
+static_assert(is_compat_integral_v<LRESULT_t, LRESULT>);
 
 ////// UINT //////////////////////////////////////////////////////////////////
 
-static_assert( sizeof(UINT_t) == sizeof(UINT) );
+static_assert(is_compat_integral_v<UINT_t, UINT>);
 
-static_assert( std::is_unsigned_v<UINT_t> && std::is_unsigned_v<UINT> );
+////// UINT_PTR //////////////////////////////////////////////////////////////
+
+static_assert(is_compat_integral_v<UINT_PTR_t, UINT_PTR>);
+
+////// WPARAM ////////////////////////////////////////////////////////////////
+
+static_assert(is_compat_integral_v<WPARAM_t, WPARAM>);
