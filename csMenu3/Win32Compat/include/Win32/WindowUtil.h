@@ -35,6 +35,8 @@
 
 namespace window {
 
+  HICON_t loadIcon(const HINSTANCE_t hInstance, const wchar_t *name);
+
   bool makeGUIThread();
 
   void unregisterClass(const HANDLE_t ptrInstance, const wchar_t *name);

@@ -36,6 +36,11 @@
 
 namespace window {
 
+  HICON_t loadIcon(const HINSTANCE_t hInstance, const wchar_t *name)
+  {
+    return LoadIconW(reinterpret_cast<HINSTANCE>(hInstance), name);
+  }
+
   bool makeGUIThread()
   {
     const BOOL result = IsGUIThread(TRUE);
