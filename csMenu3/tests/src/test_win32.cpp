@@ -21,7 +21,7 @@ void thread_func(const ProgressBar *progress)
   progress->close();
 }
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+void test_progress(HINSTANCE hInstance)
 {
   constexpr int MIN_ITEM  = 0;
   constexpr int NUM_ITEMS = 4;
@@ -36,6 +36,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
   t.join();
 
   messagebox::information(L"Done!");
+}
+
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+{
+  test_progress(hInstance);
 
   return 0;
 }
