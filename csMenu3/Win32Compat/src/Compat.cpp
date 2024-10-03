@@ -86,6 +86,8 @@ static_assert(is_compat_pointer_v<HWND_t, HWND>);
 
 static_assert(is_compat_integral_v<LONG_PTR_t, LONG_PTR>);
 
+static_assert(sizeof(LONG_PTR_t) == sizeof(void *));
+
 ////// LPARAM ////////////////////////////////////////////////////////////////
 
 static_assert(is_compat_integral_v<LPARAM_t, LPARAM>);
@@ -101,6 +103,8 @@ static_assert(is_compat_integral_v<UINT_t, UINT>);
 ////// UINT_PTR //////////////////////////////////////////////////////////////
 
 static_assert(is_compat_integral_v<UINT_PTR_t, UINT_PTR>);
+
+static_assert(sizeof(UINT_PTR_t) == sizeof(void *));
 
 ////// WPARAM ////////////////////////////////////////////////////////////////
 
