@@ -70,6 +70,10 @@ static_assert(is_compat_integral_v<DWORD_t, DWORD>);
 
 static_assert(is_compat_pointer_v<HANDLE_t, HANDLE>);
 
+////// HICON /////////////////////////////////////////////////////////////////
+
+static_assert(is_compat_pointer_v<HICON_t, HICON>);
+
 ////// HINSTANCE /////////////////////////////////////////////////////////////
 
 static_assert(is_compat_pointer_v<HINSTANCE_t, HINSTANCE>);

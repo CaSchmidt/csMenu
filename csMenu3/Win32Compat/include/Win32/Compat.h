@@ -75,6 +75,8 @@ using DWORD_t = uint32_t;
 
 using HANDLE_t = void *;
 
+using HICON_t = HANDLE_t;
+
 using HINSTANCE_t = HANDLE_t;
 
 using HWND_t = HANDLE_t;
