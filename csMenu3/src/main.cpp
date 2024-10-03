@@ -35,7 +35,7 @@
 #include "Register.h"
 #include "ScriptMenuFactory.h"
 #include "Win32/ProgressBar.h"
-#include "Win32/Window.h"
+#include "Win32/WindowUtil.h"
 
 ////// Global ////////////////////////////////////////////////////////////////
 

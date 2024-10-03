@@ -42,7 +42,7 @@
 #include "Win32/MessageBox.h"
 #include "Win32/ProgressBar.h"
 #include "Win32/Shell.h"
-#include "Win32/Window.h"
+#include "Win32/WindowUtil.h"
 
 ////// Imports ///////////////////////////////////////////////////////////////
 

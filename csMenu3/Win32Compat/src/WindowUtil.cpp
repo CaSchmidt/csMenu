@@ -32,7 +32,7 @@
 #define NOMINMAX
 #include <Windows.h>
 
-#include "Win32/Window.h"
+#include "Win32/WindowUtil.h"
 
 namespace window {
 
