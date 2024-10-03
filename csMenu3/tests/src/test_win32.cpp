@@ -1,11 +1,36 @@
+#include <algorithm>
+#include <format>
+#include <iterator>
+#include <string>
 #include <thread>
 
 #define NOMINMAX
 #include <Windows.h>
 
+#include "Win32/Dialog.h"
 #include "Win32/Message.h"
 #include "Win32/MessageBox.h"
 #include "Win32/ProgressBar.h"
+
+std::wstring widen(const std::string_view& str)
+{
+  constexpr auto lambda_widen = [](const char ch) -> wchar_t {
+    return static_cast<wchar_t>(ch);
+  };
+
+  std::wstring result;
+  std::transform(str.cbegin(), str.cend(), std::back_inserter(result), lambda_widen);
+  return result;
+}
+
+void test_dialog(const HINSTANCE hInstance)
+{
+  window::Dialog d;
+  const bool b          = d.exec(hInstance);
+  const std::string s   = std::format("result: {}", b);
+  const std::wstring ws = widen(s);
+  messagebox::information(ws.data());
+}
 
 void thread_func(const ProgressBar *progress)
 {
@@ -21,7 +46,7 @@ void thread_func(const ProgressBar *progress)
   progress->close();
 }
 
-void test_progress(HINSTANCE hInstance)
+void test_progress(const HINSTANCE hInstance)
 {
   constexpr int MIN_ITEM  = 0;
   constexpr int NUM_ITEMS = 4;
@@ -40,7 +65,7 @@ void test_progress(HINSTANCE hInstance)
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-  test_progress(hInstance);
+  test_dialog(hInstance);
 
   return 0;
 }

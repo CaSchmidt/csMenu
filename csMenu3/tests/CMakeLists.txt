@@ -19,6 +19,7 @@ target_link_libraries(test_ext
 
 add_executable(test_win32 WIN32
   src/test_win32.cpp
+  ${csMenu3_SOURCE_DIR}/Win32Compat/resource/Dialog.rc
 )
 
 format_output_name(test_win32 "test_win32")

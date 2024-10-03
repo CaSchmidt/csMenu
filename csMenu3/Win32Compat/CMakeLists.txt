@@ -35,7 +35,6 @@ list(APPEND Win32Compat_SOURCES
 )
 
 list(APPEND Win32Compat_OTHER
-  resource/Dialog.rc
   resource/DialogResource.h
 )
 
