@@ -3,6 +3,7 @@
 list(APPEND Win32Compat_HEADERS
   include/Win32/Clipboard.h
   include/Win32/Compat.h
+  include/Win32/Dialog.h
   include/Win32/GUID.h
   include/Win32/Message.h
   include/Win32/MessageBox.h
@@ -12,12 +13,14 @@ list(APPEND Win32Compat_HEADERS
   include/Win32/Registry.h
   include/Win32/Shell.h
   include/Win32/String.h
+  include/Win32/Window.h
   include/Win32/WindowUtil.h
 )
 
 list(APPEND Win32Compat_SOURCES
   src/Clipboard.cpp
   src/Compat.cpp
+  src/Dialog.cpp
   src/GUID.cpp
   src/Message.cpp
   src/MessageBox.cpp
@@ -27,7 +30,13 @@ list(APPEND Win32Compat_SOURCES
   src/Registry.cpp
   src/Shell.cpp
   src/String.cpp
+  src/Window.cpp
   src/WindowUtil.cpp
+)
+
+list(APPEND Win32Compat_OTHER
+  resource/Dialog.rc
+  resource/DialogResource.h
 )
 
 ### Target ###################################################################
@@ -43,6 +52,7 @@ set_target_properties(Win32Compat PROPERTIES
 
 target_include_directories(Win32Compat
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/resource
 )
 
 target_link_libraries(Win32Compat
@@ -53,4 +63,5 @@ target_link_libraries(Win32Compat
 target_sources(Win32Compat
   PRIVATE ${Win32Compat_HEADERS}
   PRIVATE ${Win32Compat_SOURCES}
+  PRIVATE ${Win32Compat_OTHER}
 )
