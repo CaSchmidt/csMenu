@@ -13,6 +13,11 @@
 
 #include "RenameDialog.h"
 
+// cf. https://learn.microsoft.com/en-us/windows/win32/controls/cookbook-overview
+#pragma comment(linker,"\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 ////// Dialog ////////////////////////////////////////////////////////////////
 
 std::wstring widen(const std::string_view& str)
