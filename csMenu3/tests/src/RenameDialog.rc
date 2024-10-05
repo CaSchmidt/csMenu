@@ -1,0 +1,61 @@
+/****************************************************************************
+** Copyright (c) 2024, Carsten Schmidt. All rights reserved.
+**
+** Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions
+** are met:
+**
+** 1. Redistributions of source code must retain the above copyright
+**    notice, this list of conditions and the following disclaimer.
+**
+** 2. Redistributions in binary form must reproduce the above copyright
+**    notice, this list of conditions and the following disclaimer in the
+**    documentation and/or other materials provided with the distribution.
+**
+** 3. Neither the name of the copyright holder nor the names of its
+**    contributors may be used to endorse or promote products derived from
+**    this software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+** HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*****************************************************************************/
+
+#include <Windows.h>
+
+#include "RenameDialogResource.h"
+
+#define _W  168 /* width */
+#define _H   64 /* height */
+
+#define _B     2 /* border */
+#define _BW   32 /* button width */
+#define _EW  128 /* edit width */
+#define _LW   32 /* label width */
+#define _MW   62 /* mode width */
+#define _RH   12 /* row height */
+#define _S     4 /* space */
+
+IDD_RenameDialog DIALOGEX 16, 16, _W, _H, CAPTION L"Rename" CLASS WNDCLASS_RenameDialog
+{
+  LTEXT L"Mode:",        ID_LabelMode,       _B,                _B,  _LW,  _RH,  SS_CENTERIMAGE | SS_LEFT | WS_GROUP
+  COMBOBOX               ID_ComboMode,       _B+_LW+_S,         _B,  _MW,  _RH,  CBS_DROPDOWNLIST | WS_TABSTOP
+  CHECKBOX L"Extension", ID_CheckExtension,  _B+_LW+_S+_MW+_S,  _B,  _MW,  _RH
+
+  LTEXT L"Pattern:", ID_LabelPattern,  _B,         _B+_RH+_S,  _LW,  _RH,  SS_CENTERIMAGE | SS_LEFT | WS_GROUP
+  EDITTEXT           ID_EditPattern,   _B+_LW+_S,  _B+_RH+_S,  _EW,  _RH
+
+  LTEXT L"Text:", ID_LabelText,  _B,         _B+_RH+_S+_RH+_S,  _LW,  _RH,  SS_CENTERIMAGE | SS_LEFT | WS_GROUP
+  EDITTEXT        ID_EditText,   _B+_LW+_S,  _B+_RH+_S+_RH+_S,  _EW,  _RH
+
+  DEFPUSHBUTTON L"&OK",     IDOK,      _W-_B-_BW-_S-_BW,  _H-_B-_RH,  _BW,  _RH
+  PUSHBUTTON    L"&Cancel", IDCANCEL,  _W-_B-_BW,         _H-_B-_RH,  _BW,  _RH
+}

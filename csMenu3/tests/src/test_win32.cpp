@@ -7,10 +7,13 @@
 #define NOMINMAX
 #include <Windows.h>
 
-#include "Win32/Dialog.h"
 #include "Win32/Message.h"
 #include "Win32/MessageBox.h"
 #include "Win32/ProgressBar.h"
+
+#include "RenameDialog.h"
+
+////// Dialog ////////////////////////////////////////////////////////////////
 
 std::wstring widen(const std::string_view& str)
 {
@@ -19,6 +22,7 @@ std::wstring widen(const std::string_view& str)
   };
 
   std::wstring result;
+  result.reserve(str.size());
   std::transform(str.cbegin(), str.cend(), std::back_inserter(result), lambda_widen);
   return result;
 }
@@ -31,6 +35,8 @@ void test_dialog(const HINSTANCE hInstance)
   const std::wstring ws = widen(s);
   messagebox::information(ws.data());
 }
+
+////// ProgressBar ///////////////////////////////////////////////////////////
 
 void thread_func(const ProgressBar *progress)
 {
@@ -63,9 +69,22 @@ void test_progress(const HINSTANCE hInstance)
   messagebox::information(L"Done!");
 }
 
+////// RenameDialog //////////////////////////////////////////////////////////
+
+void test_renamedialog(const HINSTANCE hInstance)
+{
+  RenameDialog d;
+  const bool b          = d.exec(hInstance);
+  const std::string s   = std::format("result: {}", b);
+  const std::wstring ws = widen(s);
+  messagebox::information(ws.data());
+}
+
+////// Main //////////////////////////////////////////////////////////////////
+
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-  test_dialog(hInstance);
+  test_renamedialog(hInstance);
 
   return 0;
 }
