@@ -77,12 +77,12 @@ namespace window {
 
   ////// public //////////////////////////////////////////////////////////////
 
-  Dialog::Dialog()
+  Dialog::Dialog() noexcept
     : Window(nullptr)
   {
   }
 
-  Dialog::~Dialog()
+  Dialog::~Dialog() noexcept
   {
   }
 

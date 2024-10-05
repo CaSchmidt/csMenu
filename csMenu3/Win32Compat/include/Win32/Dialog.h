@@ -37,8 +37,8 @@ namespace window {
 
   class Dialog : public Window {
   public:
-    Dialog();
-    ~Dialog();
+    Dialog() noexcept;
+    ~Dialog() noexcept;
 
     LRESULT_t onCommand(WPARAM_t wParam, LPARAM_t lParam);
     virtual LRESULT_t onInitDialog(HWND_t wnd, LPARAM_t lParam); // WM_INITDIALOG

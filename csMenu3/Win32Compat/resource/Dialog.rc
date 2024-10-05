@@ -43,6 +43,6 @@
 
 IDD_Dialog DIALOGEX 16, 16, _W, _H, CAPTION L"Dialog" CLASS WNDCLASS_Dialog
 {
-  PUSHBUTTON L"&OK",     IDOK,     _W-_B-_BW-_S-_BW, _H-_B-_RH, _BW, _RH
-  PUSHBUTTON L"&Cancel", IDCANCEL, _W-_B-_BW,        _H-_B-_RH, _BW, _RH
+  DEFPUSHBUTTON L"&OK",     IDOK,      _W-_B-_BW-_S-_BW,  _H-_B-_RH,  _BW,  _RH
+  PUSHBUTTON    L"&Cancel", IDCANCEL,  _W-_B-_BW,         _H-_B-_RH,  _BW,  _RH
 }

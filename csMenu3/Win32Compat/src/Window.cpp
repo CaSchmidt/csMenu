@@ -78,7 +78,7 @@ namespace window {
 
   LRESULT_t Window::onCommand(WPARAM_t /*wParam*/, LPARAM_t /*lParam*/)
   {
-    return 0;
+    return FALSE;
   }
 
   ////// protected ///////////////////////////////////////////////////////////
