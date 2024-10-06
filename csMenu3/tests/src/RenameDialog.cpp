@@ -32,6 +32,10 @@
 #define UNICODE
 #include <Windows.h>
 
+#include "Win32/UI/CheckBox.h"
+#include "Win32/UI/ComboBox.h"
+#include "Win32/UI/EditText.h"
+
 #include "RenameDialog.h"
 
 #include "RenameDialogResource.h"
@@ -47,6 +51,27 @@ RenameDialog::~RenameDialog() noexcept
 }
 
 ////// protected /////////////////////////////////////////////////////////////
+
+LRESULT_t RenameDialog::onInitDialog(HWND_t wnd, LPARAM_t lParam)
+{
+  const LRESULT_t result = Dialog::onInitDialog(wnd, lParam);
+
+  _controls.push_back(ui::CheckBox::create(wnd, ID_CheckExtension));
+
+  ui::WindowPtr modeCombo = ui::ComboBox::create(wnd, ID_ComboMode);
+  ui::COMBOBOX(modeCombo)->addItem(L"Append");
+  ui::COMBOBOX(modeCombo)->addItem(L"Prepend");
+  ui::COMBOBOX(modeCombo)->addItem(L"Remove");
+  ui::COMBOBOX(modeCombo)->addItem(L"Replace");
+  ui::COMBOBOX(modeCombo)->setCurrentIndex(0);
+  _controls.push_back(std::move(modeCombo));
+
+  _controls.push_back(ui::EditText::create(wnd, ID_EditPattern));
+
+  _controls.push_back(ui::EditText::create(wnd, ID_EditText));
+
+  return result;
+}
 
 const wchar_t *RenameDialog::dialogName() const
 {

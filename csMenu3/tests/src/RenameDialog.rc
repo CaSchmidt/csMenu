@@ -47,7 +47,7 @@
 IDD_RenameDialog DIALOGEX 16, 16, _W, _H, CAPTION L"Rename" CLASS WNDCLASS_RenameDialog
 {
   LTEXT L"Mode:",        ID_LabelMode,       _B,                _B,  _LW,  _RH,  SS_CENTERIMAGE | SS_LEFT | WS_GROUP
-  COMBOBOX               ID_ComboMode,       _B+_LW+_S,         _B,  _MW,  _RH,  CBS_DROPDOWNLIST | WS_TABSTOP
+  COMBOBOX               ID_ComboMode,       _B+_LW+_S,         _B,  _MW,  _RH,  CBS_DROPDOWNLIST | CBS_HASSTRINGS | CBS_SORT | WS_TABSTOP
   CHECKBOX L"Extension", ID_CheckExtension,  _B+_LW+_S+_MW+_S,  _B,  _MW,  _RH
 
   LTEXT L"Pattern:", ID_LabelPattern,  _B,         _B+_RH+_S,  _LW,  _RH,  SS_CENTERIMAGE | SS_LEFT | WS_GROUP

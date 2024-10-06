@@ -31,14 +31,16 @@
 
 #pragma once
 
-#include "Win32/Dialog.h"
+#include "Win32/UI/Dialog.h"
 
-class RenameDialog : public window::Dialog {
+class RenameDialog : public ui::Dialog {
 public:
   RenameDialog() noexcept;
   ~RenameDialog() noexcept;
 
 protected:
+  LRESULT_t onInitDialog(HWND_t wnd, LPARAM_t lParam);
+
   const wchar_t *dialogName() const;
   const wchar_t *wndClassName() const;
 };
