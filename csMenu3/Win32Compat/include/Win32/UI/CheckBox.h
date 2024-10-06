@@ -31,9 +31,9 @@
 
 #pragma once
 
-#include "Win32/Window.h"
+#include "Win32/UI/Window.h"
 
-namespace window {
+namespace ui {
 
   class CheckBox : public Window {
   private:
@@ -65,4 +65,4 @@ namespace window {
     return dynamic_cast<CheckBox *>(p.get());
   }
 
-} // namespace window
+} // namespace ui

@@ -31,9 +31,9 @@
 
 #pragma once
 
-#include "Win32/Window.h"
+#include "Win32/UI/Window.h"
 
-namespace window {
+namespace ui {
 
   class Dialog : public Window {
   public:
@@ -59,4 +59,4 @@ namespace window {
     Windows _controls;
   };
 
-} // namespace window
+} // namespace ui

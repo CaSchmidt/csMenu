@@ -31,71 +31,98 @@
 
 #include <Windows.h>
 
-#include "Win32/Window.h"
+#include "Win32/UI/ComboBox.h"
 
-namespace window {
+namespace ui {
+
+  ////// Private /////////////////////////////////////////////////////////////
+
+  constexpr LRESULT_t ZERO = 0;
 
   ////// public //////////////////////////////////////////////////////////////
 
-  Window::~Window() noexcept
+  ComboBox::ComboBox(HWND_t wnd, const ctor_tag&) noexcept
+    : Window(wnd)
   {
   }
 
-  bool Window::isNull() const
-  {
-    return _wnd == nullptr;
-  }
-
-  HWND_t Window::handle() const
-  {
-    return _wnd;
-  }
-
-  int Window::controlId() const
-  {
-    return GetDlgCtrlID(reinterpret_cast<HWND>(_wnd));
-  }
-
-  LRESULT_t Window::sendMessage(UINT_t msg, WPARAM_t wParam, LPARAM_t lParam) const
-  {
-    return SendMessageW(reinterpret_cast<HWND>(_wnd), msg, wParam, lParam);
-  }
-
-  LONG_PTR_t Window::userData() const
-  {
-    return GetWindowLongPtrW(reinterpret_cast<HWND>(_wnd), GWLP_USERDATA);
-  }
-
-  void Window::setUserData(LONG_PTR_t data)
-  {
-    SetWindowLongPtrW(reinterpret_cast<HWND>(_wnd), GWLP_USERDATA, data);
-  }
-
-  void Window::setIcon(HICON_t icon)
-  {
-    SetWindowLongPtrW(reinterpret_cast<HWND>(_wnd), GCLP_HICON, reinterpret_cast<LONG_PTR>(icon));
-  }
-
-  LRESULT_t Window::onCommand(WPARAM_t /*wParam*/, LPARAM_t /*lParam*/)
-  {
-    return FALSE;
-  }
-
-  ////// protected ///////////////////////////////////////////////////////////
-
-  Window::Window(HWND_t wnd) noexcept
-    : _wnd{wnd}
+  ComboBox::ComboBox(HWND_t dlg, int idDlgItem, const ctor_tag&) noexcept
+    : Window(dlg, idDlgItem)
   {
   }
 
-  Window::Window(HWND_t dlg, int idDlgItem) noexcept
+  ComboBox::~ComboBox() noexcept
   {
-    _wnd = GetDlgItem(reinterpret_cast<HWND>(dlg), idDlgItem);
   }
 
-  void Window::setHandle(HWND_t wnd)
+  bool ComboBox::addItem(const std::wstring& item)
   {
-    _wnd = wnd;
+    if( item.empty() ) {
+      return false;
+    }
+    return sendMessage(CB_ADDSTRING, 0, reinterpret_cast<LPARAM_t>(item.data())) >= ZERO;
   }
 
-} // namespace window
+  void ComboBox::clear()
+  {
+    sendMessage(CB_RESETCONTENT, 0, 0);
+  }
+
+  LRESULT_t ComboBox::count() const
+  {
+    const LRESULT_t result = sendMessage(CB_GETCOUNT, 0, 0);
+    if( result < ZERO ) {
+      return 0;
+    }
+    return result;
+  }
+
+  LRESULT_t ComboBox::currentIndex() const
+  {
+    return sendMessage(CB_GETCURSEL, 0, 0);
+  }
+
+  bool ComboBox::setCurrentIndex(const WPARAM_t index)
+  {
+    return sendMessage(CB_SETCURSEL, index, 0) >= ZERO;
+  }
+
+  std::wstring ComboBox::currentText() const
+  {
+    const LRESULT_t index = sendMessage(CB_GETCURSEL, 0, 0);
+    if( index < ZERO ) {
+      return std::wstring();
+    }
+
+    const LRESULT_t length = sendMessage(CB_GETLBTEXTLEN, index, 0);
+    if( length <= ZERO ) {
+      return std::wstring();
+    }
+
+    std::wstring result;
+    try {
+      result.resize(length);
+    } catch( ... ) {
+      return std::wstring();
+    }
+
+    if( sendMessage(CB_GETLBTEXT, index, reinterpret_cast<LPARAM_t>(result.data())) <= ZERO ) {
+      return std::wstring();
+    }
+
+    return result;
+  }
+
+  ////// public static ///////////////////////////////////////////////////////
+
+  WindowPtr ComboBox::create(HWND_t wnd)
+  {
+    return std::make_unique<ComboBox>(wnd);
+  }
+
+  WindowPtr ComboBox::create(HWND_t dlg, int idDlgItem)
+  {
+    return std::make_unique<ComboBox>(dlg, idDlgItem);
+  }
+
+} // namespace ui

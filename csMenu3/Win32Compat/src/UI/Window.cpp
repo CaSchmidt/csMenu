@@ -31,57 +31,71 @@
 
 #include <Windows.h>
 
-#include "Win32/CheckBox.h"
+#include "Win32/UI/Window.h"
 
-namespace window {
+namespace ui {
 
   ////// public //////////////////////////////////////////////////////////////
 
-  CheckBox::CheckBox(HWND_t wnd, const ctor_tag&) noexcept
-    : Window(wnd)
+  Window::~Window() noexcept
   {
   }
 
-  CheckBox::CheckBox(HWND_t dlg, int idDlgItem, const ctor_tag&) noexcept
-    : Window(dlg, idDlgItem)
+  bool Window::isNull() const
+  {
+    return _wnd == nullptr;
+  }
+
+  HWND_t Window::handle() const
+  {
+    return _wnd;
+  }
+
+  int Window::controlId() const
+  {
+    return GetDlgCtrlID(reinterpret_cast<HWND>(_wnd));
+  }
+
+  LRESULT_t Window::sendMessage(UINT_t msg, WPARAM_t wParam, LPARAM_t lParam) const
+  {
+    return SendMessageW(reinterpret_cast<HWND>(_wnd), msg, wParam, lParam);
+  }
+
+  LONG_PTR_t Window::userData() const
+  {
+    return GetWindowLongPtrW(reinterpret_cast<HWND>(_wnd), GWLP_USERDATA);
+  }
+
+  void Window::setUserData(LONG_PTR_t data)
+  {
+    SetWindowLongPtrW(reinterpret_cast<HWND>(_wnd), GWLP_USERDATA, data);
+  }
+
+  void Window::setIcon(HICON_t icon)
+  {
+    SetWindowLongPtrW(reinterpret_cast<HWND>(_wnd), GCLP_HICON, reinterpret_cast<LONG_PTR>(icon));
+  }
+
+  LRESULT_t Window::onCommand(WPARAM_t /*wParam*/, LPARAM_t /*lParam*/)
+  {
+    return FALSE;
+  }
+
+  ////// protected ///////////////////////////////////////////////////////////
+
+  Window::Window(HWND_t wnd) noexcept
+    : _wnd{wnd}
   {
   }
 
-  CheckBox::~CheckBox() noexcept
+  Window::Window(HWND_t dlg, int idDlgItem) noexcept
   {
+    _wnd = GetDlgItem(reinterpret_cast<HWND>(dlg), idDlgItem);
   }
 
-  bool CheckBox::isChecked() const
+  void Window::setHandle(HWND_t wnd)
   {
-    return sendMessage(BM_GETCHECK, 0, 0) == BST_CHECKED;
+    _wnd = wnd;
   }
 
-  void CheckBox::setChecked(const bool on)
-  {
-    const WPARAM wParam = on
-                          ? BST_CHECKED
-                          : BST_UNCHECKED;
-    sendMessage(BM_SETCHECK, wParam, 0);
-  }
-
-  LRESULT_t CheckBox::onCommand(WPARAM_t /*wParam*/, LPARAM_t /*lParam*/)
-  {
-    if( isChecked() ) {
-      setChecked(false);
-    } else {
-      setChecked(true);
-    }
-    return sendMessage(BM_GETCHECK, 0, 0);
-  }
-
-  WindowPtr CheckBox::create(HWND_t wnd)
-  {
-    return std::make_unique<CheckBox>(wnd);
-  }
-
-  WindowPtr CheckBox::create(HWND_t dlg, int idDlgItem)
-  {
-    return std::make_unique<CheckBox>(dlg, idDlgItem);
-  }
-
-} // namespace window
+} // namespace ui

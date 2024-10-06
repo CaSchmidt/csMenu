@@ -31,98 +31,57 @@
 
 #include <Windows.h>
 
-#include "Win32/ComboBox.h"
+#include "Win32/UI/CheckBox.h"
 
-namespace window {
-
-  ////// Private /////////////////////////////////////////////////////////////
-
-  constexpr LRESULT_t ZERO = 0;
+namespace ui {
 
   ////// public //////////////////////////////////////////////////////////////
 
-  ComboBox::ComboBox(HWND_t wnd, const ctor_tag&) noexcept
+  CheckBox::CheckBox(HWND_t wnd, const ctor_tag&) noexcept
     : Window(wnd)
   {
   }
 
-  ComboBox::ComboBox(HWND_t dlg, int idDlgItem, const ctor_tag&) noexcept
+  CheckBox::CheckBox(HWND_t dlg, int idDlgItem, const ctor_tag&) noexcept
     : Window(dlg, idDlgItem)
   {
   }
 
-  ComboBox::~ComboBox() noexcept
+  CheckBox::~CheckBox() noexcept
   {
   }
 
-  bool ComboBox::addItem(const std::wstring& item)
+  bool CheckBox::isChecked() const
   {
-    if( item.empty() ) {
-      return false;
+    return sendMessage(BM_GETCHECK, 0, 0) == BST_CHECKED;
+  }
+
+  void CheckBox::setChecked(const bool on)
+  {
+    const WPARAM wParam = on
+                          ? BST_CHECKED
+                          : BST_UNCHECKED;
+    sendMessage(BM_SETCHECK, wParam, 0);
+  }
+
+  LRESULT_t CheckBox::onCommand(WPARAM_t /*wParam*/, LPARAM_t /*lParam*/)
+  {
+    if( isChecked() ) {
+      setChecked(false);
+    } else {
+      setChecked(true);
     }
-    return sendMessage(CB_ADDSTRING, 0, reinterpret_cast<LPARAM_t>(item.data())) >= ZERO;
+    return sendMessage(BM_GETCHECK, 0, 0);
   }
 
-  void ComboBox::clear()
+  WindowPtr CheckBox::create(HWND_t wnd)
   {
-    sendMessage(CB_RESETCONTENT, 0, 0);
+    return std::make_unique<CheckBox>(wnd);
   }
 
-  LRESULT_t ComboBox::count() const
+  WindowPtr CheckBox::create(HWND_t dlg, int idDlgItem)
   {
-    const LRESULT_t result = sendMessage(CB_GETCOUNT, 0, 0);
-    if( result < ZERO ) {
-      return 0;
-    }
-    return result;
+    return std::make_unique<CheckBox>(dlg, idDlgItem);
   }
 
-  LRESULT_t ComboBox::currentIndex() const
-  {
-    return sendMessage(CB_GETCURSEL, 0, 0);
-  }
-
-  bool ComboBox::setCurrentIndex(const WPARAM_t index)
-  {
-    return sendMessage(CB_SETCURSEL, index, 0) >= ZERO;
-  }
-
-  std::wstring ComboBox::currentText() const
-  {
-    const LRESULT_t index = sendMessage(CB_GETCURSEL, 0, 0);
-    if( index < ZERO ) {
-      return std::wstring();
-    }
-
-    const LRESULT_t length = sendMessage(CB_GETLBTEXTLEN, index, 0);
-    if( length <= ZERO ) {
-      return std::wstring();
-    }
-
-    std::wstring result;
-    try {
-      result.resize(length);
-    } catch( ... ) {
-      return std::wstring();
-    }
-
-    if( sendMessage(CB_GETLBTEXT, index, reinterpret_cast<LPARAM_t>(result.data())) <= ZERO ) {
-      return std::wstring();
-    }
-
-    return result;
-  }
-
-  ////// public static ///////////////////////////////////////////////////////
-
-  WindowPtr ComboBox::create(HWND_t wnd)
-  {
-    return std::make_unique<ComboBox>(wnd);
-  }
-
-  WindowPtr ComboBox::create(HWND_t dlg, int idDlgItem)
-  {
-    return std::make_unique<ComboBox>(dlg, idDlgItem);
-  }
-
-} // namespace window
+} // namespace ui

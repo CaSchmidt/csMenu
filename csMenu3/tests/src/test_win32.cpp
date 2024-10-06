@@ -34,7 +34,7 @@ std::wstring widen(const std::string_view& str)
 
 void test_dialog(const HINSTANCE hInstance)
 {
-  window::Dialog d;
+  ui::Dialog d;
   const bool b          = d.exec(hInstance);
   const std::string s   = std::format("result: {}", b);
   const std::wstring ws = widen(s);

@@ -1,11 +1,8 @@
 ### Project ##################################################################
 
 list(APPEND Win32Compat_HEADERS
-  include/Win32/CheckBox.h
   include/Win32/Clipboard.h
-  include/Win32/ComboBox.h
   include/Win32/Compat.h
-  include/Win32/Dialog.h
   include/Win32/GUID.h
   include/Win32/Message.h
   include/Win32/MessageBox.h
@@ -15,16 +12,16 @@ list(APPEND Win32Compat_HEADERS
   include/Win32/Registry.h
   include/Win32/Shell.h
   include/Win32/String.h
-  include/Win32/Window.h
+  include/Win32/UI/CheckBox.h
+  include/Win32/UI/ComboBox.h
+  include/Win32/UI/Dialog.h
+  include/Win32/UI/Window.h
   include/Win32/WindowUtil.h
 )
 
 list(APPEND Win32Compat_SOURCES
-  src/CheckBox.cpp
   src/Clipboard.cpp
-  src/ComboBox.cpp
   src/Compat.cpp
-  src/Dialog.cpp
   src/GUID.cpp
   src/Message.cpp
   src/MessageBox.cpp
@@ -34,7 +31,10 @@ list(APPEND Win32Compat_SOURCES
   src/Registry.cpp
   src/Shell.cpp
   src/String.cpp
-  src/Window.cpp
+  src/UI/CheckBox.cpp
+  src/UI/ComboBox.cpp
+  src/UI/Dialog.cpp
+  src/UI/Window.cpp
   src/WindowUtil.cpp
 )
 

@@ -32,11 +32,11 @@
 #define UNICODE
 #include <Windows.h>
 
-#include "Win32/Dialog.h"
+#include "Win32/UI/Dialog.h"
 
 #include "DialogResource.h"
 
-namespace window {
+namespace ui {
 
   ////// Private /////////////////////////////////////////////////////////////
 
@@ -181,4 +181,4 @@ namespace window {
     return WNDCLASS_Dialog;
   }
 
-} // namespace window
+} // namespace ui

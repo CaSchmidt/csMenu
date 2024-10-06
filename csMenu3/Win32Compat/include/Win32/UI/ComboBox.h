@@ -31,44 +31,46 @@
 
 #pragma once
 
-#include <list>
-#include <memory>
+#include <string>
 
-#include "Win32/Compat.h"
+#include "Win32/UI/Window.h"
 
-namespace window {
+namespace ui {
 
-  using WindowPtr = std::unique_ptr<class Window>;
+  /*
+   * NOTE: The combo box must be created with the CBS_HASSTRINGS style!
+   */
 
-  class Window {
-  public:
-    virtual ~Window() noexcept;
-
-    bool isNull() const;
-
-    HWND_t handle() const;
-
-    int controlId() const;
-
-    LRESULT_t sendMessage(UINT_t msg, WPARAM_t wParam, LPARAM_t lParam) const;
-
-    LONG_PTR_t userData() const;
-    void setUserData(LONG_PTR_t data);
-
-    void setIcon(HICON_t icon);
-
-    virtual LRESULT_t onCommand(WPARAM_t wParam, LPARAM_t lParam); // WM_COMMAND
-
-  protected:
-    Window(HWND_t wnd) noexcept;
-    Window(HWND_t dlg, int idDlgItem) noexcept;
-
-    void setHandle(HWND_t wnd);
-
+  class ComboBox : public Window {
   private:
-    HWND_t _wnd{nullptr};
+    struct ctor_tag {
+      ctor_tag() noexcept = default;
+    };
+
+  public:
+    ComboBox(HWND_t wnd, const ctor_tag& = ctor_tag()) noexcept;
+    ComboBox(HWND_t dlg, int idDlgItem, const ctor_tag& = ctor_tag()) noexcept;
+    ~ComboBox() noexcept;
+
+    bool addItem(const std::wstring& item);
+    void clear();
+    LRESULT_t count() const;
+    LRESULT_t currentIndex() const; // NOTE: May return negative index if no selection is made!
+    bool setCurrentIndex(const WPARAM_t index);
+    std::wstring currentText() const;
+
+    static WindowPtr create(HWND_t wnd);
+    static WindowPtr create(HWND_t dlg, int idDlgItem);
   };
 
-  using Windows = std::list<WindowPtr>;
+  inline ComboBox *COMBOBOX(const Window *w)
+  {
+    return dynamic_cast<ComboBox *>(const_cast<Window *>(w));
+  }
 
-} // namespace window
+  inline ComboBox *COMBOBOX(const WindowPtr& p)
+  {
+    return dynamic_cast<ComboBox *>(p.get());
+  }
+
+} // namespace ui
