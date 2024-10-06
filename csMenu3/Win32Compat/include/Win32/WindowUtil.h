@@ -31,6 +31,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "Win32/Compat.h"
 
 namespace window {
@@ -38,6 +40,9 @@ namespace window {
   HICON_t loadIcon(const HINSTANCE_t instance, const wchar_t *name);
 
   bool makeGUIThread();
+
+  std::wstring text(const HWND_t wnd);
+  bool setText(HWND_t wnd, const wchar_t *text);
 
   void unregisterClass(const HINSTANCE_t instance, const wchar_t *name);
 

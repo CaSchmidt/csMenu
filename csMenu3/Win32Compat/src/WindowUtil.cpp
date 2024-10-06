@@ -47,6 +47,32 @@ namespace window {
     return result != FALSE && result != ERROR_NOT_ENOUGH_MEMORY;
   }
 
+  std::wstring text(const HWND_t wnd)
+  {
+    const int length = GetWindowTextLengthW(reinterpret_cast<HWND>(wnd));
+    if( length < 1 ) {
+      return std::wstring();
+    }
+
+    std::wstring result;
+    try {
+      result.resize(length);
+    } catch( ... ) {
+      return std::wstring();
+    }
+
+    if( GetWindowTextW(reinterpret_cast<HWND>(wnd), result.data(), length + 1) < 1 ) {
+      return std::wstring();
+    }
+
+    return result;
+  }
+
+  bool setText(HWND_t wnd, const wchar_t *text)
+  {
+    return SetWindowTextW(reinterpret_cast<HWND>(wnd), text) != FALSE;
+  }
+
   void unregisterClass(const HINSTANCE_t instance, const wchar_t *name)
   {
     if( instance == nullptr || name == nullptr ) {
