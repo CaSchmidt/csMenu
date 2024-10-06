@@ -45,7 +45,7 @@ namespace message {
       if( result < 0 ) {
         // TODO: handle error...
       } else {
-        if( filter && filter(msg.message) ) {
+        if( filter && filter(msg.hwnd, msg.message) ) {
           continue;
         }
 

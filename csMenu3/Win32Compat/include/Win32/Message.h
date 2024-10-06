@@ -37,7 +37,7 @@
 
 namespace message {
 
-  using FilterFunction  = std::function<bool(UINT_t)>;
+  using FilterFunction  = std::function<bool(HWND_t, UINT_t)>;
   using HandlerFunction = std::function<void(HWND_t, UINT_t, WPARAM_t, LPARAM_t)>;
 
   int loop(const FilterFunction& filter = nullptr, const HandlerFunction& handler = nullptr);
