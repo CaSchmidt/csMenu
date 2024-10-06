@@ -35,10 +35,10 @@
 
 namespace window {
 
-  HICON_t loadIcon(const HINSTANCE_t hInstance, const wchar_t *name);
+  HICON_t loadIcon(const HINSTANCE_t instance, const wchar_t *name);
 
   bool makeGUIThread();
 
-  void unregisterClass(const HANDLE_t ptrInstance, const wchar_t *name);
+  void unregisterClass(const HINSTANCE_t instance, const wchar_t *name);
 
 } // namespace window

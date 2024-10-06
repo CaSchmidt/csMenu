@@ -36,9 +36,9 @@
 
 namespace window {
 
-  HICON_t loadIcon(const HINSTANCE_t hInstance, const wchar_t *name)
+  HICON_t loadIcon(const HINSTANCE_t instance, const wchar_t *name)
   {
-    return LoadIconW(reinterpret_cast<HINSTANCE>(hInstance), name);
+    return LoadIconW(reinterpret_cast<HINSTANCE>(instance), name);
   }
 
   bool makeGUIThread()
@@ -47,12 +47,12 @@ namespace window {
     return result != FALSE && result != ERROR_NOT_ENOUGH_MEMORY;
   }
 
-  void unregisterClass(const HANDLE_t ptrInstance, const wchar_t *name)
+  void unregisterClass(const HINSTANCE_t instance, const wchar_t *name)
   {
-    if( ptrInstance == nullptr || name == nullptr ) {
+    if( instance == nullptr || name == nullptr ) {
       return;
     }
-    HINSTANCE hInstance = reinterpret_cast<HINSTANCE>(ptrInstance);
+    HINSTANCE hInstance = reinterpret_cast<HINSTANCE>(instance);
 
     WNDCLASSEXW wcex;
     if( GetClassInfoExW(hInstance, name, &wcex) != FALSE ) {
