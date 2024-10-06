@@ -46,7 +46,12 @@ namespace ui {
     return _wnd == nullptr;
   }
 
-  HWND_t Window::handle() const
+  const HWND_t Window::handle() const
+  {
+    return _wnd;
+  }
+
+  HWND_t Window::handle()
   {
     return _wnd;
   }

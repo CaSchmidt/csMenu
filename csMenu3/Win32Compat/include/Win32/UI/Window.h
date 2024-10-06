@@ -46,7 +46,8 @@ namespace ui {
 
     bool isNull() const;
 
-    HWND_t handle() const;
+    const HWND_t handle() const;
+    HWND_t handle();
 
     int controlId() const;
 
