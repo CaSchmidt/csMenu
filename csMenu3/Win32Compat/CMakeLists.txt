@@ -15,6 +15,7 @@ list(APPEND Win32Compat_HEADERS
   include/Win32/UI/CheckBox.h
   include/Win32/UI/ComboBox.h
   include/Win32/UI/Dialog.h
+  include/Win32/UI/EditText.h
   include/Win32/UI/Window.h
   include/Win32/WindowUtil.h
 )
@@ -34,6 +35,7 @@ list(APPEND Win32Compat_SOURCES
   src/UI/CheckBox.cpp
   src/UI/ComboBox.cpp
   src/UI/Dialog.cpp
+  src/UI/EditText.cpp
   src/UI/Window.cpp
   src/WindowUtil.cpp
 )
