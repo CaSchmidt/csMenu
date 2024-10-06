@@ -3,6 +3,7 @@
 list(APPEND Win32Compat_HEADERS
   include/Win32/CheckBox.h
   include/Win32/Clipboard.h
+  include/Win32/ComboBox.h
   include/Win32/Compat.h
   include/Win32/Dialog.h
   include/Win32/GUID.h
@@ -21,6 +22,7 @@ list(APPEND Win32Compat_HEADERS
 list(APPEND Win32Compat_SOURCES
   src/CheckBox.cpp
   src/Clipboard.cpp
+  src/ComboBox.cpp
   src/Compat.cpp
   src/Dialog.cpp
   src/GUID.cpp
