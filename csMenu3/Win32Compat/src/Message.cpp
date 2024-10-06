@@ -53,7 +53,7 @@ namespace message {
         DispatchMessageW(&msg);
 
         if( handler ) {
-          handler(msg.message);
+          handler(msg.hwnd, msg.message, msg.wParam, msg.lParam);
         }
       }
     } // For Each Message
