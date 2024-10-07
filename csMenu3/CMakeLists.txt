@@ -28,6 +28,8 @@ list(APPEND csMenu3_EXTRAS
   csMenu3.def
   resource/csMenu3.rc
   resource/csMenu3Resource.h
+  resource/RenameDialog.rc
+  resource/RenameDialogResource.h
 )
 
 list(APPEND csMenu3_HEADERS
@@ -45,6 +47,7 @@ list(APPEND csMenu3_HEADERS
   include/MainMenuFactory.h
   include/MenuFlags.h
   include/Register.h
+  include/RenameDialog.h
   include/ScriptMenuFactory.h
   include/ScriptWorker.h
   include/Settings.h
@@ -68,6 +71,7 @@ list(APPEND csMenu3_SOURCES
   src/MainMenuFactory.cpp
   src/MenuFlags.cpp
   src/Register.cpp
+  src/RenameDialog.cpp
   src/ScriptMenuFactory.cpp
   src/ScriptWorker.cpp
   src/WorkContext.cpp
