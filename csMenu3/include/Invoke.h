@@ -36,4 +36,4 @@
 #include "Commands.h"
 
 void invokeCommandId(const CommandId id, const std::wstring& script = std::wstring{},
-                     const cs::PathList& files = cs::PathList{});
+                     const cs::PathList& selection = cs::PathList{});

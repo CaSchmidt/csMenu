@@ -95,9 +95,9 @@ IFACEMETHODIMP_(HRESULT) CommandInvoke::Invoke(IShellItemArray *psiItemArray, IB
 {
   UNREFERENCED_PARAMETER(pbc);
 
-  const cs::PathList files = impl_cmdinvoke::makeFileList(psiItemArray);
+  const cs::PathList selection = impl_cmdinvoke::makeFileList(psiItemArray);
 
-  invokeCommandId(_id, _title, files);
+  invokeCommandId(_id, _title, selection);
 
   return S_OK;
 }

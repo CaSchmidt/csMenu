@@ -54,6 +54,12 @@ namespace impl_menu {
     menu->append(winrt::make<CommandInvoke>(Command::ListPath));
     menu->append(winrt::make<CommandInvoke>(Command::ListPathTabular));
 
+    // Rename ////////////////////////////////////////////////////////////////
+
+    menu->append(winrt::make<CommandSeparator>());
+
+    menu->append(winrt::make<CommandInvoke>(Command::Rename));
+
     // Settings ////////////////////////////////////////////////////////////////
 
     menu->append(winrt::make<CommandSeparator>());

@@ -122,11 +122,11 @@ namespace impl_invoke {
     writeFlags(flags);
   }
 
-  void invokeHash(const CommandId id, const cs::PathList& files)
+  void invokeHash(const CommandId id, const cs::PathList& selection)
   {
     WorkContext ctx;
 
-    if( !ctx.setFiles(files) ) {
+    if( !ctx.setFiles(selection) ) {
       return;
     }
 
@@ -138,9 +138,9 @@ namespace impl_invoke {
     std::thread(hash_work, func, std::move(ctx)).detach();
   }
 
-  void invokeList(const CommandId id, const cs::PathList& files)
+  void invokeList(const CommandId id, const cs::PathList& selection)
   {
-    if( files.empty() ) {
+    if( selection.empty() ) {
       return;
     }
 
@@ -149,16 +149,16 @@ namespace impl_invoke {
 
     std::wstring text;
     try {
-      for( const fs::path& file : files ) {
+      for( const fs::path& item : selection ) {
         std::wstring uncName;
-        if( is_unc && !(uncName = resolveUniversalName(file.wstring().data())).empty() ) {
+        if( is_unc && !(uncName = resolveUniversalName(item.wstring().data())).empty() ) {
           appendFilename(text, uncName, id);
         } else {
-          appendFilename(text, file.wstring(), id);
+          appendFilename(text, item.wstring(), id);
         }
-      } // For each file
+      } // For each item
 
-      if( files.size() == ONE && text.size() >= EOL.size() ) { // Remove trailing EOL
+      if( selection.size() == ONE && text.size() >= EOL.size() ) { // Remove trailing EOL
         text.erase(text.size() - EOL.size());
       }
     } catch( ... ) {
@@ -172,12 +172,20 @@ namespace impl_invoke {
     setClipboardText(text.data());
   }
 
-  void invokeScript(const std::wstring& script, const cs::PathList& files)
+  void invokeRename(const cs::PathList& selection)
+  {
+    const cs::PathList files = cs::filter(selection, cs::PathListFlag::File);
+    if( files.empty() ) {
+      return;
+    }
+  }
+
+  void invokeScript(const std::wstring& script, const cs::PathList& selection)
   {
     constexpr std::size_t ONE = 1;
 
     WorkContext ctx;
-    if( !ctx.setScript(script) || !ctx.setFiles(files) ) {
+    if( !ctx.setScript(script) || !ctx.setFiles(selection) ) {
       return;
     }
 
@@ -200,10 +208,10 @@ namespace impl_invoke {
 
 ////// Public ////////////////////////////////////////////////////////////////
 
-void invokeCommandId(const CommandId id, const std::wstring& script, const cs::PathList& files)
+void invokeCommandId(const CommandId id, const std::wstring& script, const cs::PathList& selection)
 {
   if( id == Command::List || id == Command::ListPath || id == Command::ListPathTabular ) {
-    impl_invoke::invokeList(id, files);
+    impl_invoke::invokeList(id, selection);
   } else if( id == Command::CheckBatchProcessing ) {
     impl_invoke::invokeFlags(id);
   } else if( id == Command::CheckParallelExecution ) {
@@ -213,8 +221,10 @@ void invokeCommandId(const CommandId id, const std::wstring& script, const cs::P
   } else if( id == Command::CheckUnixPathSeparators ) {
     impl_invoke::invokeFlags(id);
   } else if( id > Command::HashMenu && id < Command::ScriptMenu ) {
-    impl_invoke::invokeHash(id, files);
+    impl_invoke::invokeHash(id, selection);
+  } else if( id == Command::Rename ) {
+    impl_invoke::invokeRename(selection);
   } else if( id > Command::ScriptMenu ) {
-    impl_invoke::invokeScript(script, files);
+    impl_invoke::invokeScript(script, selection);
   }
 }

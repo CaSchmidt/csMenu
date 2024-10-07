@@ -45,8 +45,8 @@ std::wstring titleFromId(const CommandId id)
     return std::wstring{L"List (path)"};
   } else if( id == Command::ListPathTabular ) {
     return std::wstring{L"List (path, tabular)"};
-  } else if( id == Command::SettingsMenu ) {
-    return std::wstring{L"Settings"};
+  } else if( id == Command::Rename ) {
+    return std::wstring(L"Rename...");
   } else if( id == Command::CheckBatchProcessing ) {
     return std::wstring{L"Batch processing"};
   } else if( id == Command::CheckParallelExecution ) {
