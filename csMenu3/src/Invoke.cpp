@@ -39,10 +39,15 @@
 
 #include "HashWorker.h"
 #include "MenuFlags.h"
+#include "RenameDialog.h"
 #include "ScriptWorker.h"
 #include "Util.h"
 #include "Win32/Clipboard.h"
 #include "Win32/Network.h"
+
+////// Imports ///////////////////////////////////////////////////////////////
+
+extern HANDLE_t getInstDLL(); // main.cpp
 
 ////// Private ///////////////////////////////////////////////////////////////
 
@@ -176,6 +181,11 @@ namespace impl_invoke {
   {
     const cs::PathList files = cs::filter(selection, cs::PathListFlag::File);
     if( files.empty() ) {
+      return;
+    }
+
+    RenameDialog d;
+    if( !d.exec(getInstDLL()) ) {
       return;
     }
   }
