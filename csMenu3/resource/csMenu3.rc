@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-#include "resource.h"
+#include "csMenu3Resource.h"
 
 IDI_main   ICON  "main.ico"
 IDI_red    ICON  "red.ico"

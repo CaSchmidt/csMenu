@@ -33,7 +33,7 @@
 
 #include "CommandEnum.h"
 #include "CommandInvoke.h"
-#include "resource.h"
+#include "csMenu3Resource.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 

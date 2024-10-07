@@ -27,6 +27,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Win32Compat
 list(APPEND csMenu3_EXTRAS
   csMenu3.def
   resource/csMenu3.rc
+  resource/csMenu3Resource.h
 )
 
 list(APPEND csMenu3_HEADERS

@@ -35,8 +35,8 @@
 #include "CommandFlag.h"
 #include "CommandInvoke.h"
 #include "CommandSeparator.h"
+#include "csMenu3Resource.h"
 #include "MenuFlags.h"
-#include "resource.h"
 
 ////// Private ///////////////////////////////////////////////////////////////
 

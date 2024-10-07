@@ -1,9 +1,9 @@
-#ifndef RESOURCE_H
-#define RESOURCE_H
+#ifndef CSMENU3RESOURCE_H
+#define CSMENU3RESOURCE_H
 
 #define IDI_main   100
 #define IDI_red    110
 #define IDI_green  120
 #define IDI_blue   130
 
-#endif // RESOURCE_H
+#endif // CSMENU3RESOURCE_H
