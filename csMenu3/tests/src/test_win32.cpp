@@ -10,8 +10,7 @@
 #include "Win32/Message.h"
 #include "Win32/MessageBox.h"
 #include "Win32/ProgressBar.h"
-
-#include "RenameDialog.h"
+#include "Win32/UI/Dialog.h"
 
 // cf. https://learn.microsoft.com/en-us/windows/win32/controls/cookbook-overview
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
@@ -74,22 +73,12 @@ void test_progress(const HINSTANCE hInstance)
   messagebox::information(L"Done!");
 }
 
-////// RenameDialog //////////////////////////////////////////////////////////
-
-void test_renamedialog(const HINSTANCE hInstance)
-{
-  RenameDialog d;
-  const bool b          = d.exec(hInstance);
-  const std::string s   = std::format("result: {}", b);
-  const std::wstring ws = widen(s);
-  messagebox::information(ws.data());
-}
-
 ////// Main //////////////////////////////////////////////////////////////////
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-  test_renamedialog(hInstance);
+  test_dialog(hInstance);
+  // test_progress(hInstance);
 
   return 0;
 }
