@@ -192,8 +192,6 @@ namespace impl_invoke {
 
   void invokeScript(const std::wstring& script, const cs::PathList& selection)
   {
-    constexpr std::size_t ONE = 1;
-
     WorkContext ctx;
     if( !ctx.setScript(script) || !ctx.setFiles(selection) ) {
       return;
