@@ -29,22 +29,25 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#pragma once
-
 #include "Rename.h"
-#include "Win32/UI/Dialog.h"
 
-class RenameDialog : public ui::Dialog {
-public:
-  RenameDialog() noexcept;
-  ~RenameDialog() noexcept;
+////// public ////////////////////////////////////////////////////////////////
 
-  Rename data() const;
+Rename::Rename(const Mode mode,
+               const std::wstring& pattern,
+               const std::wstring& replace,
+               const bool isExtension) noexcept
+  : mode{mode}
+  , pattern(pattern)
+  , replace(replace)
+  , isExtension{isExtension}
+{
+  if( mode == Replace && replace.empty() ) {
+    this->mode = Remove;
+  }
+}
 
-protected:
-  LRESULT_t onInitDialog(HWND_t wnd, LPARAM_t lParam);
-
-  const wchar_t *dialogName() const;
-  const wchar_t *iconName() const;
-  const wchar_t *wndClassName() const;
-};
+bool Rename::isValid() const
+{
+  return mode != Invalid && !pattern.empty();
+}

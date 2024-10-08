@@ -31,20 +31,26 @@
 
 #pragma once
 
-#include "Rename.h"
-#include "Win32/UI/Dialog.h"
+#include <string>
 
-class RenameDialog : public ui::Dialog {
-public:
-  RenameDialog() noexcept;
-  ~RenameDialog() noexcept;
+struct Rename {
+  enum Mode : unsigned {
+    Invalid = 0,
+    Append,
+    Prepend,
+    Remove,
+    Replace
+  };
 
-  Rename data() const;
+  Rename(const Mode mode             = Invalid,
+         const std::wstring& pattern = std::wstring(),
+         const std::wstring& replace = std::wstring(),
+         const bool isExtension      = false) noexcept;
 
-protected:
-  LRESULT_t onInitDialog(HWND_t wnd, LPARAM_t lParam);
+  bool isValid() const;
 
-  const wchar_t *dialogName() const;
-  const wchar_t *iconName() const;
-  const wchar_t *wndClassName() const;
+  Mode mode{Invalid};
+  std::wstring pattern;
+  std::wstring replace;
+  bool isExtension{false};
 };

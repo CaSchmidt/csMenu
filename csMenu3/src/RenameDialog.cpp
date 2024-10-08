@@ -51,6 +51,30 @@ RenameDialog::~RenameDialog() noexcept
 {
 }
 
+Rename RenameDialog::data() const
+{
+  ui::ComboBox *modeCombo        = ui::COMBOBOX(getControl(ID_ComboMode));
+  ui::CheckBox *isExtensionCheck = ui::CHECKBOX(getControl(ID_CheckExtension));
+  ui::EditText *patternEdit      = ui::EDITTEXT(getControl(ID_EditPattern));
+  ui::EditText *replaceEdit      = ui::EDITTEXT(getControl(ID_EditReplace));
+
+  Rename::Mode mode = Rename::Invalid;
+  if( modeCombo->currentText() == L"Append" ) {
+    mode = Rename::Append;
+  } else if( modeCombo->currentText() == L"Prepend" ) {
+    mode = Rename::Prepend;
+  } else if( modeCombo->currentText() == L"Remove" ) {
+    mode = Rename::Remove;
+  } else if( modeCombo->currentText() == L"Replace" ) {
+    mode = Rename::Replace;
+  }
+
+  return Rename(mode,
+                patternEdit->text(),
+                replaceEdit->text(),
+                isExtensionCheck->isChecked());
+}
+
 ////// protected /////////////////////////////////////////////////////////////
 
 LRESULT_t RenameDialog::onInitDialog(HWND_t wnd, LPARAM_t lParam)
