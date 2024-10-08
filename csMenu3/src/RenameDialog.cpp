@@ -69,7 +69,7 @@ LRESULT_t RenameDialog::onInitDialog(HWND_t wnd, LPARAM_t lParam)
 
   _controls.push_back(ui::EditText::create(wnd, ID_EditPattern));
 
-  _controls.push_back(ui::EditText::create(wnd, ID_EditText));
+  _controls.push_back(ui::EditText::create(wnd, ID_EditReplace));
 
   return result;
 }

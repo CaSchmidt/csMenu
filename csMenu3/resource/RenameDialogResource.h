@@ -39,8 +39,8 @@
 #define ID_CheckExtension 2003
 #define ID_LabelPattern   2004
 #define ID_EditPattern    2005
-#define ID_LabelText      2006
-#define ID_EditText       2007
+#define ID_LabelReplace   2006
+#define ID_EditReplace    2007
 
 #define WNDCLASS_RenameDialog L"RenameDialogUI"
 
