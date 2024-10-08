@@ -38,6 +38,7 @@
 
 #include "RenameDialog.h"
 
+#include "csMenu3Resource.h"
 #include "RenameDialogResource.h"
 
 ////// public ////////////////////////////////////////////////////////////////
@@ -76,6 +77,11 @@ LRESULT_t RenameDialog::onInitDialog(HWND_t wnd, LPARAM_t lParam)
 const wchar_t *RenameDialog::dialogName() const
 {
   return MAKEINTRESOURCEW(IDD_RenameDialog);
+}
+
+const wchar_t *RenameDialog::iconName() const
+{
+  return MAKEINTRESOURCEW(IDI_blue);
 }
 
 const wchar_t *RenameDialog::wndClassName() const

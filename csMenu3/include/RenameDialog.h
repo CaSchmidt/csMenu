@@ -42,5 +42,6 @@ protected:
   LRESULT_t onInitDialog(HWND_t wnd, LPARAM_t lParam);
 
   const wchar_t *dialogName() const;
+  const wchar_t *iconName() const;
   const wchar_t *wndClassName() const;
 };
