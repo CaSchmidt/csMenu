@@ -33,7 +33,7 @@
 #include <cs/Convert/BufferUtil.h>
 #include <cs/Core/Container.h>
 #include <cs/Crypto/CryptoUtil.h>
-#include <cs/Text/StringAlgorithm.h>
+#include <cs/Text/StringUtil.h>
 
 #include "HashWorker.h"
 
@@ -91,9 +91,7 @@ namespace impl_hash {
         const cs::Buffer bindigest  = cs::sum(file, _func);
         const std::string strdigest = cs::toString(bindigest);
 
-        if( cs::resize(result, strdigest.size()) ) {
-          cs::widen(result.data(), result.size(), strdigest.data(), strdigest.size());
-        }
+        result = cs::widen(strdigest);
       }
 
       if( !result.empty() ) {
@@ -148,7 +146,7 @@ void hash_work(const cs::Hash::Function func, WorkContext ctx)
   using Reduce = impl_hash::HashReduce;
   using Worker = impl_hash::Worker;
   auto f       = conc::mapReduceUnsortedAsync<std::wstring>(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
-                                                      Worker(func, progress.get()), Reduce());
+                                                            Worker(func, progress.get()), Reduce());
   message::loop();
   const std::wstring result = f.get();
 

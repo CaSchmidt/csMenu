@@ -127,7 +127,7 @@ void printShellItems(const CoShellItemArray& sia)
       continue;
     }
 
-    cs::println(&std::wcout, L"%", name);
+    cs::impl_print::println<wchar_t>(std::wcout, L"%", name);
     CoTaskMemFree(name);
   } // For Each ShellItem
 }
@@ -142,7 +142,7 @@ void invokeCommand(const CoExplorerCommand& cmd, const wchar_t *path, const bool
 
   CoShellItemArray sia;
   if( const HRESULT hr = listFiles(path, sia.put()); FAILED(hr) ) {
-    cs::println(&std::cerr, "listFiles(): 0x%", cs::hexf(hr));
+    cs::printerrln("listFiles(): 0x%", cs::hexf(hr));
     return;
   }
 
@@ -153,7 +153,7 @@ void invokeCommand(const CoExplorerCommand& cmd, const wchar_t *path, const bool
 
   const HRESULT hr = cmd->Invoke(sia.get(), nullptr);
   if( FAILED(hr) ) {
-    cs::println(&std::cerr, "Invoke(): 0x%", cs::hexf(hr));
+    cs::printerrln("Invoke(): 0x%", cs::hexf(hr));
   }
 }
 
@@ -165,11 +165,11 @@ void printTitle(const CoExplorerCommand& cmd)
 
   wchar_t *title = nullptr;
   if( FAILED(cmd->GetTitle(nullptr, &title)) ) {
-    cs::println(&std::cerr, "> ERROR: No title!");
+    cs::printerrln("> ERROR: No title!");
     return;
   }
 
-  cs::println(&std::wcout, L"> Title = \"%\"", title);
+  cs::impl_print::println<wchar_t>(std::wcout, L"> Title = \"%\"", title);
   CoTaskMemFree(title);
 }
 
@@ -211,12 +211,12 @@ int main(int argc, char **argv)
 
   CLSID clsid;
   if( FAILED(CLSIDFromString(L"{3d92630b-2959-4551-8a55-ffb508ef3791}", &clsid)) ) {
-    cs::println(&std::cerr, "ERROR: CLSIDFromString()!");
+    cs::printerrln("ERROR: CLSIDFromString()!");
     return EXIT_FAILURE;
   }
 
   if( FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) ) {
-    cs::println(&std::cerr, "ERROR: CoInitialize()!");
+    cs::printerrln("ERROR: CoInitialize()!");
     return EXIT_FAILURE;
   }
 
@@ -225,7 +225,7 @@ int main(int argc, char **argv)
     const HRESULT hr = CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER,
                                         IID_IExplorerCommand, expcmd.put_void());
     if( FAILED(hr) ) {
-      cs::println(&std::cerr, "%: CoCreateInstance(): 0x%", i, cs::hexf(hr));
+      cs::printerrln("%: CoCreateInstance(): 0x%", i, cs::hexf(hr));
       continue;
     }
 
