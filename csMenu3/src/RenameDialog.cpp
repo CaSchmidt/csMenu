@@ -44,6 +44,7 @@
 ////// public ////////////////////////////////////////////////////////////////
 
 RenameDialog::RenameDialog() noexcept
+  : data()
 {
 }
 
@@ -51,28 +52,30 @@ RenameDialog::~RenameDialog() noexcept
 {
 }
 
-Rename RenameDialog::data() const
+LRESULT_t RenameDialog::onOk(WPARAM_t wParam, LPARAM_t lParam)
 {
   ui::ComboBox *modeCombo        = ui::COMBOBOX(getControl(ID_ComboMode));
   ui::CheckBox *isExtensionCheck = ui::CHECKBOX(getControl(ID_CheckExtension));
   ui::EditText *patternEdit      = ui::EDITTEXT(getControl(ID_EditPattern));
   ui::EditText *replaceEdit      = ui::EDITTEXT(getControl(ID_EditReplace));
 
-  Rename::Mode mode = Rename::Invalid;
   if( modeCombo->currentText() == L"Append" ) {
-    mode = Rename::Append;
+    data.mode = Rename::Append;
   } else if( modeCombo->currentText() == L"Prepend" ) {
-    mode = Rename::Prepend;
+    data.mode = Rename::Prepend;
   } else if( modeCombo->currentText() == L"Remove" ) {
-    mode = Rename::Remove;
+    data.mode = Rename::Remove;
   } else if( modeCombo->currentText() == L"Replace" ) {
-    mode = Rename::Replace;
+    data.mode = Rename::Replace;
+  } else {
+    data.mode = Rename::Invalid;
   }
 
-  return Rename(mode,
-                patternEdit->text(),
-                replaceEdit->text(),
-                isExtensionCheck->isChecked());
+  data.pattern     = patternEdit->text();
+  data.replace     = replaceEdit->text();
+  data.isExtension = isExtensionCheck->isChecked();
+
+  return TRUE;
 }
 
 ////// protected /////////////////////////////////////////////////////////////

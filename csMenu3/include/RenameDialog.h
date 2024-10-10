@@ -39,7 +39,7 @@ public:
   RenameDialog() noexcept;
   ~RenameDialog() noexcept;
 
-  Rename data() const;
+  LRESULT_t onOk(WPARAM_t wParam, LPARAM_t lParam);
 
 protected:
   LRESULT_t onInitDialog(HWND_t wnd, LPARAM_t lParam);
@@ -47,4 +47,7 @@ protected:
   const wchar_t *dialogName() const;
   const wchar_t *iconName() const;
   const wchar_t *wndClassName() const;
+
+public:
+  Rename data;
 };
