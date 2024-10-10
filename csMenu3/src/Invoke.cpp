@@ -188,6 +188,15 @@ namespace impl_invoke {
     if( !d.exec(getInstDLL()) ) {
       return;
     }
+
+    const Rename rename = d.data;
+    if( !rename.isValid() ) {
+      return;
+    }
+
+    for( const std::filesystem::path& file : files ) {
+      rename(file);
+    }
   }
 
   void invokeScript(const std::wstring& script, const cs::PathList& selection)

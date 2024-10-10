@@ -31,6 +31,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <string>
 
 struct Rename {
@@ -48,6 +49,8 @@ struct Rename {
          const bool isExtension      = false) noexcept;
 
   bool isValid() const;
+
+  void operator()(const std::filesystem::path& path) const;
 
   Mode mode{Invalid};
   std::wstring pattern;
