@@ -93,6 +93,8 @@ namespace impl_parallel {
 
 } // namespace impl_parallel
 
+using Worker = impl_parallel::Worker;
+
 ////// Public ////////////////////////////////////////////////////////////////
 
 void batch_work(WorkContext ctx)
@@ -121,11 +123,10 @@ void parallel_work(WorkContext ctx)
   progress->setRange(0, static_cast<int>(ctx.files.size()));
   progress->show();
 
-  using Worker = impl_parallel::Worker;
-  auto f       = conc::mapAsync(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
-                                Worker(ctx.script, progress.get()));
+  auto future = conc::mapAsync(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
+                               Worker(ctx.script, progress.get()));
   message::loop();
-  f.get();
+  future.get();
 
   messagebox::information(L"Done! (Parallel)");
 }

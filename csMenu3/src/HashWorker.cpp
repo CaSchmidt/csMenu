@@ -124,6 +124,9 @@ namespace impl_hash {
 
 } // namespace impl_hash
 
+using Reduce = impl_hash::HashReduce;
+using Worker = impl_hash::Worker;
+
 ////// Public ////////////////////////////////////////////////////////////////
 
 void hash_work(const cs::Hash::Function func, WorkContext ctx)
@@ -143,12 +146,10 @@ void hash_work(const cs::Hash::Function func, WorkContext ctx)
   progress->setRange(0, static_cast<int>(ctx.files.size()));
   progress->show();
 
-  using Reduce = impl_hash::HashReduce;
-  using Worker = impl_hash::Worker;
-  auto f       = conc::mapReduceUnsortedAsync<std::wstring>(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
-                                                            Worker(func, progress.get()), Reduce());
+  auto future = conc::mapReduceUnsortedAsync<std::wstring>(ctx.numThreads, ctx.files.begin(), ctx.files.end(),
+                                                           Worker(func, progress.get()), Reduce());
   message::loop();
-  const std::wstring result = f.get();
+  const std::wstring result = future.get();
 
   messagebox::information(L"Done! (Hash)");
 
