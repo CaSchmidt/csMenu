@@ -1,5 +1,5 @@
 #define AppName     "CS::Menu"
-#define AppVersion  "3.0.1"
+#define AppVersion  "3.1"
 
 [Setup]
 AppName={#AppName}
@@ -11,7 +11,7 @@ ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 
 [Components]
-Name: "shellext"; Description: "CS::Menu shell extension"; Types: full; Flags: fixed
+Name: "shellext"; Description: "CS::Menu shell extension"; Types: full compact custom; Flags: fixed
 Name: "examples"; Description: "Script examples"; Types: full
 
 [Registry]
